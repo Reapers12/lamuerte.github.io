@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>О семье — La Muerte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --panel: rgba(17, 17, 17, 0.95);
+      --border: #222;
+      --text: #eaeaea;
+      --muted: #999;
+      --accent: #c0392b;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    header {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header .logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      letter-spacing: 3px;
+      color: #fff;
+    }
+    header .logo span { color: var(--accent); }
+
+    nav a {
+      color: var(--muted);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+    nav a:hover { color: #fff; }
+    nav a.active { color: #fff; }
+
+    /* Hero страницы */
+    .page-hero {
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+    }
+    .page-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.25), transparent 60%);
+      pointer-events: none;
+    }
+    .page-hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+      margin-bottom: 1rem;
+      position: relative;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+    }
+    .page-hero h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+    .page-hero p {
+      color: #ccc;
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+    }
+
+    section.block {
+      padding: 3rem 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    section.block h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+    }
+    section.block p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    section.block p em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+    .card {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .card h3 {
+      font-family: 'Cinzel', serif;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    .card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    /* Таймлайн */
+    .timeline {
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+      padding-left: 2rem;
+      border-left: 2px solid var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      padding: 0 0 2rem 1.5rem;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -2.55rem;
+      top: 0.4rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.25);
+    }
+    .timeline-item .year {
+      font-family: 'Cinzel', serif;
+      color: var(--accent);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.25rem;
+    }
+    .timeline-item h4 {
+      color: #fff;
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+    }
+    .timeline-item p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    /* Состав семьи */
+    .members {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+    .member {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .member:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .member .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c0392b, #7a1f14);
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 700;
+    }
+    .member h3 {
+      font-family: 'Cinzel', serif;
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .member .role {
+      color: var(--accent);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Cinzel', serif;
+    }
+
+    .rules {
+      list-style: none;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .rules li {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.85rem;
+      color: var(--text);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .rules li:hover {
+      transform: translateX(6px);
+      border-color: var(--accent);
+    }
+    .rules li strong {
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      margin-right: 0.5rem;
+    }
+
+    /* Назад */
+    .back-block {
+      text-align: center;
+      padding: 2rem 2rem 4rem;
+    }
+    .btn-back {
+      display: inline-block;
+      padding: 0.8rem 1.75rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: rgba(8, 8, 8, 0.9);
+      backdrop-filter: blur(6px);
+      border-top: 1px solid var(--border);
+      color: #666;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+    }
+    footer span { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; }
+      nav a { margin-left: 0; margin-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">LA <span>MUERTE</span></div>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="family.html" class="active">О семье</a>
+      <a href="index.html#join">Вступить</a>
+      <a href="index.html#about">О нас</a>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>История семьи <em>La Muerte</em></h1>
+    <p>Здесь — наша душа, наши корни и наши люди. Прочитай — и пойми, кто мы есть.</p>
+  </section>
+
+  <section class="block">
+    <h2>Кто мы</h2>
+    <p>
+      <em>La Muerte</em> — это не просто команда в игре. Это братство, которое живёт
+      по своим законам. Мы появились из идеи, что настоящая сила — не в количестве,
+      а в верности друг другу.
+    </p>
+    <p>
+      Здесь не важны твои прежние заслуги. Важно, кто ты есть сейчас и готов ли ты
+      идти с нами до конца. Мы принимаем не всех — но тех, кого приняли, не бросаем
+      никогда.
+    </p>
+  </section>
+
+  <section class="block">
+    <h2>Наша история</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="year">НАЧАЛО</div>
+        <h4>Рождение семьи</h4>
+        <p>Несколько человек, объединённых общей идеей, решили создать не команду, а семью — где доверие выше выгоды.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">РОСТ</div>
+        <h4>Первые союзники</h4>
+        <p>К нам присоединились те, кто разделял наши ценности. Семья росла — и вместе с ней росла её сила.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">ИСПЫТАНИЯ</div>
+        <h4>Проверка временем</h4>
+        <p>Были и трудные времена. Но именно они показали, кто настоящий, а кто случайный. Мы стали только крепче.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">СЕГОДНЯ</div>
+        <h4>Единая семья</h4>
+        <p>Сейчас La Muerte — это сплочённое братство, где каждый знает своё место и готов подставить плечо.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">ЗАВТРА</div>
+        <h4>Нас ждёт большее</h4>
+        <p>Мы не стоим на месте. Впереди — новые вершины, новые братья и новые победы.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Наши ценности</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>Верность</h3>
+        <p>Слово, данное семье, — закон. Мы не предаём своих.</p>
+      </div>
+      <div class="card">
+       
