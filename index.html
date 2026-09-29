@@ -36,6 +36,7 @@
       pointer-events: none;
     }
 
+    /* ---------- Header ---------- */
     header {
       background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(8px);
@@ -50,11 +51,18 @@
       flex-wrap: wrap;
       gap: 1rem;
     }
+
     header .logo {
       font-family: 'Cinzel', serif;
       font-size: 1.25rem;
       letter-spacing: 3px;
       color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    header .logo:hover {
+      opacity: 0.8;
     }
     header .logo span { color: var(--accent); }
 
@@ -68,6 +76,7 @@
     }
     nav a:hover { color: #fff; }
 
+    /* ---------- Hero ---------- */
     .hero {
       padding: 6rem 2rem 5rem;
       text-align: center;
@@ -126,6 +135,7 @@
       box-shadow: 0 8px 24px rgba(192, 57, 43, 0.5);
     }
 
+    /* ---------- Секции ---------- */
     section.block {
       padding: 4rem 2rem;
       max-width: 960px;
@@ -180,46 +190,6 @@
       color: var(--accent);
       font-style: normal;
       font-weight: 600;
-    }
-
-    .timeline {
-      position: relative;
-      max-width: 720px;
-      margin: 0 auto;
-      padding-left: 2rem;
-      border-left: 2px solid var(--border);
-    }
-    .timeline-item {
-      position: relative;
-      padding: 0 0 2rem 1.5rem;
-    }
-    .timeline-item:last-child { padding-bottom: 0; }
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: -2.55rem;
-      top: 0.4rem;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.25);
-    }
-    .timeline-item .year {
-      font-family: 'Cinzel', serif;
-      color: var(--accent);
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      margin-bottom: 0.25rem;
-    }
-    .timeline-item h4 {
-      color: #fff;
-      font-size: 1.05rem;
-      margin-bottom: 0.35rem;
-    }
-    .timeline-item p {
-      color: var(--muted);
-      font-size: 0.95rem;
     }
 
     .rules {
@@ -416,9 +386,9 @@
 </head>
 <body>
   <header>
-    <div class="logo">LA <span>MUERTE</span></div>
+    <a href="index.html" class="logo">LA <span>MUERTE</span></a>
     <nav>
-      <a href="#home">Главная</a>
+      <a href="index.html">Главная</a>
       <a href="family.html">О семье</a>
       <a onclick="openModal()">Вступить</a>
       <a href="#about">О нас</a>
@@ -438,6 +408,9 @@
       делом и словом. Здесь не спрашивают, откуда ты пришёл — здесь смотрят, кто ты есть.
       Мы держимся друг за друга, потому что поодиночке не выживают.
     </p>
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="family.html" class="btn" style="display:inline-block;padding:0.9rem 2rem;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;letter-spacing:1px;">Узнать больше о семье →</a>
+    </div>
   </section>
 
   <section class="block">
@@ -541,19 +514,16 @@
       statusEl.className = 'form-status';
 
       try {
-        // Формируем данные
         const formData = new URLSearchParams();
         formData.append('realName', realName);
         formData.append('age', age);
         formData.append('icName', icName);
 
-        // Отправляем
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
           body: formData
         });
 
-        // Google Apps Script вернёт JSON с результатом
         const result = await response.json();
 
         if (result.status === 'ok') {
@@ -569,7 +539,7 @@
         }
 
       } catch (err) {
-        statusEl.textContent = '❌ Ошибка: ' + err.message + '. Напиши нам вручную.';
+        statusEl.textContent = '❌ Ошибка: ' + err.message;
         statusEl.className = 'form-status err';
       } finally {
         btn.disabled = false;
