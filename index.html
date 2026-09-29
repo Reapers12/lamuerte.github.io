@@ -19,7 +19,6 @@
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      /* Красно-чёрный огонь — тёмная текстура пламени */
       background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
       background-color: #050505;
       color: var(--text);
@@ -28,7 +27,6 @@
       position: relative;
     }
 
-    /* Умеренное затемнение — огонь видно, но текст читается */
     body::before {
       content: "";
       position: fixed;
@@ -38,7 +36,6 @@
       pointer-events: none;
     }
 
-    /* ---------- Header ---------- */
     header {
       background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(8px);
@@ -71,7 +68,6 @@
     }
     nav a:hover { color: #fff; }
 
-    /* ---------- Hero ---------- */
     .hero {
       padding: 6rem 2rem 5rem;
       text-align: center;
@@ -130,7 +126,6 @@
       box-shadow: 0 8px 24px rgba(192, 57, 43, 0.5);
     }
 
-    /* ---------- Секции ---------- */
     section.block {
       padding: 4rem 2rem;
       max-width: 960px;
@@ -174,7 +169,6 @@
       font-size: 0.95rem;
     }
 
-    /* ---------- О семье ---------- */
     .family-intro {
       text-align: center;
       color: var(--muted);
@@ -188,7 +182,6 @@
       font-weight: 600;
     }
 
-    /* Таймлайн */
     .timeline {
       position: relative;
       max-width: 720px;
@@ -229,7 +222,6 @@
       font-size: 0.95rem;
     }
 
-    /* Правила */
     .rules {
       list-style: none;
       max-width: 720px;
@@ -256,7 +248,6 @@
       margin-right: 0.5rem;
     }
 
-    /* ---------- МОДАЛЬНОЕ ОКНО ---------- */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -330,7 +321,6 @@
       transform: rotate(90deg);
     }
 
-    /* ---------- Форма ---------- */
     .form-group { margin-bottom: 1.25rem; }
 
     .form-group label {
@@ -405,7 +395,6 @@
     .form-status.ok { color: #4caf50; }
     .form-status.err { color: var(--accent); }
 
-    /* ---------- Footer ---------- */
     footer {
       background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(6px);
@@ -417,7 +406,6 @@
     }
     footer span { color: var(--accent); }
 
-    /* ---------- Мобильная адаптация ---------- */
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; }
       nav a { margin-left: 0; margin-right: 1rem; }
@@ -437,14 +425,12 @@
     </nav>
   </header>
 
-  <!-- HERO -->
   <section class="hero" id="home">
     <h1>Добро пожаловать <br>в семью <em>La Muerte</em></h1>
     <p>Мы не просто команда. Мы — семья. Здесь каждый найдёт своё место, своё дело и своих людей.</p>
     <a onclick="openModal()" class="btn">Вступить</a>
   </section>
 
-  <!-- О СЕМЬЕ -->
   <section class="block" id="family">
     <h2>О семье</h2>
     <p class="family-intro">
@@ -454,7 +440,6 @@
     </p>
   </section>
 
-  <!-- ПРАВИЛА -->
   <section class="block">
     <h2>Правила семьи</h2>
     <ul class="rules">
@@ -466,7 +451,6 @@
     </ul>
   </section>
 
-  <!-- О НАС -->
   <section class="block" id="about">
     <h2>О нас</h2>
     <div class="cards">
@@ -485,7 +469,6 @@
     </div>
   </section>
 
-  <!-- МОДАЛЬНОЕ ОКНО -->
   <div class="modal-overlay" id="joinModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal()">×</button>
@@ -558,24 +541,35 @@
       statusEl.className = 'form-status';
 
       try {
-        await fetch(SCRIPT_URL, {
+        // Формируем данные
+        const formData = new URLSearchParams();
+        formData.append('realName', realName);
+        formData.append('age', age);
+        formData.append('icName', icName);
+
+        // Отправляем
+        const response = await fetch(SCRIPT_URL, {
           method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ realName, age, icName })
+          body: formData
         });
 
-        statusEl.textContent = '✅ Заявка отправлена! Ожидай ответа куратора.';
-        statusEl.className = 'form-status ok';
+        // Google Apps Script вернёт JSON с результатом
+        const result = await response.json();
 
-        document.getElementById('joinForm').reset();
+        if (result.status === 'ok') {
+          statusEl.textContent = '✅ Заявка отправлена! Ожидай ответа куратора.';
+          statusEl.className = 'form-status ok';
+          document.getElementById('joinForm').reset();
 
-        setTimeout(() => {
-          closeModal();
-        }, 3000);
+          setTimeout(() => {
+            closeModal();
+          }, 3000);
+        } else {
+          throw new Error(result.message || 'Ошибка на стороне сервера');
+        }
 
       } catch (err) {
-        statusEl.textContent = '❌ Ошибка отправки. Попробуй ещё раз.';
+        statusEl.textContent = '❌ Ошибка: ' + err.message + '. Напиши нам вручную.';
         statusEl.className = 'form-status err';
       } finally {
         btn.disabled = false;
