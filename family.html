@@ -19,7 +19,8 @@
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      background-color: #050505;
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
@@ -30,13 +31,13 @@
       content: "";
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       z-index: -1;
       pointer-events: none;
     }
 
     header {
-      background: rgba(10, 10, 10, 0.85);
+      background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
       padding: 1rem 2rem;
@@ -68,7 +69,6 @@
     nav a:hover { color: #fff; }
     nav a.active { color: #fff; }
 
-    /* Hero страницы */
     .page-hero {
       padding: 5rem 2rem 3rem;
       text-align: center;
@@ -78,7 +78,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.25), transparent 60%);
+      background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.3), transparent 60%);
       pointer-events: none;
     }
     .page-hero h1 {
@@ -199,10 +199,10 @@
       margin: 0;
     }
 
-    /* Состав семьи */
+    /* Состав */
     .members {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1.25rem;
     }
     .member {
@@ -240,7 +240,7 @@
     }
     .member .role {
       color: var(--accent);
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       letter-spacing: 1px;
       text-transform: uppercase;
       font-family: 'Cinzel', serif;
@@ -272,7 +272,6 @@
       margin-right: 0.5rem;
     }
 
-    /* Назад */
     .back-block {
       text-align: center;
       padding: 2rem 2rem 4rem;
@@ -296,7 +295,7 @@
     }
 
     footer {
-      background: rgba(8, 8, 8, 0.9);
+      background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(6px);
       border-top: 1px solid var(--border);
       color: #666;
@@ -381,4 +380,59 @@
         <p>Слово, данное семье, — закон. Мы не предаём своих.</p>
       </div>
       <div class="card">
-       
+        <h3>Уважение</h3>
+        <p>Каждый брат и сестра заслуживают уважения — без исключений.</p>
+      </div>
+      <div class="card">
+        <h3>Братство</h3>
+        <p>Мы — одна семья. В беде и в радости, всегда рядом.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Состав семьи</h2>
+    <div class="members">
+      <div class="member">
+        <div class="avatar">Л</div>
+        <h3>Лидер</h3>
+        <div class="role">Глава семьи</div>
+      </div>
+      <div class="member">
+        <div class="avatar">К</div>
+        <h3>Куратор</h3>
+        <div class="role">Наставник</div>
+      </div>
+      <div class="member">
+        <div class="avatar">Б</div>
+        <h3>Брат</h3>
+        <div class="role">Участник</div>
+      </div>
+      <div class="member">
+        <div class="avatar">С</div>
+        <h3>Сестра</h3>
+        <div class="role">Участница</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Правила семьи</h2>
+    <ul class="rules">
+      <li><strong>I.</strong> Слово, данное семье, — закон. Не нарушаем.</li>
+      <li><strong>II.</strong> Своих не бросаем — ни в беде, ни в споре.</li>
+      <li><strong>III.</strong> Уважение к каждому брату и сестре — обязательно.</li>
+      <li><strong>IV.</strong> Внутренние конфликты решаем внутри семьи.</li>
+      <li><strong>V.</strong> Семья — это не место, а люди. Береги их.</li>
+    </ul>
+  </section>
+
+  <div class="back-block">
+    <a href="index.html" class="btn-back">← Вернуться на главную</a>
+  </div>
+
+  <footer>
+    © 2024–2026 <span>La Muerte</span> — Все права защищены.
+  </footer>
+</body>
+</html>
