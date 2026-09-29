@@ -14,7 +14,7 @@
       --border: #222;
       --text: #eaeaea;
       --muted: #999;
-      --accent: #c0392b;   /* кроваво-красный акцент */
+      --accent: #c0392b;
     }
 
     body {
@@ -37,6 +37,8 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     header .logo {
       font-family: 'Cinzel', serif;
@@ -91,7 +93,8 @@
       position: relative;
     }
 
-    .hero button {
+    .hero .btn {
+      display: inline-block;
       padding: 0.9rem 2rem;
       background: var(--accent);
       color: #fff;
@@ -101,10 +104,11 @@
       font-size: 1rem;
       font-weight: 600;
       letter-spacing: 1px;
+      text-decoration: none;
       transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
       position: relative;
     }
-    .hero button:hover {
+    .hero .btn:hover {
       background: #e04a3a;
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(192, 57, 43, 0.35);
@@ -152,6 +156,160 @@
       font-size: 0.95rem;
     }
 
+    /* ---------- О семье ---------- */
+    .family-intro {
+      text-align: center;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 3rem;
+      font-size: 1.05rem;
+    }
+    .family-intro em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* Таймлайн */
+    .timeline {
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+      padding-left: 2rem;
+      border-left: 2px solid var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      padding: 0 0 2rem 1.5rem;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -2.55rem;
+      top: 0.4rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.15);
+    }
+    .timeline-item .year {
+      font-family: 'Cinzel', serif;
+      color: var(--accent);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.25rem;
+    }
+    .timeline-item h4 {
+      color: #fff;
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+    }
+    .timeline-item p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Правила */
+    .rules {
+      list-style: none;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .rules li {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.85rem;
+      color: var(--text);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .rules li:hover {
+      transform: translateX(6px);
+      border-color: var(--accent);
+    }
+    .rules li strong {
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      margin-right: 0.5rem;
+    }
+
+    /* ---------- Форма заявки ---------- */
+    .join-form {
+      max-width: 520px;
+      margin: 0 auto 3rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input::placeholder {
+      color: #555;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit:hover {
+      background: #e04a3a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.35);
+    }
+
+    .form-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+
     /* ---------- Footer ---------- */
     footer {
       background: #080808;
@@ -162,6 +320,18 @@
       font-size: 0.9rem;
     }
     footer span { color: var(--accent); }
+
+    /* ---------- Мобильная адаптация ---------- */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav a {
+        margin-left: 0;
+        margin-right: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -169,17 +339,66 @@
     <div class="logo">LA <span>MUERTE</span></div>
     <nav>
       <a href="#home">Главная</a>
+      <a href="#family">О семье</a>
       <a href="#about">О нас</a>
       <a href="#join">Вступить</a>
     </nav>
   </header>
 
+  <!-- HERO -->
   <section class="hero" id="home">
     <h1>Добро пожаловать <br>в семью <em>La Muerte</em></h1>
     <p>Мы не просто команда. Мы — семья. Здесь каждый найдёт своё место, своё дело и своих людей.</p>
-    <button onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">Вступить</button>
+    <a href="#join" class="btn">Вступить</a>
   </section>
 
+  <!-- О СЕМЬЕ -->
+  <section class="block" id="family">
+    <h2>О семье</h2>
+    <p class="family-intro">
+      <em>La Muerte</em> — это не просто название. Это братство, проверенное временем,
+      делом и словом. Здесь не спрашивают, откуда ты пришёл — здесь смотрят, кто ты есть.
+      Мы держимся друг за друга, потому что поодиночке не выживают.
+    </p>
+
+    <h3 style="font-family:'Cinzel',serif;color:#fff;text-align:center;margin-bottom:2rem;font-size:1.25rem;">Наша история</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="year">НАЧАЛО</div>
+        <h4>Рождение семьи</h4>
+        <p>Несколько человек, объединённых общей идеей, решили создать не команду, а семью — где доверие выше выгоды.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">РОСТ</div>
+        <h4>Первые союзники</h4>
+        <p>К нам присоединились те, кто разделял наши ценности. Семья росла — и вместе с ней росла её сила.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">СЕГОДНЯ</div>
+        <h4>Единая семья</h4>
+        <p>Сейчас La Muerte — это сплочённое братство, где каждый знает своё место и готов подставить плечо.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">ЗАВТРА</div>
+        <h4>Нас ждёт большее</h4>
+        <p>Мы не стоим на месте. Впереди — новые вершины, новые братья и новые победы.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПРАВИЛА -->
+  <section class="block">
+    <h2>Правила семьи</h2>
+    <ul class="rules">
+      <li><strong>I.</strong> Слово, данное семье, — закон. Не нарушаем.</li>
+      <li><strong>II.</strong> Своих не бросаем — ни в беде, ни в споре.</li>
+      <li><strong>III.</strong> Уважение к каждому брату и сестре — обязательно.</li>
+      <li><strong>IV.</strong> Внутренние конфликты решаем внутри семьи.</li>
+      <li><strong>V.</strong> Семья — это не место, а люди. Береги их.</li>
+    </ul>
+  </section>
+
+  <!-- О НАС -->
   <section class="block" id="about">
     <h2>О нас</h2>
     <div class="cards">
@@ -198,16 +417,38 @@
     </div>
   </section>
 
+  <!-- ВСТУПИТЬ -->
   <section class="block" id="join">
     <h2>Вступить в семью</h2>
+
+    <form class="join-form" id="joinForm">
+      <div class="form-group">
+        <label for="realName">Реальное имя</label>
+        <input type="text" id="realName" name="realName" placeholder="Например: Александр" required>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Возраст</label>
+        <input type="number" id="age" name="age" min="14" max="99" placeholder="Например: 18" required>
+      </div>
+
+      <div class="form-group">
+        <label for="icName">IC имя</label>
+        <input type="text" id="icName" name="icName" placeholder="Имя персонажа в игре" required>
+      </div>
+
+      <button type="submit" class="btn-submit">Отправить заявку</button>
+      <p class="form-note">После отправки вы будете перенаправлены в наш Discord.</p>
+    </form>
+
     <div class="cards">
       <div class="card">
         <h3>Шаг 1</h3>
-        <p>Оставь заявку в нашем Discord или Telegram.</p>
+        <p>Заполни форму заявки выше.</p>
       </div>
       <div class="card">
         <h3>Шаг 2</h3>
-        <p>Пройди короткое собеседование с куратором.</p>
+        <p>Пройди короткое собеседование с куратором в Discord.</p>
       </div>
       <div class="card">
         <h3>Шаг 3</h3>
@@ -219,5 +460,31 @@
   <footer>
     © 2025 <span>La Muerte</span> — семья, а не просто название.
   </footer>
+
+  <script>
+    document.getElementById('joinForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const realName = document.getElementById('realName').value.trim();
+      const age = document.getElementById('age').value.trim();
+      const icName = document.getElementById('icName').value.trim();
+
+      const message =
+        '📝 Новая заявка в La Muerte\n' +
+        '━━━━━━━━━━━━━━━\n' +
+        '👤 Реальное имя: ' + realName + '\n' +
+        '🎂 Возраст: ' + age + '\n' +
+        '🎭 IC имя: ' + icName + '\n' +
+        '━━━━━━━━━━━━━━━';
+
+      navigator.clipboard.writeText(message).then(function () {
+        alert('Заявка скопирована!\n\nВставь её в Discord в канале заявок.');
+        window.open('https://discord.gg/WcVJEfuwP', '_blank');
+      }).catch(function () {
+        alert('Скопируй заявку вручную:\n\n' + message);
+        window.open('https://discord.gg/WcVJEfuwP', '_blank');
+      });
+    });
+  </script>
 </body>
 </html>
