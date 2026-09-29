@@ -66,6 +66,7 @@
       cursor: pointer;
     }
     nav a:hover { color: #fff; }
+    nav a.active { color: #fff; }
 
     .hero {
       padding: 6rem 2rem 5rem;
@@ -179,46 +180,6 @@
       color: var(--accent);
       font-style: normal;
       font-weight: 600;
-    }
-
-    .timeline {
-      position: relative;
-      max-width: 720px;
-      margin: 0 auto;
-      padding-left: 2rem;
-      border-left: 2px solid var(--border);
-    }
-    .timeline-item {
-      position: relative;
-      padding: 0 0 2rem 1.5rem;
-    }
-    .timeline-item:last-child { padding-bottom: 0; }
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: -2.55rem;
-      top: 0.4rem;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.25);
-    }
-    .timeline-item .year {
-      font-family: 'Cinzel', serif;
-      color: var(--accent);
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      margin-bottom: 0.25rem;
-    }
-    .timeline-item h4 {
-      color: #fff;
-      font-size: 1.05rem;
-      margin-bottom: 0.35rem;
-    }
-    .timeline-item p {
-      color: var(--muted);
-      font-size: 0.95rem;
     }
 
     .rules {
@@ -417,8 +378,8 @@
   <header>
     <div class="logo">LA <span>MUERTE</span></div>
     <nav>
-      <a href="#home">Главная</a>
-      <a href="#family">О семье</a>
+      <a href="index.html" class="active">Главная</a>
+      <a href="family.html">О семье</a>
       <a onclick="openModal()">Вступить</a>
       <a href="#about">О нас</a>
     </nav>
@@ -437,29 +398,8 @@
       делом и словом. Здесь не спрашивают, откуда ты пришёл — здесь смотрят, кто ты есть.
       Мы держимся друг за друга, потому что поодиночке не выживают.
     </p>
-
-    <h3 style="font-family:'Cinzel',serif;color:#fff;text-align:center;margin-bottom:2rem;font-size:1.25rem;text-shadow:0 2px 12px rgba(0,0,0,0.8);">Наша история</h3>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="year">НАЧАЛО</div>
-        <h4>Рождение семьи</h4>
-        <p>Несколько человек, объединённых общей идеей, решили создать не команду, а семью — где доверие выше выгоды.</p>
-      </div>
-      <div class="timeline-item">
-        <div class="year">РОСТ</div>
-        <h4>Первые союзники</h4>
-        <p>К нам присоединились те, кто разделял наши ценности. Семья росла — и вместе с ней росла её сила.</p>
-      </div>
-      <div class="timeline-item">
-        <div class="year">СЕГОДНЯ</div>
-        <h4>Единая семья</h4>
-        <p>Сейчас La Muerte — это сплочённое братство, где каждый знает своё место и готов подставить плечо.</p>
-      </div>
-      <div class="timeline-item">
-        <div class="year">ЗАВТРА</div>
-        <h4>Нас ждёт большее</h4>
-        <p>Мы не стоим на месте. Впереди — новые вершины, новые братья и новые победы.</p>
-      </div>
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="family.html" class="btn" style="display:inline-block;padding:0.9rem 2rem;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;letter-spacing:1px;">Узнать больше о семье →</a>
     </div>
   </section>
 
@@ -547,12 +487,8 @@
   </footer>
 
   <script>
-    /* ============================================================
-       ССЫЛКА НА GOOGLE APPS SCRIPT (уже вставлена)
-       ============================================================ */
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4ocygR4FyvTSHkC1zz1BVNRXGTPP8EthwAexlxkMvxO2t3sZ72JUO9m1ncBpuWvyxqg/exec';
 
-    /* ---------- Модальное окно ---------- */
     function openModal() {
       document.getElementById('joinModal').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -573,7 +509,6 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    /* ---------- Отправка формы в Google Sheets ---------- */
     document.getElementById('joinForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
