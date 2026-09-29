@@ -20,25 +20,26 @@
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
-      background-color: #0a0a0a;
+      background-color: #050505;
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
       position: relative;
     }
 
+    /* Двойное затемнение — почти чёрный фон */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.78);
+      background: rgba(0, 0, 0, 0.93);
       z-index: -1;
       pointer-events: none;
     }
 
     /* ---------- Header ---------- */
     header {
-      background: rgba(10, 10, 10, 0.85);
+      background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
       padding: 1rem 2rem;
@@ -79,7 +80,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.25), transparent 60%);
+      background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.2), transparent 60%);
       pointer-events: none;
     }
 
@@ -259,7 +260,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.92);
       backdrop-filter: blur(6px);
       z-index: 100;
       justify-content: center;
@@ -405,7 +406,7 @@
 
     /* ---------- Footer ---------- */
     footer {
-      background: rgba(8, 8, 8, 0.9);
+      background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(6px);
       border-top: 1px solid var(--border);
       color: #666;
