@@ -50,11 +50,18 @@
       flex-wrap: wrap;
       gap: 1rem;
     }
+
     header .logo {
       font-family: 'Cinzel', serif;
       font-size: 1.25rem;
       letter-spacing: 3px;
       color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    header .logo:hover {
+      opacity: 0.8;
     }
     header .logo span { color: var(--accent); }
 
@@ -121,6 +128,10 @@
     section.block p {
       color: var(--muted);
       margin-bottom: 1rem;
+      text-align: center;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
     }
     section.block p em {
       color: var(--accent);
@@ -155,9 +166,9 @@
       color: var(--muted);
       font-size: 0.95rem;
       margin: 0;
+      text-align: left;
     }
 
-    /* Таймлайн */
     .timeline {
       position: relative;
       max-width: 720px;
@@ -197,9 +208,9 @@
       color: var(--muted);
       font-size: 0.95rem;
       margin: 0;
+      text-align: left;
     }
 
-    /* Состав */
     .members {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -313,11 +324,11 @@
 </head>
 <body>
   <header>
-    <div class="logo">LA <span>MUERTE</span></div>
+    <a href="index.html" class="logo">LA <span>MUERTE</span></a>
     <nav>
       <a href="index.html">Главная</a>
       <a href="family.html" class="active">О семье</a>
-      <a href="index.html#join">Вступить</a>
+      <a href="index.html">Вступить</a>
       <a href="index.html#about">О нас</a>
     </nav>
   </header>
@@ -395,44 +406,4 @@
     <div class="members">
       <div class="member">
         <div class="avatar">Л</div>
-        <h3>Лидер</h3>
-        <div class="role">Глава семьи</div>
-      </div>
-      <div class="member">
-        <div class="avatar">К</div>
-        <h3>Куратор</h3>
-        <div class="role">Наставник</div>
-      </div>
-      <div class="member">
-        <div class="avatar">Б</div>
-        <h3>Брат</h3>
-        <div class="role">Участник</div>
-      </div>
-      <div class="member">
-        <div class="avatar">С</div>
-        <h3>Сестра</h3>
-        <div class="role">Участница</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="block">
-    <h2>Правила семьи</h2>
-    <ul class="rules">
-      <li><strong>I.</strong> Слово, данное семье, — закон. Не нарушаем.</li>
-      <li><strong>II.</strong> Своих не бросаем — ни в беде, ни в споре.</li>
-      <li><strong>III.</strong> Уважение к каждому брату и сестре — обязательно.</li>
-      <li><strong>IV.</strong> Внутренние конфликты решаем внутри семьи.</li>
-      <li><strong>V.</strong> Семья — это не место, а люди. Береги их.</li>
-    </ul>
-  </section>
-
-  <div class="back-block">
-    <a href="index.html" class="btn-back">← Вернуться на главную</a>
-  </div>
-
-  <footer>
-    © 2024–2026 <span>La Muerte</span> — Все права защищены.
-  </footer>
-</body>
-</html>
+        <
