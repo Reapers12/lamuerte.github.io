@@ -36,7 +36,6 @@
       pointer-events: none;
     }
 
-    /* ---------- Header ---------- */
     header {
       background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(8px);
@@ -62,9 +61,7 @@
       transition: opacity 0.2s;
       display: inline-block;
     }
-    header .logo:hover {
-      opacity: 0.75;
-    }
+    header .logo:hover { opacity: 0.75; }
     header .logo span { color: var(--accent); }
 
     nav a {
@@ -74,10 +71,10 @@
       font-size: 0.95rem;
       transition: color 0.2s;
       cursor: pointer;
+      white-space: nowrap;
     }
     nav a:hover { color: #fff; }
 
-    /* ---------- Hero ---------- */
     .hero {
       padding: 6rem 2rem 5rem;
       text-align: center;
@@ -136,7 +133,6 @@
       box-shadow: 0 8px 24px rgba(192, 57, 43, 0.5);
     }
 
-    /* ---------- Секции ---------- */
     section.block {
       padding: 4rem 2rem;
       max-width: 960px;
@@ -219,7 +215,6 @@
       margin-right: 0.5rem;
     }
 
-    /* ---------- Модальное окно ---------- */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -392,7 +387,8 @@
     <nav>
       <a href="index.html">Главная</a>
       <a href="family.html">О семье</a>
-      <a onclick="openModal()">Вступить</a>
+      <a href="transport.html">О транспорте</a>
+      <a onclick="openModal()">Вступить в семью</a>
       <a href="#about">О нас</a>
     </nav>
   </header>
