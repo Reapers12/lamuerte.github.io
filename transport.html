@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>О транспорте — La Muerte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --panel: rgba(17, 17, 17, 0.95);
+      --border: #222;
+      --text: #eaeaea;
+      --muted: #999;
+      --accent: #c0392b;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      background-color: #050505;
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    header {
+      background: rgba(5, 5, 5, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    header .logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      letter-spacing: 3px;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      display: inline-block;
+    }
+    header .logo:hover { opacity: 0.75; }
+    header .logo span { color: var(--accent); }
+
+    nav a {
+      color: var(--muted);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    nav a:hover { color: #fff; }
+    nav a.active { color: #fff; }
+
+    .page-hero {
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+    }
+    .page-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.3), transparent 60%);
+      pointer-events: none;
+    }
+    .page-hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+      margin-bottom: 1rem;
+      position: relative;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+    }
+    .page-hero h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+    .page-hero p {
+      color: #ccc;
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+    }
+
+    section.block {
+      padding: 3rem 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    section.block h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+    }
+    section.block p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      text-align: center;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    section.block p em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+    .card {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .card h3 {
+      font-family: 'Cinzel', serif;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    .card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0;
+      text-align: left;
+    }
+
+    /* Транспорт — карточки с иконками */
+    .vehicle {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .vehicle:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .vehicle .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .vehicle h3 {
+      font-family: 'Cinzel', serif;
+      color: #fff;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
+    .vehicle p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0;
+      text-align: center;
+    }
+
+    .rules {
+      list-style: none;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .rules li {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.85rem;
+      color: var(--text);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .rules li:hover {
+      transform: translateX(6px);
+      border-color: var(--accent);
+    }
+    .rules li strong {
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      margin-right: 0.5rem;
+    }
+
+    .back-block {
+      text-align: center;
+      padding: 2rem 2rem 4rem;
+    }
+    .btn-back {
+      display: inline-block;
+      padding: 0.8rem 1.75rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: rgba(5, 5, 5, 0.95);
+      backdrop-filter: blur(6px);
+      border-top: 1px solid var(--border);
+      color: #666;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+    }
+    footer span { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; }
+      nav a { margin-left: 0; margin-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">LA <span>MUERTE</span></a>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="family.html">О семье</a>
+      <a href="transport.html" class="active">О транспорте</a>
+      <a href="index.html">Вступить в семью</a>
+      <a href="index.html#about">О нас</a>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>Автопарк <em>La Muerte</em></h1>
+    <p>Наш транспорт — это не просто машины. Это мощь, стиль и скорость семьи.</p>
+  </section>
+
+  <section class="block">
+    <h2>О нашем автопарке</h2>
+    <p>
+      <em>La Muerte</em> передвигается только на достойном транспорте. Мы не гонимся
+      за количеством — важна надёжность, скорость и внешний вид.
+    </p>
+    <p>
+      Каждый автомобиль в семье закреплён за конкретным братом или сестрой.
+      Машина — это продолжение статуса семьи. Мы следим за состоянием
+      и не позволяем себе ездить на чём попало.
+    </p>
+  </section>
+
+  <section class="block">
+    <h2>Наш транспорт</h2>
+    <div class="cards">
+      <div class="vehicle">
+        <span class="icon">🏍</span>
+        <h3>Мотоциклы</h3>
+        <p>Быстрые, манёвренные — для разведки и скорости.</p>
+      </div>
+      <div class="vehicle">
+        <span class="icon">🚗</span>
+        <h3>Спорткары</h3>
+        <p>Для статусных выездов и гонок.</p>
+      </div>
+      <div class="vehicle">
+        <span class="icon">🚙</span>
+        <h3>Внедорожники</h3>
+        <p>Для сложных маршрутов и перевозки группы.</p>
+      </div>
+      <div class="vehicle">
+        <span class="icon">🚐</span>
+        <h3>Микроавтобусы</h3>
+        <p>Для массовых сборов и операций семьи.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Правила транспорта</h2>
+    <ul class="rules">
+      <li><strong>I.</strong> Машина — это лицо семьи. Следи за её состоянием.</li>
+      <li><strong>II.</strong> Не передавай транспорт посторонним без разрешения.</li>
+      <li><strong>III.</strong> Уважай чужой транспорт так же, как свой.</li>
+      <li><strong>IV.</strong> Повреждение транспорта брата — общая проблема семьи.</li>
+      <li><strong>V.</strong> Хочешь новую машину — обсуди с куратором.</li>
+    </ul>
+  </section>
+
+  <div class="back-block">
+    <a href="index.html" class="btn-back">← Вернуться на главную</a>
+  </div>
+
+  <footer>
+    © 2024–2026 <span>La Muerte</span> — Все права защищены.
+  </footer>
+</body>
+</html>
