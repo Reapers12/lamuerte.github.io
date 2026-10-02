@@ -139,6 +139,7 @@
       font-weight: 600;
     }
 
+    /* ---------- ТАБЛИЦА ТРАНСПОРТА ---------- */
     .vehicle-table {
       width: 100%;
       border-collapse: separate;
@@ -195,7 +196,6 @@
       text-align: center;
     }
 
-    /* ---------- КЛИКАБЕЛЬНАЯ КАРТИНКА ---------- */
     .vehicle-table .img-cell img {
       width: 110px;
       height: 70px;
@@ -207,7 +207,7 @@
       margin: 0 auto;
       background: #0d0d0d;
       padding: 4px;
-      cursor: zoom-in;                 /* курсор-лупа */
+      cursor: zoom-in;
     }
 
     .vehicle-table tbody tr:hover .img-cell img {
@@ -241,54 +241,6 @@
     .fuel-icon {
       display: inline-block;
       margin-right: 0.35rem;
-    }
-
-    .rules {
-      list-style: none;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .rules li {
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 0.85rem;
-      color: var(--text);
-      transition: transform 0.2s, border-color 0.2s;
-    }
-    .rules li:hover {
-      transform: translateX(6px);
-      border-color: var(--accent);
-    }
-    .rules li strong {
-      color: #fff;
-      font-family: 'Cinzel', serif;
-      margin-right: 0.5rem;
-    }
-
-    .back-block {
-      text-align: center;
-      padding: 2rem 2rem 4rem;
-    }
-    .btn-back {
-      display: inline-block;
-      padding: 0.8rem 1.75rem;
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      letter-spacing: 1px;
-      transition: border-color 0.2s, color 0.2s, transform 0.15s;
-    }
-    .btn-back:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-2px);
     }
 
     /* ---------- МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНКИ ---------- */
@@ -364,6 +316,54 @@
       to { transform: scale(1); opacity: 1; }
     }
 
+    .rules {
+      list-style: none;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .rules li {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.85rem;
+      color: var(--text);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .rules li:hover {
+      transform: translateX(6px);
+      border-color: var(--accent);
+    }
+    .rules li strong {
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      margin-right: 0.5rem;
+    }
+
+    .back-block {
+      text-align: center;
+      padding: 2rem 2rem 4rem;
+    }
+    .btn-back {
+      display: inline-block;
+      padding: 0.8rem 1.75rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
     footer {
       background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(6px);
@@ -436,6 +436,7 @@
       <a href="index.html">Главная</a>
       <a href="family.html">О семье</a>
       <a href="transport.html" class="active">О транспорте</a>
+      <a href="contracts.html">Контракты</a>
       <a href="index.html">Вступить в семью</a>
       <a href="index.html#about">О нас</a>
     </nav>
@@ -509,61 +510,4 @@
   <section class="block">
     <h2>Правила транспорта</h2>
     <ul class="rules">
-      <li><strong>I.</strong> Машина — это лицо семьи. Следи за её состоянием.</li>
-      <li><strong>II.</strong> Не передавай транспорт посторонним без разрешения.</li>
-      <li><strong>III.</strong> Уважай чужой транспорт так же, как свой.</li>
-      <li><strong>IV.</strong> Повреждение транспорта брата — общая проблема семьи.</li>
-      <li><strong>V.</strong> Хочешь новую машину — обсуди с куратором.</li>
-    </ul>
-  </section>
-
-  <div class="back-block">
-    <a href="index.html" class="btn-back">← Вернуться на главную</a>
-  </div>
-
-  <!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНКИ ========== -->
-  <div class="img-modal" id="imgModal">
-    <div class="img-modal-content">
-      <button class="img-modal-close" onclick="closeImage()">×</button>
-      <img id="imgModalImg" src="" alt="">
-      <p class="img-modal-caption" id="imgModalCaption"></p>
-    </div>
-  </div>
-
-  <footer>
-    © 2024–2026 <span>La Muerte</span> — Все права защищены.
-  </footer>
-
-  <script>
-    /* ---------- Открыть картинку ---------- */
-    function openImage(imgElement) {
-      const modal = document.getElementById('imgModal');
-      const modalImg = document.getElementById('imgModalImg');
-      const caption = document.getElementById('imgModalCaption');
-
-      modalImg.src = imgElement.src;
-      modalImg.alt = imgElement.alt;
-      caption.textContent = imgElement.alt;
-
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    /* ---------- Закрыть ---------- */
-    function closeImage() {
-      document.getElementById('imgModal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    /* Закрытие по клику на фон */
-    document.getElementById('imgModal').addEventListener('click', function (e) {
-      if (e.target === this) closeImage();
-    });
-
-    /* Закрытие по Escape */
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeImage();
-    });
-  </script>
-</body>
-</html>
+      <li><strong>I.</strong> Машина — это лицо семьи. Сле
