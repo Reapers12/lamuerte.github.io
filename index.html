@@ -463,7 +463,7 @@
         </div>
 
         <button type="submit" class="btn-submit" id="submitBtn">Отправить заявку</button>
-        <p class="form-note">Заявка уходит прямо в таблицу семьи.</p>
+        <p class="form-note">Заявка уходит прямо в Discord семьи.</p>
         <p class="form-status" id="formStatus"></p>
       </form>
     </div>
@@ -512,9 +512,9 @@
       statusEl.className = 'form-status';
 
       try {
+        // ⚠️ ВАЖНО: НЕТ заголовка Content-Type, иначе Apps Script блокирует CORS
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'join',
             realName: realName,
@@ -526,11 +526,10 @@
         const result = await response.json();
 
         if (result.status === 'ok') {
-          statusEl.textContent = '✅ Заявка отправлена! Ожидай ответа куратора.';
+          statusEl.textContent = '✅ Заявка отправлена в Discord! Ожидай ответа куратора.';
           statusEl.className = 'form-status ok';
           document.getElementById('joinForm').reset();
 
-          // Открываем Discord La Muerte
           setTimeout(() => {
             window.open('https://discord.gg/gv4arpXuvj', '_blank');
           }, 800);
