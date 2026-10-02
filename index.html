@@ -552,13 +552,15 @@
           statusEl.className = 'form-status ok';
           document.getElementById('joinForm').reset();
 
+          // ⏱ Открыть Discord через 5 секунд
           setTimeout(() => {
             window.open('https://discord.gg/gv4arpXuvj', '_blank');
-          }, 800);
+          }, 5000);
 
+          // Закрыть модалку через 6 секунд
           setTimeout(() => {
             closeModal();
-          }, 3000);
+          }, 6000);
         } else {
           throw new Error(result.message || 'Ошибка на стороне сервера');
         }
