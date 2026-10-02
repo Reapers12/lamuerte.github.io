@@ -299,7 +299,8 @@
       margin-bottom: 0.5rem;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group textarea {
       width: 100%;
       padding: 0.75rem 1rem;
       background: #0d0d0d;
@@ -311,9 +312,16 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .form-group input::placeholder { color: #555; }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
 
-    .form-group input:focus {
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #555; }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.25);
@@ -462,6 +470,11 @@
           <input type="text" id="icName" name="icName" placeholder="Имя персонажа в игре" required>
         </div>
 
+        <div class="form-group">
+          <label for="plans">Чем планируешь заниматься в семье?</label>
+          <textarea id="plans" name="plans" placeholder="Например: помогать с набором, участвовать в мероприятиях, развивать автопарк..." required></textarea>
+        </div>
+
         <button type="submit" class="btn-submit" id="submitBtn">Отправить заявку</button>
         <p class="form-note">Заявка уходит прямо в Discord семьи.</p>
         <p class="form-status" id="formStatus"></p>
@@ -474,7 +487,6 @@
   </footer>
 
   <script>
-    // ✅ URL из Apps Script (Web app)
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxaXSOMei9uVrTu4LpwMNrW8uhBYnr1oNlT7i8dkuuLcSC7HNk4EUXtbsr-vk-GNSOSJw/exec';
 
     function openModal() {
@@ -506,6 +518,7 @@
       const realName = document.getElementById('realName').value.trim();
       const age = document.getElementById('age').value.trim();
       const icName = document.getElementById('icName').value.trim();
+      const plans = document.getElementById('plans').value.trim();
 
       btn.disabled = true;
       btn.textContent = 'Отправка...';
@@ -513,14 +526,14 @@
       statusEl.className = 'form-status';
 
       try {
-        // БЕЗ заголовка Content-Type — иначе CORS блокирует Apps Script
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
           body: JSON.stringify({
             action: 'join',
             realName: realName,
             age: age,
-            icName: icName
+            icName: icName,
+            plans: plans
           })
         });
 
