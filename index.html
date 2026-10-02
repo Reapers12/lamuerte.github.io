@@ -370,6 +370,42 @@
     .form-status.ok { color: #4caf50; }
     .form-status.err { color: var(--accent); }
 
+    /* ---------- Блок успеха с кнопкой Discord ---------- */
+    .success-block {
+      display: none;
+      text-align: center;
+      padding: 1rem 0 0;
+    }
+    .success-block.show { display: block; }
+
+    .success-message {
+      color: #4caf50;
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-discord {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 1px;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-discord:hover {
+      background: #e04a3a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.5);
+    }
+
     footer {
       background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(6px);
@@ -485,6 +521,14 @@
         <p class="form-note">Заявка уходит прямо в Discord семьи.</p>
         <p class="form-status" id="formStatus"></p>
       </form>
+
+      <!-- Блок успеха с кнопкой Discord -->
+      <div class="success-block" id="successBlock">
+        <p class="success-message">✅ Заявка отправлена в Discord!</p>
+        <a href="https://discord.gg/gv4arpXuvj" target="_blank" rel="noopener" class="btn-discord">
+          💬 Открыть Discord
+        </a>
+      </div>
     </div>
   </div>
 
@@ -503,8 +547,17 @@
     function closeModal() {
       document.getElementById('joinModal').classList.remove('active');
       document.body.style.overflow = '';
-      document.getElementById('formStatus').textContent = '';
-      document.getElementById('formStatus').className = 'form-status';
+
+      // Сброс через небольшую задержку, чтобы анимация закрытия успела
+      setTimeout(() => {
+        document.getElementById('formStatus').textContent = '';
+        document.getElementById('formStatus').className = 'form-status';
+
+        // Возвращаем форму
+        document.getElementById('joinForm').style.display = '';
+        document.getElementById('successBlock').classList.remove('show');
+        document.getElementById('joinForm').reset();
+      }, 300);
     }
 
     document.getElementById('joinModal').addEventListener('click', function (e) {
@@ -548,19 +601,10 @@
         const result = await response.json();
 
         if (result.status === 'ok') {
-          statusEl.textContent = '✅ Заявка отправлена в Discord! Ожидай ответа куратора.';
-          statusEl.className = 'form-status ok';
-          document.getElementById('joinForm').reset();
+          // Скрываем форму, показываем кнопку Discord
+          document.getElementById('joinForm').style.display = 'none';
+          document.getElementById('successBlock').classList.add('show');
 
-          // ⏱ Открыть Discord через 5 секунд
-          setTimeout(() => {
-            window.open('https://discord.gg/gv4arpXuvj', '_blank');
-          }, 5000);
-
-          // Закрыть модалку через 6 секунд
-          setTimeout(() => {
-            closeModal();
-          }, 6000);
         } else {
           throw new Error(result.message || 'Ошибка на стороне сервера');
         }
@@ -568,7 +612,6 @@
       } catch (err) {
         statusEl.textContent = '❌ Ошибка: ' + err.message;
         statusEl.className = 'form-status err';
-      } finally {
         btn.disabled = false;
         btn.textContent = 'Отправить заявку';
       }
