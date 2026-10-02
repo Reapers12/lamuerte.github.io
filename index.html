@@ -370,7 +370,6 @@
     .form-status.ok { color: #4caf50; }
     .form-status.err { color: var(--accent); }
 
-    /* ---------- Блок успеха с кнопкой Discord ---------- */
     .success-block {
       display: none;
       text-align: center;
@@ -522,7 +521,6 @@
         <p class="form-status" id="formStatus"></p>
       </form>
 
-      <!-- Блок успеха с кнопкой Discord -->
       <div class="success-block" id="successBlock">
         <p class="success-message">✅ Заявка отправлена в Discord! Ожидайте ответа в Кратчайшие сроки!</p>
         <a href="https://discord.gg/gv4arpXuvj" target="_blank" rel="noopener" class="btn-discord">
@@ -558,9 +556,7 @@
       }, 300);
     }
 
-    document.getElementById('joinModal').addEventListener('click', function (e) {
-      if (e.target === this) closeModal();
-    });
+    /* ⛔ Закрытие по клику на фон УБРАНО — только крестик или Escape */
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeModal();
