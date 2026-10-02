@@ -548,12 +548,10 @@
       document.getElementById('joinModal').classList.remove('active');
       document.body.style.overflow = '';
 
-      // Сброс через небольшую задержку, чтобы анимация закрытия успела
       setTimeout(() => {
         document.getElementById('formStatus').textContent = '';
         document.getElementById('formStatus').className = 'form-status';
 
-        // Возвращаем форму
         document.getElementById('joinForm').style.display = '';
         document.getElementById('successBlock').classList.remove('show');
         document.getElementById('joinForm').reset();
@@ -601,10 +599,8 @@
         const result = await response.json();
 
         if (result.status === 'ok') {
-          // Скрываем форму, показываем кнопку Discord
           document.getElementById('joinForm').style.display = 'none';
           document.getElementById('successBlock').classList.add('show');
-
         } else {
           throw new Error(result.message || 'Ошибка на стороне сервера');
         }
