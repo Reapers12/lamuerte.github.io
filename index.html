@@ -472,6 +472,11 @@
         </div>
 
         <div class="form-group">
+          <label for="discord">Ваш Discord для связи</label>
+          <input type="text" id="discord" name="discord" placeholder="Например: username или username#1234" required>
+        </div>
+
+        <div class="form-group">
           <label for="plans">Чем планируешь заниматься в семье?</label>
           <textarea id="plans" name="plans" placeholder="Например: помогать с набором, участвовать в мероприятиях, развивать автопарк..." required></textarea>
         </div>
@@ -488,7 +493,7 @@
   </footer>
 
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqT1UoLcNr7M-MYnYLHOeE6RnOFFeXroSnDWkIS6XRgmXrbyJMsc6NpnO1qToV2cXmgw/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxaXSOMei9uVrTu4LpwMNrW8uhBYnr1oNlT7i8dkuuLcSC7HNk4EUXtbsr-vk-GNSOSJw/exec';
 
     function openModal() {
       document.getElementById('joinModal').classList.add('active');
@@ -519,6 +524,7 @@
       const realName = document.getElementById('realName').value.trim();
       const age = document.getElementById('age').value.trim();
       const icName = document.getElementById('icName').value.trim();
+      const discord = document.getElementById('discord').value.trim();
       const plans = document.getElementById('plans').value.trim();
 
       btn.disabled = true;
@@ -534,6 +540,7 @@
             realName: realName,
             age: age,
             icName: icName,
+            discord: discord,
             plans: plans
           })
         });
