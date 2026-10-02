@@ -474,7 +474,8 @@
   </footer>
 
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8VLJ2i6iQG7AF1BYW5iK1FIdZ740f_KWOrODXobGqKKRVUQpcQrOsODQIonLHJ4wFdg/exec'; 
+    // ⚠️ ВСТАВЬ СЮДА НОВЫЙ URL ИЗ APPS SCRIPT (Web app URL)
+    const SCRIPT_URL = 'https://script.google.com/macros/s/ВСТАВЬ_НОВЫЙ_URL/exec';
 
     function openModal() {
       document.getElementById('joinModal').classList.add('active');
@@ -512,7 +513,7 @@
       statusEl.className = 'form-status';
 
       try {
-        // ⚠️ ВАЖНО: НЕТ заголовка Content-Type, иначе Apps Script блокирует CORS
+        // БЕЗ заголовка Content-Type — иначе CORS блокирует Apps Script
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
           body: JSON.stringify({
