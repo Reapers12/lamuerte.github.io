@@ -512,14 +512,15 @@
       statusEl.className = 'form-status';
 
       try {
-        const formData = new URLSearchParams();
-        formData.append('realName', realName);
-        formData.append('age', age);
-        formData.append('icName', icName);
-
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
-          body: formData
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'join',
+            realName: realName,
+            age: age,
+            icName: icName
+          })
         });
 
         const result = await response.json();
@@ -528,6 +529,11 @@
           statusEl.textContent = '✅ Заявка отправлена! Ожидай ответа куратора.';
           statusEl.className = 'form-status ok';
           document.getElementById('joinForm').reset();
+
+          // Открываем Discord La Muerte
+          setTimeout(() => {
+            window.open('https://discord.gg/gv4arpXuvj', '_blank');
+          }, 800);
 
           setTimeout(() => {
             closeModal();
