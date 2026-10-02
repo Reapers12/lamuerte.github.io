@@ -316,6 +316,7 @@
       to { transform: scale(1); opacity: 1; }
     }
 
+    /* ---------- ПРАВИЛА ТРАНСПОРТА ---------- */
     .rules {
       list-style: none;
       max-width: 720px;
@@ -507,7 +508,61 @@
     </table>
   </section>
 
+  <!-- ========== ПРАВИЛА ТРАНСПОРТА ========== -->
   <section class="block">
     <h2>Правила транспорта</h2>
     <ul class="rules">
-      <li><strong>I.</strong> Машина — это лицо семьи. Сле
+      <li><strong>I.</strong> Машина — это лицо семьи. Следи за её состоянием.</li>
+      <li><strong>II.</strong> Не передавай транспорт посторонним без разрешения.</li>
+      <li><strong>III.</strong> Уважай чужой транспорт так же, как свой.</li>
+      <li><strong>IV.</strong> Повреждение транспорта брата — общая проблема семьи.</li>
+      <li><strong>V.</strong> Хочешь новую машину — обсуди с куратором.</li>
+    </ul>
+  </section>
+
+  <div class="back-block">
+    <a href="index.html" class="btn-back">← Вернуться на главную</a>
+  </div>
+
+  <!-- ========== МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНКИ ========== -->
+  <div class="img-modal" id="imgModal">
+    <div class="img-modal-content">
+      <button class="img-modal-close" onclick="closeImage()">×</button>
+      <img id="imgModalImg" src="" alt="">
+      <p class="img-modal-caption" id="imgModalCaption"></p>
+    </div>
+  </div>
+
+  <footer>
+    © 2024–2026 <span>La Muerte</span> — Все права защищены.
+  </footer>
+
+  <script>
+    function openImage(imgElement) {
+      const modal = document.getElementById('imgModal');
+      const modalImg = document.getElementById('imgModalImg');
+      const caption = document.getElementById('imgModalCaption');
+
+      modalImg.src = imgElement.src;
+      modalImg.alt = imgElement.alt;
+      caption.textContent = imgElement.alt;
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeImage() {
+      document.getElementById('imgModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('imgModal').addEventListener('click', function (e) {
+      if (e.target === this) closeImage();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeImage();
+    });
+  </script>
+</body>
+</html>
