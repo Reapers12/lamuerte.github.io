@@ -123,21 +123,22 @@
     .table-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-      max-width: 720px;
+      gap: 1rem;
+      max-width: 620px;
       margin: 0 auto;
     }
 
+    /* ========== КАРТОЧКА — УМЕНЬШЕНА ========== */
     .table-card {
       background: var(--panel);
       backdrop-filter: blur(6px);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
-      border-radius: 12px;
-      padding: 1.5rem 1.75rem;
+      border-radius: 10px;
+      padding: 0.85rem 1.15rem;   /* было 1.5rem 1.75rem */
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.85rem;               /* было 1rem */
       text-decoration: none;
       color: var(--text);
       transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
@@ -150,7 +151,7 @@
     }
 
     .table-card .card-icon {
-      font-size: 2.25rem;
+      font-size: 1.75rem;         /* было 2.25rem */
       flex-shrink: 0;
     }
 
@@ -161,19 +162,19 @@
     .table-card .card-title {
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
-      font-size: 1.15rem;
+      font-size: 1rem;            /* было 1.15rem */
       color: #fff;
       letter-spacing: 0.5px;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.15rem;     /* было 0.25rem */
     }
 
     .table-card .card-desc {
-      font-size: 0.9rem;
+      font-size: 0.8rem;          /* было 0.9rem */
       color: var(--muted);
     }
 
     .table-card .card-arrow {
-      font-size: 1.25rem;
+      font-size: 1.1rem;          /* было 1.25rem */
       color: var(--accent);
       transition: transform 0.2s;
       flex-shrink: 0;
@@ -251,8 +252,6 @@
         </div>
         <span class="card-arrow">→</span>
       </a>
-
-      <!-- Здесь можно добавить другие карточки -->
 
     </div>
   </section>
