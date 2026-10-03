@@ -80,7 +80,7 @@
     nav a.active { color: #fff; }
 
     .page-hero {
-      padding: 4rem 2rem 2rem;
+      padding: 4rem 2rem 1rem;   /* уменьшили нижний padding */
       text-align: center;
       position: relative;
     }
@@ -115,14 +115,15 @@
     }
 
     section.block {
-      padding: 2rem 2rem;
+      padding: 1rem 2rem;   /* уменьшили вертикальные отступы */
       max-width: 960px;
       margin: 0 auto;
     }
 
+    /* ========== АККОРДЕОН ========== */
     .accordion {
       max-width: 700px;
-      margin: 0 auto 1rem;
+      margin: 0 auto;
     }
 
     .accordion-header {
@@ -183,17 +184,10 @@
       margin-top: 0.5rem;
     }
 
-    /* ========== СЕТКА 2 КОЛОНКИ ДЛЯ ГРИБОВ ========== */
+    /* ========== СЕТКА 2 КОЛОНКИ (для руды и грибов) ========== */
     .contracts-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-    }
-
-    /* ========== СПИСОК 1 КОЛОНКА ДЛЯ МЕТАЛЛУРГИИ ========== */
-    .contracts-list {
-      display: flex;
-      flex-direction: column;
       gap: 0.5rem;
     }
 
@@ -281,7 +275,7 @@
       font-weight: 700;
       font-size: 1.35rem;
       color: #fff;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       text-align: center;
       letter-spacing: 0.5px;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
@@ -376,7 +370,7 @@
     <p>Актуальные закупочные цены на ресурсы для семьи.</p>
   </section>
 
-  <!-- ========== РАЗДЕЛ 1: МЕТАЛЛУРГИЯ ========== -->
+  <!-- ========== РАЗДЕЛ 1: МЕТАЛЛУРГИЯ (2 КОЛОНКИ) ========== -->
   <section class="block">
     <div class="accordion">
 
@@ -389,14 +383,14 @@
       </div>
 
       <div class="accordion-content">
-        <div class="contracts-list">
+        <div class="contracts-grid">
 
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🔨</span>
               <span class="contract-name">Олово</span>
             </div>
-            <span class="contract-payment">Оплата 33.000$</span>
+            <span class="contract-payment">33.000$</span>
           </div>
 
           <div class="contract-item">
@@ -404,7 +398,7 @@
               <span class="contract-icon">🔨</span>
               <span class="contract-name">Медь</span>
             </div>
-            <span class="contract-payment">Оплата 25.000$</span>
+            <span class="contract-payment">25.000$</span>
           </div>
 
           <div class="contract-item">
@@ -412,7 +406,7 @@
               <span class="contract-icon">🔨</span>
               <span class="contract-name">Серебро</span>
             </div>
-            <span class="contract-payment">Оплата 25.000$</span>
+            <span class="contract-payment">25.000$</span>
           </div>
 
           <div class="contract-item">
@@ -420,7 +414,7 @@
               <span class="contract-icon">🔨</span>
               <span class="contract-name">Железо</span>
             </div>
-            <span class="contract-payment">Оплата 25.000$</span>
+            <span class="contract-payment">25.000$</span>
           </div>
 
         </div>
@@ -429,7 +423,7 @@
     </div>
   </section>
 
-  <!-- ========== РАЗДЕЛ 2: ГРИБЫ ========== -->
+  <!-- ========== РАЗДЕЛ 2: ГРИБЫ (2 КОЛОНКИ) ========== -->
   <section class="block">
     <div class="accordion">
 
@@ -444,7 +438,6 @@
       <div class="accordion-content">
         <div class="contracts-grid">
 
-          <!-- 1 -->
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -453,7 +446,6 @@
             <span class="contract-payment">95.000$</span>
           </div>
 
-          <!-- 2 -->
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -462,7 +454,6 @@
             <span class="contract-payment">140.000$</span>
           </div>
 
-          <!-- 3 -->
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -471,7 +462,6 @@
             <span class="contract-payment">110.000$</span>
           </div>
 
-          <!-- 4 -->
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -480,7 +470,6 @@
             <span class="contract-payment">170.000$</span>
           </div>
 
-          <!-- 5 -->
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -489,7 +478,6 @@
             <span class="contract-payment">130.000$</span>
           </div>
 
-          <!-- 6 -->
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
