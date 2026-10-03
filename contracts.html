@@ -183,16 +183,10 @@
       margin-top: 0.5rem;
     }
 
-    /* ========== СЕТКА 2 КОЛОНКИ ========== */
     .contracts-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.5rem;
-    }
-
-    /* ========== ДУБ ПО ЦЕНТРУ ========== */
-    .contract-item.centered {
-      grid-column: 1 / -1;   /* растягивается на 2 колонки */
     }
 
     .contract-item {
@@ -213,6 +207,22 @@
       transform: translateX(6px);
       border-color: var(--accent);
       box-shadow: 0 8px 24px rgba(192, 57, 43, 0.2);
+    }
+
+    /* ========== ДУБ — ПО ЦЕНТРУ, БЕЗ РАСТЯГИВАНИЯ ========== */
+    .contract-item.centered {
+      grid-column: 1 / -1;
+      justify-content: center;   /* центрируем содержимое */
+      gap: 1rem;                 /* отступ между Дуб и ценой */
+    }
+
+    .contract-item.centered .contract-info {
+      flex: 0 0 auto;            /* не растягивается */
+      justify-content: center;
+    }
+
+    .contract-item.centered .contract-payment {
+      flex: 0 0 auto;
     }
 
     .contract-info {
@@ -345,6 +355,14 @@
         align-self: flex-end;
       }
 
+      .contract-item.centered {
+        align-items: center;
+      }
+
+      .contract-item.centered .contract-payment {
+        align-self: center;
+      }
+
       .section-title,
       .accordion-header {
         font-size: 1.1rem;
@@ -374,7 +392,7 @@
     <p>Актуальные закупочные цены на ресурсы для семьи.</p>
   </section>
 
-  <!-- ========== РАЗДЕЛ 1: МЕТАЛЛУРГИЯ ========== -->
+  <!-- МЕТАЛЛУРГИЯ -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -420,7 +438,7 @@
     </div>
   </section>
 
-  <!-- ========== РАЗДЕЛ 2: ГРИБЫ ========== -->
+  <!-- ГРИБЫ -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -480,7 +498,7 @@
     </div>
   </section>
 
-  <!-- ========== РАЗДЕЛ 3: ДЕРЕВО ========== -->
+  <!-- ДЕРЕВО -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -494,7 +512,6 @@
       <div class="accordion-content">
         <div class="contracts-grid">
 
-          <!-- Сосна -->
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🌲</span>
@@ -503,7 +520,6 @@
             <span class="contract-payment">140.000$</span>
           </div>
 
-          <!-- Берёза -->
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🌲</span>
@@ -512,7 +528,7 @@
             <span class="contract-payment">210.000$</span>
           </div>
 
-          <!-- Дуб — по центру -->
+          <!-- Дуб — по центру, цена сразу после названия -->
           <div class="contract-item centered">
             <div class="contract-info">
               <span class="contract-icon">🌲</span>
@@ -526,7 +542,7 @@
     </div>
   </section>
 
-  <!-- ========== ПРАВИЛА ========== -->
+  <!-- ПРАВИЛА -->
   <section class="block">
     <h2 class="section-title">
       <span class="icon">📜</span>
