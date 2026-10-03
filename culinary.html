@@ -112,6 +112,14 @@
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
     }
 
+    .page-hero .legend {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--gold);
+      position: relative;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+    }
+
     section.block {
       padding: 0.4rem 2rem;
       max-width: 1400px;
@@ -261,6 +269,26 @@
       font-weight: 600;
       font-size: 0.8rem;
       min-width: 180px;
+    }
+
+    /* ===== Блюда для контрактов ===== */
+    .cook-table tbody tr.contract-dish {
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.18), rgba(212, 175, 55, 0.04));
+      box-shadow: inset 3px 0 0 0 var(--gold);
+    }
+
+    .cook-table tbody tr.contract-dish:hover {
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.28), rgba(212, 175, 55, 0.08));
+    }
+
+    .cook-table tbody tr.contract-dish .name-cell {
+      color: var(--gold);
+    }
+
+    .cook-table tbody tr.contract-dish .name-cell::before {
+      content: "★ ";
+      color: var(--gold);
+      font-size: 0.8em;
     }
 
     .expand-cell {
@@ -413,6 +441,7 @@
   <section class="page-hero">
     <h1>Прокачка Кулинарии</h1>
     <p>Все рецепты, ингредиенты и бонусы от блюд. Нажми на ⭐ или ⏱ для деталей.</p>
+    <p class="legend">★ — блюда, необходимые для контрактов</p>
   </section>
 
   <!-- ========== ПРОСТЫЕ БЛЮДА ========== -->
@@ -440,7 +469,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Картофель Фри</td>
                 <td class="craft-cell">×3 Картофель, Сливочное масло, Травы</td>
                 <td class="food-cell">55 | -10</td>
@@ -780,7 +809,7 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Смузи «Мультифрукт»</td>
                 <td class="craft-cell">Яблоко, Апельсин, Банан, Молоко</td>
                 <td class="food-cell">28 | 55</td>
@@ -1032,7 +1061,7 @@
                 </td>
                 <td class="bonus-cell">Обжорство</td>
               </tr>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Американские Панкейки</td>
                 <td class="craft-cell">×2 Мука, Молоко, Яйцо, Банан</td>
                 <td class="food-cell">50 | 0</td>
@@ -1174,7 +1203,7 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Креветки Темпура</td>
                 <td class="craft-cell">×3 Креветки, ×1 Мука, ×1 Яйцо, ×1 Бутылка воды</td>
                 <td class="food-cell">55 | -5</td>
@@ -1338,7 +1367,7 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Суши-Роллы с Сериолой</td>
                 <td class="craft-cell">×1 Нори, ×2 Рис, 1000 гр Сериола, ×1 Огурец</td>
                 <td class="food-cell">61 | 0</td>
@@ -1655,7 +1684,7 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Вишнёвый пирог «Твин-Пикс»</td>
                 <td class="craft-cell">×2 Мука, ×1 Яйцо, ×1 Сливочное масло, ×2 Вишня, ×1 Мёд</td>
                 <td class="food-cell">61 | 28</td>
@@ -1731,7 +1760,7 @@
                 </td>
                 <td class="bonus-cell">Не хочешь кушать и пить (1 час)</td>
               </tr>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Биск из Лобстера</td>
                 <td class="craft-cell">×1 Лобстер, ×2 Бутылки воды, ×1 Молоко, ×1 Помидор, ×1 Травы</td>
                 <td class="food-cell">72 | 28</td>
@@ -2027,7 +2056,7 @@
                 </td>
                 <td class="bonus-cell">Иммунитет к Болезням (4 часа)</td>
               </tr>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Токсичный Ролл</td>
                 <td class="craft-cell">×1 Нори, 1000 гр Токсичный окунь, ×1 Мука, ×1 Яйцо, ×2 Рис</td>
                 <td class="food-cell">61 | 0</td>
@@ -2103,7 +2132,7 @@
                 </td>
                 <td class="bonus-cell">Иммунитет к Болезням (4 часа)</td>
               </tr>
-              <tr>
+              <tr class="contract-dish">
                 <td class="name-cell">Стейк «Томагавк»</td>
                 <td class="craft-cell">×2 Жареное мясо, ×2 Сливочное масло, ×2 Травы, ×2 Картошка</td>
                 <td class="food-cell">94 | -5</td>
