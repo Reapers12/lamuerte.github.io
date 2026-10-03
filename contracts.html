@@ -173,21 +173,14 @@
       transform: rotate(180deg);
     }
 
-    /* ===== ВАРИАНТ 2: быстрая и плавная анимация через grid ===== */
+    /* ===== Аккордеон: JS-анимация через height ===== */
     .accordion-content {
-      display: grid;
-      grid-template-rows: 0fr;
       overflow: hidden;
-      transition: grid-template-rows 0.3s ease, margin-top 0.2s ease;
-    }
-
-    .accordion-content > * {
-      overflow: hidden;
-      min-height: 0;
+      height: 0;
+      transition: height 0.3s ease, margin-top 0.2s ease;
     }
 
     .accordion-content.open {
-      grid-template-rows: 1fr;
       margin-top: 0.5rem;
     }
 
@@ -948,7 +941,35 @@
     function toggleAccordion(header) {
       header.classList.toggle('active');
       const content = header.nextElementSibling;
-      content.classList.toggle('open');
+
+      if (content.classList.contains('open')) {
+        // Закрытие: фиксируем текущую высоту, затем анимируем в 0
+        content.style.height = content.scrollHeight + 'px';
+        void content.offsetHeight;
+        content.style.height = '0px';
+        content.classList.remove('open');
+
+        content.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName === 'height') {
+            content.style.height = '';
+            content.removeEventListener('transitionend', handler);
+          }
+        });
+      } else {
+        // Открытие: анимируем от 0 до реальной высоты
+        content.classList.add('open');
+        const targetHeight = content.scrollHeight;
+        content.style.height = '0px';
+        void content.offsetHeight;
+        content.style.height = targetHeight + 'px';
+
+        content.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName === 'height') {
+            content.style.height = 'auto';
+            content.removeEventListener('transitionend', handler);
+          }
+        });
+      }
     }
   </script>
 </body>
