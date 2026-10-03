@@ -879,4 +879,19 @@
 
   <div class="back-block">
     <a href="tables.html" class="btn-back">← Назад к таблицам</a>
-    <a href="index.html" class="btn-back">
+    <a href="index.html" class="btn-back">← На главную</a>
+  </div>
+
+  <footer>
+    © 2024–2026 <span>La Muerte</span> — Все права защищены.
+  </footer>
+
+  <script>
+    function toggleAccordion(header) {
+      header.classList.toggle('active');
+      const content = header.nextElementSibling;
+      content.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
