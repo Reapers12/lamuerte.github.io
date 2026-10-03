@@ -173,14 +173,14 @@
       transform: rotate(180deg);
     }
 
+    /* ===== Аккордеон: JS-анимация через height ===== */
     .accordion-content {
-      max-height: 0;
       overflow: hidden;
-      transition: max-height 0.5s ease, margin-top 0.3s ease;
+      height: 0;
+      transition: height 0.3s ease, margin-top 0.2s ease;
     }
 
     .accordion-content.open {
-      max-height: 5000px;
       margin-top: 0.5rem;
     }
 
@@ -892,8 +892,24 @@
     function toggleAccordion(header) {
       header.classList.toggle('active');
       const content = header.nextElementSibling;
-      content.classList.toggle('open');
-    }
-  </script>
-</body>
-</html>
+
+      if (content.classList.contains('open')) {
+        // Закрытие: фиксируем текущую высоту, потом анимируем в 0
+        content.style.height = content.scrollHeight + 'px';
+        void content.offsetHeight;
+        content.style.height = '0px';
+        content.classList.remove('open');
+
+        content.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName === 'height') {
+            content.style.height = '';
+            content.removeEventListener('transitionend', handler);
+          }
+        });
+      } else {
+        // Открытие: анимируем от 0 до реальной высоты содержимого
+        content.classList.add('open');
+        const targetHeight = content.scrollHeight;
+        content.style.height = '0px';
+        void content.offsetHeight;
+        content
