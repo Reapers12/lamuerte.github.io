@@ -267,27 +267,14 @@
       min-width: 180px;
     }
 
-    .category-row td {
-      background: rgba(192, 57, 43, 0.2) !important;
-      font-family: 'Overpass', sans-serif;
-      font-weight: 800;
-      color: #fff;
-      text-align: center;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-size: 0.85rem;
-      padding: 0.75rem !important;
-      border-bottom: 2px solid var(--accent) !important;
-    }
-
-    /* ========== РАСКРЫВАЮЩИЕСЯ ЯЧЕЙКИ (Опыт / Время) ========== */
+    /* ========== РАСКРЫВАЮЩИЕСЯ ЯЧЕЙКИ ========== */
     .expand-cell {
       text-align: center;
       white-space: nowrap;
       cursor: pointer;
       user-select: none;
       transition: background 0.2s;
-      min-width: 90px;
+      min-width: 110px;
     }
 
     .expand-cell:hover {
@@ -313,7 +300,6 @@
       transform: rotate(180deg);
     }
 
-    /* Опыт — зелёный */
     .expand-cell.exp .expand-value {
       color: var(--green);
     }
@@ -321,7 +307,6 @@
       background: rgba(76, 175, 80, 0.1);
     }
 
-    /* Время — золотой */
     .expand-cell.time .expand-value {
       color: var(--gold);
     }
@@ -347,6 +332,7 @@
       display: flex;
       justify-content: space-between;
       padding: 0.1rem 0;
+      gap: 0.5rem;
     }
 
     .expand-details .detail-row span:first-child {
@@ -438,7 +424,7 @@
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <div class="header-left">
           <span class="icon">🍳</span>
-          <span>Кулинария — Рецепты</span>
+          <span>Кулинария: Простые Блюда</span>
         </div>
         <span class="arrow">▼</span>
       </div>
@@ -458,11 +444,6 @@
             </thead>
             <tbody>
 
-              <!-- КАТЕГОРИЯ -->
-              <tr class="category-row">
-                <td colspan="6">🍽 Простые блюда</td>
-              </tr>
-
               <!-- Картофель Фри -->
               <tr>
                 <td class="name-cell">Картофель Фри</td>
@@ -471,9 +452,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">12 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>12 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>24 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>36 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>12 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>24 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>36 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
@@ -495,9 +476,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">6 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>6 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>12 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>18 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>6 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>12 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>18 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
@@ -519,9 +500,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">8 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>8 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>16 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>24 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>8 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>16 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>24 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
@@ -543,9 +524,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">8 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>8 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>16 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>24 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>8 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>16 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>24 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
@@ -567,9 +548,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">12 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>12 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>24 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>36 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>12 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>24 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>36 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
@@ -591,9 +572,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">16 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>16 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>32 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>48 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>16 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>32 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>48 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
@@ -615,9 +596,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">16 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>16 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>32 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>48 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>16 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>32 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>48 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
@@ -639,9 +620,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">23 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>23 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>46 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>69 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>23 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>46 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>69 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
@@ -663,9 +644,9 @@
                 <td class="expand-cell exp" onclick="toggleCell(this)">
                   <span class="expand-value">28 <span class="expand-arrow">▼</span></span>
                   <div class="expand-details">
-                    <div class="detail-row exp"><span>×1</span><span>28 Exp</span></div>
-                    <div class="detail-row exp"><span>×2</span><span>56 Exp</span></div>
-                    <div class="detail-row exp"><span>×3</span><span>84 Exp</span></div>
+                    <div class="detail-row exp"><span>×1</span><span>28 Exp / Блюдо</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>56 Exp / Блюда</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>84 Exp / Блюд</span></div>
                   </div>
                 </td>
                 <td class="expand-cell time" onclick="toggleCell(this)">
