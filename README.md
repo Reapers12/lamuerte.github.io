@@ -1,1 +1,1 @@
-# laMuerte.github.io
+# la-Muerte.github.io
