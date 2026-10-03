@@ -17,6 +17,7 @@
       --accent: #c0392b;
       --gold: #d4af37;
       --green: #4caf50;
+      --blue: #3498db;
     }
 
     body {
@@ -117,12 +118,12 @@
 
     section.block {
       padding: 1rem 2rem;
-      max-width: 1400px;
+      max-width: 1600px;
       margin: 0 auto;
     }
 
     .accordion {
-      max-width: 1300px;
+      max-width: 1500px;
       margin: 0 auto 0.4rem;
     }
 
@@ -176,11 +177,11 @@
     .accordion-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.5s ease, margin-top 0.3s ease;
+      transition: max-height 0.6s ease, margin-top 0.3s ease;
     }
 
     .accordion-content.open {
-      max-height: 5000px;
+      max-height: 50000px;
       margin-top: 0.5rem;
     }
 
@@ -193,104 +194,106 @@
       backdrop-filter: blur(6px);
     }
 
-    .upgrade-table {
+    .cook-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1100px;
-      font-size: 0.9rem;
+      min-width: 1400px;
+      font-size: 0.82rem;
     }
 
-    .upgrade-table thead {
+    .cook-table thead {
       background: rgba(192, 57, 43, 0.15);
       border-bottom: 2px solid var(--accent);
     }
 
-    .upgrade-table thead th {
+    .cook-table thead th {
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
-      font-size: 0.85rem;
-      letter-spacing: 1px;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
       color: #fff;
-      padding: 1rem 1rem;
+      padding: 0.75rem 0.6rem;
       text-align: left;
       white-space: nowrap;
       border-right: 1px solid var(--border);
+      vertical-align: middle;
     }
-    .upgrade-table thead th:last-child { border-right: none; }
+    .cook-table thead th:last-child { border-right: none; }
 
-    .upgrade-table tbody tr {
+    .cook-table tbody tr {
       border-bottom: 1px solid var(--border);
       transition: background 0.2s;
     }
-    .upgrade-table tbody tr:last-child { border-bottom: none; }
-    .upgrade-table tbody tr:hover { background: rgba(192, 57, 43, 0.08); }
+    .cook-table tbody tr:last-child { border-bottom: none; }
+    .cook-table tbody tr:hover { background: rgba(192, 57, 43, 0.08); }
 
-    .upgrade-table tbody td {
-      padding: 1rem 1rem;
+    .cook-table tbody td {
+      padding: 0.65rem 0.6rem;
       vertical-align: top;
       border-right: 1px solid var(--border);
       color: var(--text);
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 0.82rem;
+      line-height: 1.45;
     }
-    .upgrade-table tbody td:last-child { border-right: none; }
+    .cook-table tbody td:last-child { border-right: none; }
 
-    .upgrade-table .level-cell {
+    .cook-table .name-cell {
       font-family: 'Overpass', sans-serif;
-      font-weight: 800;
-      font-size: 1rem;
-      color: var(--accent);
+      font-weight: 700;
+      color: #fff;
+      font-size: 0.85rem;
       white-space: nowrap;
+      min-width: 160px;
+    }
+
+    .cook-table .craft-cell {
+      color: var(--muted);
+      min-width: 220px;
+    }
+
+    .cook-table .food-cell {
+      color: var(--blue);
+      font-weight: 700;
       text-align: center;
-      width: 110px;
-    }
-
-    .upgrade-table .cost-cell {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .upgrade-table .cost-cell .price {
-      display: block;
+      white-space: nowrap;
       font-family: 'Overpass', sans-serif;
-      font-weight: 800;
-      font-size: 1rem;
-      color: var(--gold);
-      text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
-      margin-bottom: 0.5rem;
     }
 
-    .upgrade-table .cost-cell .price::before {
-      content: "💰 ";
-      font-size: 0.95rem;
-      margin-right: 0.15rem;
-    }
-
-    .upgrade-table .features-cell ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .upgrade-table .features-cell li {
-      padding: 0.15rem 0;
-      color: var(--text);
-    }
-
-    .upgrade-table .features-cell li::before {
-      content: "▸ ";
-      color: var(--accent);
-      font-weight: 700;
-      margin-right: 0.25rem;
-    }
-
-    .upgrade-table .time-cell {
-      font-family: 'Overpass', sans-serif;
-      font-weight: 700;
+    .cook-table .exp-cell {
       color: var(--green);
+      font-weight: 700;
       text-align: center;
       white-space: nowrap;
-      width: 130px;
+      font-family: 'Overpass', sans-serif;
+    }
+
+    .cook-table .time-cell {
+      color: var(--gold);
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+      font-family: 'Overpass', sans-serif;
+    }
+
+    .cook-table .bonus-cell {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.78rem;
+      min-width: 180px;
+    }
+
+    .category-row td {
+      background: rgba(192, 57, 43, 0.2) !important;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      padding: 0.75rem !important;
+      border-bottom: 2px solid var(--accent) !important;
     }
 
     .back-block {
@@ -355,7 +358,7 @@
 
   <section class="page-hero">
     <h1>Прокачка Кулинарии</h1>
-    <p>Все уровни и рецепты для кулинарии.</p>
+    <p>Все рецепты, ингредиенты и бонусы от блюд.</p>
   </section>
 
   <!-- ========== КУЛИНАРИЯ ========== -->
@@ -364,35 +367,161 @@
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <div class="header-left">
           <span class="icon">🍳</span>
-          <span>Кулинария</span>
+          <span>Кулинария — Рецепты</span>
         </div>
         <span class="arrow">▼</span>
       </div>
 
       <div class="accordion-content">
         <div class="table-wrapper">
-          <table class="upgrade-table">
+          <table class="cook-table">
             <thead>
               <tr>
-                <th>Уровень</th>
-                <th>Что нужно для улучшения</th>
-                <th>Особенности</th>
-                <th>Время улучшения</th>
+                <th>Название рецепта</th>
+                <th>Что нужно для крафта</th>
+                <th>🍴 Еда и вода</th>
+                <th>⭐ Опыт ×1</th>
+                <th>⭐ Опыт ×2</th>
+                <th>⭐ Опыт ×3</th>
+                <th>⏱ ×1</th>
+                <th>⏱ ×2</th>
+                <th>⏱ ×3</th>
+                <th>🎁 Бонусы</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="level-cell">1 Уровень</td>
-                <td class="cost-cell">
-                  <span class="price">Базовое значение</span>
-                </td>
-                <td class="features-cell">
-                  <ul>
-                    <li>Базовое значение</li>
-                  </ul>
-                </td>
-                <td class="time-cell">Базовое значение</td>
+
+              <!-- КАТЕГОРИЯ -->
+              <tr class="category-row">
+                <td colspan="10">🍽 Простые блюда</td>
               </tr>
+
+              <!-- Картофель Фри -->
+              <tr>
+                <td class="name-cell">Картофель Фри</td>
+                <td class="craft-cell">×3 Картофель, Сливочное масло, Травы</td>
+                <td class="food-cell">55 | -10</td>
+                <td class="exp-cell">12</td>
+                <td class="exp-cell">24</td>
+                <td class="exp-cell">36</td>
+                <td class="time-cell">3 ч</td>
+                <td class="time-cell">5 ч 2 мин</td>
+                <td class="time-cell">7 ч 34 мин</td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Английский Завтрак -->
+              <tr>
+                <td class="name-cell">Английский Завтрак</td>
+                <td class="craft-cell">×3 Яйца, ×1 Консервированные бобы, ×1 Сливочное масло</td>
+                <td class="food-cell">61 | 0</td>
+                <td class="exp-cell">6</td>
+                <td class="exp-cell">12</td>
+                <td class="exp-cell">18</td>
+                <td class="time-cell">2 ч</td>
+                <td class="time-cell">3 ч 22 мин</td>
+                <td class="time-cell">5 ч 2 мин</td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Грибной Микс -->
+              <tr>
+                <td class="name-cell">Грибной Микс</td>
+                <td class="craft-cell">×2 Вёшенки, ×2 Шампиньон, ×1 Гипсизикус, ×1 Подболотник, ×1 Подберёзовик</td>
+                <td class="food-cell">22 | 6</td>
+                <td class="exp-cell">8</td>
+                <td class="exp-cell">16</td>
+                <td class="exp-cell">24</td>
+                <td class="time-cell">1 ч 30 мин</td>
+                <td class="time-cell">2 ч 31 мин</td>
+                <td class="time-cell">3 ч 47 мин</td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Кукуруза "Элоте" -->
+              <tr>
+                <td class="name-cell">Кукуруза «Элоте»</td>
+                <td class="craft-cell">×3 Кукуруза, ×1 Сливочное масло, ×1 Сыр, ×1 Травы</td>
+                <td class="food-cell">55 | -5</td>
+                <td class="exp-cell">8</td>
+                <td class="exp-cell">16</td>
+                <td class="exp-cell">24</td>
+                <td class="time-cell">2 ч</td>
+                <td class="time-cell">3 ч 22 мин</td>
+                <td class="time-cell">5 ч 2 мин</td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Ягодный Джем -->
+              <tr>
+                <td class="name-cell">Ягодный Джем</td>
+                <td class="craft-cell">×2 Клубника, ×1 Черника, ×1 Вишня, ×1 Мёд</td>
+                <td class="food-cell">33 | 17</td>
+                <td class="exp-cell">12</td>
+                <td class="exp-cell">24</td>
+                <td class="exp-cell">36</td>
+                <td class="time-cell">3 ч</td>
+                <td class="time-cell">5 ч 2 мин</td>
+                <td class="time-cell">7 ч 34 мин</td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Шашлычки из Черемши -->
+              <tr>
+                <td class="name-cell">Шашлычки из Черемши</td>
+                <td class="craft-cell">500 гр Мясо зайца, ×1 Лук, ×1 Помидор, ×1 Травы</td>
+                <td class="food-cell">66 | 0</td>
+                <td class="exp-cell">16</td>
+                <td class="exp-cell">32</td>
+                <td class="exp-cell">48</td>
+                <td class="time-cell">4 ч</td>
+                <td class="time-cell">6 ч 43 мин</td>
+                <td class="time-cell">10 ч 5 мин</td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Фруктовый Салат "Тропикана" -->
+              <tr>
+                <td class="name-cell">Фруктовый Салат «Тропикана»</td>
+                <td class="craft-cell">×1 Яблоко, ×1 Банан, ×1 Апельсин, Нож</td>
+                <td class="food-cell">44 | 39</td>
+                <td class="exp-cell">16</td>
+                <td class="exp-cell">32</td>
+                <td class="exp-cell">48</td>
+                <td class="time-cell">4 ч</td>
+                <td class="time-cell">6 ч 43 мин</td>
+                <td class="time-cell">10 ч 5 мин</td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Запеченое яблоко с медом -->
+              <tr>
+                <td class="name-cell">Запечёное яблоко с мёдом</td>
+                <td class="craft-cell">×2 Яблоко, ×1 Мёд, Нож</td>
+                <td class="food-cell">39 | 22</td>
+                <td class="exp-cell">23</td>
+                <td class="exp-cell">46</td>
+                <td class="exp-cell">69</td>
+                <td class="time-cell">6 ч</td>
+                <td class="time-cell">10 ч 5 мин</td>
+                <td class="time-cell">15 ч 7 мин</td>
+                <td class="bonus-cell">+10% бег, +100% выносливость (15 мин)</td>
+              </tr>
+
+              <!-- Жаркое из зайца по домашнему -->
+              <tr>
+                <td class="name-cell">Жаркое из зайца по-домашнему</td>
+                <td class="craft-cell">500 гр Мясо зайца, ×2 Картошки, ×1 Морковь, ×1 Лук</td>
+                <td class="food-cell">66 | 6</td>
+                <td class="exp-cell">28</td>
+                <td class="exp-cell">56</td>
+                <td class="exp-cell">84</td>
+                <td class="time-cell">8 ч</td>
+                <td class="time-cell">13 ч 26 мин</td>
+                <td class="time-cell">20 ч 10 мин</td>
+                <td class="bonus-cell">Вакцины + Противовирусное + Детокс</td>
+              </tr>
+
             </tbody>
           </table>
         </div>
