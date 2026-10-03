@@ -78,7 +78,7 @@
     nav a.active { color: #fff; }
 
     .page-hero {
-      padding: 4rem 2rem 2rem;   /* было 5rem 2rem 3rem — уменьшили */
+      padding: 4rem 2rem 2rem;
       text-align: center;
       position: relative;
     }
@@ -91,7 +91,7 @@
     }
     .page-hero h1 {
       font-family: 'Cinzel', serif;
-      font-size: clamp(1.75rem, 4.5vw, 2.5rem);   /* было 2-3rem */
+      font-size: clamp(1.75rem, 4.5vw, 2.5rem);
       font-weight: 700;
       letter-spacing: 2px;
       color: #fff;
@@ -105,7 +105,7 @@
     }
     .page-hero p {
       color: #ccc;
-      font-size: 0.95rem;   /* было 1.05rem */
+      font-size: 0.95rem;
       max-width: 640px;
       margin: 0 auto;
       position: relative;
@@ -113,7 +113,7 @@
     }
 
     section.block {
-      padding: 2rem 2rem;   /* было 3rem 2rem */
+      padding: 2rem 2rem;
       max-width: 960px;
       margin: 0 auto;
     }
@@ -121,7 +121,7 @@
     /* ========== ЗАГОЛОВОК РАЗДЕЛА ========== */
     .section-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.35rem;   /* было 1.6rem */
+      font-size: 1.35rem;
       color: #fff;
       margin-bottom: 1.25rem;
       text-align: center;
@@ -134,15 +134,15 @@
     }
 
     .section-title .icon {
-      font-size: 1.5rem;   /* было 1.75rem */
+      font-size: 1.5rem;
     }
 
-    /* ========== СПИСОК КОНТРАКТОВ — УМЕНЬШЕН ========== */
+    /* ========== СПИСОК КОНТРАКТОВ — КОМПАКТНО ========== */
     .contracts-list {
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;   /* было 1rem */
-      max-width: 600px;   /* было 720px — карточки стали уже */
+      gap: 0.5rem;             /* было 0.7rem */
+      max-width: 600px;
       margin: 0 auto;
     }
 
@@ -151,12 +151,12 @@
       backdrop-filter: blur(6px);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
-      border-radius: 8px;   /* было 10px */
-      padding: 0.75rem 1rem;   /* было 1.25rem 1.5rem — карточки стали ниже */
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;   /* было 0.75rem 1rem */
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.6rem;
       transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     }
 
@@ -169,12 +169,12 @@
     .contract-info {
       display: flex;
       align-items: center;
-      gap: 0.75rem;   /* было 1rem */
+      gap: 0.6rem;
       flex: 1;
     }
 
     .contract-icon {
-      font-size: 1.5rem;   /* было 2rem */
+      font-size: 1.35rem;   /* было 1.5rem */
       line-height: 1;
       flex-shrink: 0;
     }
@@ -182,14 +182,14 @@
     .contract-name {
       font-family: 'Cinzel', serif;
       color: #fff;
-      font-size: 0.95rem;   /* было 1.05rem */
+      font-size: 0.9rem;
       letter-spacing: 0.5px;
     }
 
     .contract-payment {
       font-family: 'Cinzel', serif;
       color: var(--gold);
-      font-size: 0.95rem;   /* было 1.05rem */
+      font-size: 0.9rem;
       font-weight: 700;
       letter-spacing: 0.5px;
       white-space: nowrap;
@@ -199,7 +199,7 @@
     /* ========== ПРАВИЛА ========== */
     .rules {
       list-style: none;
-      max-width: 600px;   /* тоже уже */
+      max-width: 600px;
       margin: 0 auto;
     }
     .rules li {
@@ -208,10 +208,10 @@
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       border-radius: 8px;
-      padding: 0.75rem 1rem;   /* было 1rem 1.25rem */
-      margin-bottom: 0.7rem;
+      padding: 0.6rem 0.9rem;
+      margin-bottom: 0.5rem;
       color: var(--text);
-      font-size: 0.9rem;   /* добавили меньше шрифт */
+      font-size: 0.9rem;
       transition: transform 0.2s, border-color 0.2s;
     }
     .rules li:hover {
@@ -226,11 +226,11 @@
 
     .back-block {
       text-align: center;
-      padding: 1.5rem 2rem 3rem;   /* было 2rem 2rem 4rem */
+      padding: 1.5rem 2rem 3rem;
     }
     .btn-back {
       display: inline-block;
-      padding: 0.7rem 1.5rem;   /* было 0.8rem 1.75rem */
+      padding: 0.7rem 1.5rem;
       background: transparent;
       color: var(--text);
       border: 1px solid var(--border);
@@ -253,7 +253,7 @@
       border-top: 1px solid var(--border);
       color: #666;
       text-align: center;
-      padding: 1.25rem;   /* было 1.5rem */
+      padding: 1.25rem;
       font-size: 0.85rem;
     }
     footer span { color: var(--accent); }
@@ -265,7 +265,7 @@
       .contract-item {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: 0.4rem;
       }
 
       .contract-payment {
