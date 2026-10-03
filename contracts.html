@@ -118,32 +118,74 @@
       margin: 0 auto;
     }
 
-    /* ========== ЗАГОЛОВОК РАЗДЕЛА ========== */
-    .section-title {
+    /* ========== РАСКРЫВАЮЩИЙСЯ РАЗДЕЛ ========== */
+    .accordion {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .accordion-header {
       font-family: 'Cinzel', serif;
       font-size: 1.35rem;
       color: #fff;
-      margin-bottom: 1.25rem;
-      text-align: center;
       letter-spacing: 1px;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .accordion-header:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .accordion-header .header-left {
+      display: flex;
+      align-items: center;
       gap: 0.6rem;
     }
 
-    .section-title .icon {
+    .accordion-header .icon {
       font-size: 1.5rem;
     }
 
-    /* ========== СПИСОК КОНТРАКТОВ — КОМПАКТНО ========== */
+    .accordion-header .arrow {
+      font-size: 1rem;
+      color: var(--accent);
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-header.active .arrow {
+      transform: rotate(180deg);
+    }
+
+    /* ========== КОНТЕНТ АККОРДЕОНА ========== */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, margin-top 0.3s ease;
+    }
+
+    .accordion-content.open {
+      max-height: 500px;
+      margin-top: 0.5rem;
+    }
+
     .contracts-list {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;             /* было 0.7rem */
-      max-width: 600px;
-      margin: 0 auto;
+      gap: 0.5rem;
     }
 
     .contract-item {
@@ -152,7 +194,7 @@
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       border-radius: 8px;
-      padding: 0.5rem 0.75rem;   /* было 0.75rem 1rem */
+      padding: 0.5rem 0.75rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -174,7 +216,7 @@
     }
 
     .contract-icon {
-      font-size: 1.35rem;   /* было 1.5rem */
+      font-size: 1.35rem;
       line-height: 1;
       flex-shrink: 0;
     }
@@ -222,6 +264,24 @@
       color: #fff;
       font-family: 'Cinzel', serif;
       margin-right: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .section-title .icon {
+      font-size: 1.5rem;
     }
 
     .back-block {
@@ -272,11 +332,11 @@
         align-self: flex-end;
       }
 
-      .section-title {
-        font-size: 1.15rem;
+      .section-title,
+      .accordion-header {
+        font-size: 1.1rem;
       }
 
-      .contracts-list,
       .rules {
         max-width: 100%;
       }
@@ -301,49 +361,58 @@
     <p>Актуальные закупочные цены на ресурсы для семьи.</p>
   </section>
 
-  <!-- ========== РАЗДЕЛ: МЕТАЛЛУРГИЯ ========== -->
+  <!-- ========== РАСКРЫВАЮЩИЙСЯ РАЗДЕЛ: МЕТАЛЛУРГИЯ ========== -->
   <section class="block">
-    <h2 class="section-title">
-      <span class="icon">⚙️</span>
-      Металлургия
-    </h2>
+    <div class="accordion">
 
-    <div class="contracts-list">
-
-      <!-- ===== Олово ===== -->
-      <div class="contract-item">
-        <div class="contract-info">
-          <span class="contract-icon">🥫</span>
-          <span class="contract-name">Олово</span>
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="header-left">
+          <span class="icon">⚙️</span>
+          <span>Металлургия</span>
         </div>
-        <span class="contract-payment">Оплата 33.000$</span>
+        <span class="arrow">▼</span>
       </div>
 
-      <!-- ===== Медная руда ===== -->
-      <div class="contract-item">
-        <div class="contract-info">
-          <span class="contract-icon">🟠</span>
-          <span class="contract-name">Медная руда</span>
-        </div>
-        <span class="contract-payment">Оплата 25.000$</span>
-      </div>
+      <div class="accordion-content">
+        <div class="contracts-list">
 
-      <!-- ===== Серебряная руда ===== -->
-      <div class="contract-item">
-        <div class="contract-info">
-          <span class="contract-icon">⚪</span>
-          <span class="contract-name">Серебряная руда</span>
-        </div>
-        <span class="contract-payment">Оплата 25.000$</span>
-      </div>
+          <!-- ===== Олово ===== -->
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🥫</span>
+              <span class="contract-name">Олово</span>
+            </div>
+            <span class="contract-payment">Оплата 33.000$</span>
+          </div>
 
-      <!-- ===== Железная руда ===== -->
-      <div class="contract-item">
-        <div class="contract-info">
-          <span class="contract-icon">🔩</span>
-          <span class="contract-name">Железная руда</span>
+          <!-- ===== Медная руда ===== -->
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🟠</span>
+              <span class="contract-name">Медная руда</span>
+            </div>
+            <span class="contract-payment">Оплата 25.000$</span>
+          </div>
+
+          <!-- ===== Серебряная руда ===== -->
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">⚪</span>
+              <span class="contract-name">Серебряная руда</span>
+            </div>
+            <span class="contract-payment">Оплата 25.000$</span>
+          </div>
+
+          <!-- ===== Железная руда ===== -->
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🔩</span>
+              <span class="contract-name">Железная руда</span>
+            </div>
+            <span class="contract-payment">Оплата 25.000$</span>
+          </div>
+
         </div>
-        <span class="contract-payment">Оплата 25.000$</span>
       </div>
 
     </div>
@@ -371,5 +440,16 @@
   <footer>
     © 2024–2026 <span>La Muerte</span> — Все права защищены.
   </footer>
+
+  <script>
+    function toggleAccordion(header) {
+      // Переключаем активный класс у заголовка
+      header.classList.toggle('active');
+
+      // Открываем / закрываем контент
+      const content = header.nextElementSibling;
+      content.classList.toggle('open');
+    }
+  </script>
 </body>
 </html>
