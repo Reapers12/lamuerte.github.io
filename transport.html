@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>О транспорте — La Muerte</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -18,7 +18,7 @@
     }
 
     body {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: 'Overpass', sans-serif;
       background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
       background-color: #050505;
       color: var(--text);
@@ -52,7 +52,8 @@
     }
 
     header .logo {
-      font-family: 'Cinzel', serif;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 800;
       font-size: 1.25rem;
       letter-spacing: 3px;
       color: #fff;
@@ -69,6 +70,7 @@
       margin-left: 1.5rem;
       text-decoration: none;
       font-size: 0.95rem;
+      font-weight: 500;
       transition: color 0.2s;
       cursor: pointer;
       white-space: nowrap;
@@ -89,10 +91,10 @@
       pointer-events: none;
     }
     .page-hero h1 {
-      font-family: 'Cinzel', serif;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 800;
       font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       color: #fff;
       margin-bottom: 1rem;
       position: relative;
@@ -117,12 +119,13 @@
       margin: 0 auto;
     }
     section.block h2 {
-      font-family: 'Cinzel', serif;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
       font-size: 1.6rem;
       color: #fff;
       margin-bottom: 1.5rem;
       text-align: center;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
     }
     section.block p {
@@ -136,7 +139,7 @@
     section.block p em {
       color: var(--accent);
       font-style: normal;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     /* ---------- ТАБЛИЦА ТРАНСПОРТА ---------- */
@@ -148,8 +151,9 @@
     }
 
     .vehicle-table thead th {
-      font-family: 'Cinzel', serif;
-      font-size: 0.85rem;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--accent);
@@ -220,17 +224,18 @@
     }
 
     .vehicle-table .name-cell {
-      font-family: 'Cinzel', serif;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
       color: #fff;
-      font-size: 1.05rem;
-      letter-spacing: 0.5px;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
     }
 
     .vehicle-table .rank-cell {
       color: var(--accent);
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.95rem;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }
 
     .vehicle-table .fuel-cell {
@@ -299,9 +304,10 @@
     .img-modal-caption {
       text-align: center;
       color: #fff;
-      font-family: 'Cinzel', serif;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
       font-size: 1.1rem;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       margin-top: 1rem;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
     }
@@ -339,7 +345,8 @@
     }
     .rules li strong {
       color: #fff;
-      font-family: 'Cinzel', serif;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
       margin-right: 0.5rem;
     }
 
@@ -404,7 +411,8 @@
 
       .vehicle-table tbody td::before {
         content: attr(data-label);
-        font-family: 'Cinzel', serif;
+        font-family: 'Overpass', sans-serif;
+        font-weight: 700;
         color: var(--accent);
         font-size: 0.8rem;
         letter-spacing: 1px;
