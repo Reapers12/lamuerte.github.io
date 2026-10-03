@@ -17,7 +17,6 @@
       --accent: #c0392b;
       --gold: #d4af37;
       --green: #4caf50;
-      --blue: #3498db;
     }
 
     body {
@@ -103,7 +102,10 @@
       position: relative;
       text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
     }
-    .page-hero h1 span { color: var(--accent); }
+    .page-hero h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
     .page-hero p {
       color: #ccc;
       font-size: 0.95rem;
@@ -114,28 +116,28 @@
     }
 
     section.block {
-      padding: 0.4rem 2rem;
-      max-width: 1400px;
+      padding: 1rem 2rem;
+      max-width: 960px;
       margin: 0 auto;
     }
 
     .accordion {
-      max-width: 1300px;
-      margin: 0 auto 0.5rem;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
     .accordion-header {
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.35rem;
       color: #fff;
       letter-spacing: 0.5px;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.85rem 1rem;
+      gap: 0.6rem;
+      padding: 0.85rem 1.25rem;
       background: var(--panel);
       backdrop-filter: blur(6px);
       border: 1px solid var(--border);
@@ -158,11 +160,11 @@
     }
 
     .accordion-header .icon {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
 
     .accordion-header .arrow {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--accent);
       transition: transform 0.3s ease;
     }
@@ -186,87 +188,194 @@
 
     .accordion-content.open {
       grid-template-rows: 1fr;
-      margin-top: 0.4rem;
+      margin-top: 0.5rem;
     }
 
-    .table-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border-radius: 12px;
-      border: 1px solid var(--border);
+    .contracts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .contracts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .contract-item {
       background: var(--panel);
       backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     }
 
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 700px;
+    .contract-item:hover {
+      transform: translateX(6px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.2);
+    }
+
+    .contract-item.centered {
+      grid-column: 1 / -1;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .contract-item.centered .contract-info {
+      flex: 0 0 auto;
+      justify-content: center;
+    }
+
+    .contract-item.centered .contract-payment {
+      flex: 0 0 auto;
+    }
+
+    .contract-info {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex: 1;
+    }
+
+    .contract-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .contract-name {
+      font-family: 'Overpass', sans-serif;
+      font-weight: 600;
+      color: #fff;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+    }
+
+    .contract-payment {
+      font-family: 'Overpass', sans-serif;
+      font-weight: 800;
+      color: var(--gold);
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+    }
+
+    .job-card {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .job-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .job-card:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .job-title {
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      color: #fff;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .job-title .icon {
+      font-size: 1.25rem;
+    }
+
+    .job-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.25rem 0;
       font-size: 0.9rem;
     }
 
-    .data-table thead {
-      background: rgba(192, 57, 43, 0.15);
-      border-bottom: 2px solid var(--accent);
+    .job-row .label {
+      color: var(--muted);
+      font-weight: 500;
     }
 
-    .data-table thead th {
+    .job-row .value {
+      color: #fff;
+      font-weight: 700;
       font-family: 'Overpass', sans-serif;
-      font-weight: 700;
-      font-size: 0.78rem;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: #fff;
-      padding: 0.75rem 0.8rem;
-      text-align: left;
-      white-space: nowrap;
-      border-right: 1px solid var(--border);
-    }
-    .data-table thead th:last-child { border-right: none; }
-
-    .data-table tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-    .data-table tbody tr:last-child { border-bottom: none; }
-    .data-table tbody tr:hover { background: rgba(192, 57, 43, 0.08); }
-
-    .data-table tbody td {
-      padding: 0.7rem 0.8rem;
-      vertical-align: top;
-      border-right: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.88rem;
-      line-height: 1.45;
-    }
-    .data-table tbody td:last-child { border-right: none; }
-
-    .data-table .name-cell {
-      font-weight: 700;
-      color: #fff;
     }
 
-    .data-table .price-cell {
+    .job-row .value.gold {
       color: var(--gold);
-      font-weight: 700;
-      white-space: nowrap;
+      text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
     }
 
-    .data-table .qty-cell {
-      color: var(--green);
+    .job-row .value.premium {
+      color: #4caf50;
+      text-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .job-row .value.cd {
+      color: var(--accent);
+    }
+
+    .job-dishes {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border);
+    }
+
+    .job-dishes .dishes-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .job-dishes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .job-dishes li {
+      padding: 0.15rem 0;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .job-dishes li::before {
+      content: "▸ ";
+      color: var(--accent);
       font-weight: 700;
-      white-space: nowrap;
+      margin-right: 0.25rem;
     }
 
     .back-block {
       text-align: center;
       padding: 1.5rem 2rem 3rem;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
     }
-
     .btn-back {
       display: inline-block;
       padding: 0.7rem 1.5rem;
@@ -276,8 +385,8 @@
       border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
-      letter-spacing: 1px;
       font-size: 0.9rem;
+      letter-spacing: 1px;
       transition: border-color 0.2s, color 0.2s, transform 0.15s;
     }
     .btn-back:hover {
@@ -300,8 +409,24 @@
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; }
       nav a { margin-left: 0; margin-right: 1rem; }
-      section.block { padding: 0.3rem 0.75rem; }
-      .accordion-header { font-size: 1rem; padding: 0.7rem 0.85rem; }
+
+      .contracts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contract-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+      }
+
+      .contract-payment {
+        align-self: flex-end;
+      }
+
+      .accordion-header {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
@@ -319,11 +444,11 @@
   </header>
 
   <section class="page-hero">
-    <h1>Контракты <span>La Muerte</span></h1>
+    <h1>Контракты <em>La Muerte</em></h1>
     <p>Актуальные цены на контракты в семье!</p>
   </section>
 
-  <!-- ========== МЕТАЛЛУРГИЯ ========== -->
+  <!-- МЕТАЛЛУРГИЯ -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -334,27 +459,41 @@
         <span class="arrow">▼</span>
       </div>
       <div class="accordion-content">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Ресурс</th>
-                <th>Цена за шт.</th>
-                <th>Кол-во</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="name-cell">Железо</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Медь</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Сталь</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-            </tbody>
-          </table>
+        <div class="contracts-grid">
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🔨</span>
+              <span class="contract-name">Олово</span>
+            </div>
+            <span class="contract-payment">33.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🔨</span>
+              <span class="contract-name">Медь</span>
+            </div>
+            <span class="contract-payment">25.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🔨</span>
+              <span class="contract-name">Серебро</span>
+            </div>
+            <span class="contract-payment">25.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🔨</span>
+              <span class="contract-name">Железо</span>
+            </div>
+            <span class="contract-payment">25.000$</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== ГРИБЫ ========== -->
+  <!-- ГРИБЫ -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -365,58 +504,93 @@
         <span class="arrow">▼</span>
       </div>
       <div class="accordion-content">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Ресурс</th>
-                <th>Цена за шт.</th>
-                <th>Кол-во</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="name-cell">Вёшенки</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Шампиньоны</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Гипсизикус</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-            </tbody>
-          </table>
+        <div class="contracts-grid">
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🍄‍🟫</span>
+              <span class="contract-name">Шампиньоны</span>
+            </div>
+            <span class="contract-payment">95.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🍄‍🟫</span>
+              <span class="contract-name">Мухоморы</span>
+            </div>
+            <span class="contract-payment">140.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🍄‍🟫</span>
+              <span class="contract-name">Вёшенки</span>
+            </div>
+            <span class="contract-payment">110.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🍄‍🟫</span>
+              <span class="contract-name">Подболотники</span>
+            </div>
+            <span class="contract-payment">170.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🍄‍🟫</span>
+              <span class="contract-name">Гипсизигусы</span>
+            </div>
+            <span class="contract-payment">130.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🍄‍🟫</span>
+              <span class="contract-name">Подберёзовики</span>
+            </div>
+            <span class="contract-payment">200.000$</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== ДЕРЕВО ========== -->
+  <!-- ДЕРЕВО -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <div class="header-left">
-          <span class="icon">🌲</span>
+          <span class="icon">🌳</span>
           <span>Дерево</span>
         </div>
         <span class="arrow">▼</span>
       </div>
       <div class="accordion-content">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Ресурс</th>
-                <th>Цена за шт.</th>
-                <th>Кол-во</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="name-cell">Древесина</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Доски</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Брёвна</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-            </tbody>
-          </table>
+        <div class="contracts-grid">
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🌲</span>
+              <span class="contract-name">Сосна</span>
+            </div>
+            <span class="contract-payment">140.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🌲</span>
+              <span class="contract-name">Берёза</span>
+            </div>
+            <span class="contract-payment">210.000$</span>
+          </div>
+          <div class="contract-item centered">
+            <div class="contract-info">
+              <span class="contract-icon">🌲</span>
+              <span class="contract-name">Дуб</span>
+            </div>
+            <span class="contract-payment">173.000$</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== ФЕРМА ========== -->
+  <!-- ФЕРМА -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -427,27 +601,55 @@
         <span class="arrow">▼</span>
       </div>
       <div class="accordion-content">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Ресурс</th>
-                <th>Цена за шт.</th>
-                <th>Кол-во</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="name-cell">Пшеница</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Морковь</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Картофель</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-            </tbody>
-          </table>
+        <div class="contracts-grid">
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🍊</span>
+              <span class="contract-name">Апельсины</span>
+            </div>
+            <span class="contract-payment">88.500$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🌾</span>
+              <span class="contract-name">Пшеница</span>
+            </div>
+            <span class="contract-payment">102.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🥔</span>
+              <span class="contract-name">Картофель</span>
+            </div>
+            <span class="contract-payment">120.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🥬</span>
+              <span class="contract-name">Капуста</span>
+            </div>
+            <span class="contract-payment">140.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🌽</span>
+              <span class="contract-name">Кукуруза</span>
+            </div>
+            <span class="contract-payment">165.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🎃</span>
+              <span class="contract-name">Тыква</span>
+            </div>
+            <span class="contract-payment">190.000$</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== АТЕЛЬЕ ========== -->
+  <!-- АТЕЛЬЕ -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -458,27 +660,27 @@
         <span class="arrow">▼</span>
       </div>
       <div class="accordion-content">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Товар</th>
-                <th>Цена</th>
-                <th>Кол-во</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="name-cell">Ткань</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Кожа</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Фурнитура</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-            </tbody>
-          </table>
+        <div class="contracts-list">
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">💰</span>
+              <span class="contract-name">💰 Активация</span>
+            </div>
+            <span class="contract-payment">12.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">👕</span>
+              <span class="contract-name">💵 Выплата за 1 форму</span>
+            </div>
+            <span class="contract-payment">1.700$</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== ТОВАР С САМОЛЁТА ========== -->
+  <!-- ТОВАР С САМОЛЁТА -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -489,26 +691,27 @@
         <span class="arrow">▼</span>
       </div>
       <div class="accordion-content">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Товар</th>
-                <th>Цена</th>
-                <th>Кол-во</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="name-cell">Товар 1</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Товар 2</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-            </tbody>
-          </table>
+        <div class="contracts-list">
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">💰</span>
+              <span class="contract-name">💰 Активация</span>
+            </div>
+            <span class="contract-payment">16.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">📦</span>
+              <span class="contract-name">💵 Выплата</span>
+            </div>
+            <span class="contract-payment">30.000$</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== РЫБА ========== -->
+  <!-- РЫБА -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -519,27 +722,69 @@
         <span class="arrow">▼</span>
       </div>
       <div class="accordion-content">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Рыба</th>
-                <th>Цена за шт.</th>
-                <th>Кол-во</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="name-cell">Сериола</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Рустер</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Токсичный окунь</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-            </tbody>
-          </table>
+        <div class="contracts-grid">
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🐟</span>
+              <span class="contract-name">1 ранг</span>
+            </div>
+            <span class="contract-payment">78.300$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🐟</span>
+              <span class="contract-name">5 ранг</span>
+            </div>
+            <span class="contract-payment">163.800$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🐟</span>
+              <span class="contract-name">2 ранг</span>
+            </div>
+            <span class="contract-payment">102.600$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🐟</span>
+              <span class="contract-name">6 ранг</span>
+            </div>
+            <span class="contract-payment">189.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🐟</span>
+              <span class="contract-name">3 ранг</span>
+            </div>
+            <span class="contract-payment">121.500$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🐟</span>
+              <span class="contract-name">7 ранг</span>
+            </div>
+            <span class="contract-payment">216.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🐟</span>
+              <span class="contract-name">4 ранг</span>
+            </div>
+            <span class="contract-payment">144.000$</span>
+          </div>
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🐟</span>
+              <span class="contract-name">8 ранг</span>
+            </div>
+            <span class="contract-payment">243.000$</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== ДОПОЛНИТЕЛЬНЫЙ ЗАРАБОТОК ========== -->
+  <!-- ДОПОЛНИТЕЛЬНЫЙ ЗАРАБОТОК -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -550,21 +795,143 @@
         <span class="arrow">▼</span>
       </div>
       <div class="accordion-content">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Занятие</th>
-                <th>Оплата</th>
-                <th>Кол-во</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="name-cell">Задание 1</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-              <tr><td class="name-cell">Задание 2</td><td class="price-cell">—</td><td class="qty-cell">—</td></tr>
-            </tbody>
-          </table>
+
+        <!-- КУРЬЕР ФАСТФУДА -->
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">🍔</span>
+            <span>Курьер фастфуда</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💰 Активация</span>
+            <span class="value">100$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💵 Награда</span>
+            <span class="value gold">23.900$ – 34.100$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💎 Majestic Premium</span>
+            <span class="value premium">29.875$ – 42.625$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">⏰ Cooldown</span>
+            <span class="value cd">1 час 30 минут</span>
+          </div>
+          <div class="job-dishes">
+            <span class="dishes-label">Требуются блюда:</span>
+            <ul>
+              <li>Картошка Фри — 3 шт</li>
+              <li>Смузи «Мульти-фрукт» — 3 шт</li>
+              <li>Американские Панкейки — 3 шт</li>
+            </ul>
+          </div>
         </div>
+
+        <!-- КУРЬЕР КАФЕ -->
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">☕</span>
+            <span>Курьер кафе</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💰 Активация</span>
+            <span class="value">200$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💵 Награда</span>
+            <span class="value gold">34.100$ – 45.450$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💎 Majestic Premium</span>
+            <span class="value premium">42.625$ – 56.812$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">⏰ Cooldown</span>
+            <span class="value cd">1 час 30 минут</span>
+          </div>
+          <div class="job-dishes">
+            <span class="dishes-label">Требуются блюда:</span>
+            <ul>
+              <li>Креветки Темпура — 3 шт</li>
+              <li>Суши Роллы с Сериолой — 3 шт</li>
+              <li>Вишнёвый пирог «Твин-Пикс» — 3 шт</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- КУРЬЕР РЕСТОРАНА -->
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">🍽️</span>
+            <span>Курьер ресторана</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💰 Активация</span>
+            <span class="value">300$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💵 Награда</span>
+            <span class="value gold">45.450$ – 55.000$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💎 Majestic Premium</span>
+            <span class="value premium">56.812$ – 68.750$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">⏰ Cooldown</span>
+            <span class="value cd">1 час 30 минут</span>
+          </div>
+          <div class="job-dishes">
+            <span class="dishes-label">Требуются блюда:</span>
+            <ul>
+              <li>Биск из Лобстера — 3 шт</li>
+              <li>Токсичный Ролл — 3 шт</li>
+              <li>Стейк «Томагавк» — 3 шт</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ТЮНИНГ V -->
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">🔧</span>
+            <span>Тюнинг V</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💰 Активация</span>
+            <span class="value">500$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💵 Награда</span>
+            <span class="value gold">21.380$ – 24.380$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💎 Majestic Premium</span>
+            <span class="value premium">26.725$ – 30.475$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">⏰ Cooldown</span>
+            <span class="value cd">2 часа</span>
+          </div>
+        </div>
+
+        <!-- ОПЛАТА НАЛОГА ЗА ДОМ -->
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">🏠</span>
+            <span>Оплата налога за дом</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💰 Стоимость</span>
+            <span class="value">150 MC</span>
+          </div>
+          <div class="job-row">
+            <span class="label">💵 Выплата</span>
+            <span class="value gold">35.000$</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
