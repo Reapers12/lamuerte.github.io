@@ -328,53 +328,6 @@
       color: var(--accent);
     }
 
-    .rules {
-      list-style: none;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .rules li {
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      padding: 0.6rem 0.9rem;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-      font-size: 0.9rem;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-    .rules li:hover {
-      transform: translateX(6px);
-      border-color: var(--accent);
-    }
-    .rules li strong {
-      color: #fff;
-      font-family: 'Overpass', sans-serif;
-      font-weight: 700;
-      margin-right: 0.5rem;
-    }
-
-    .section-title {
-      font-family: 'Overpass', sans-serif;
-      font-weight: 700;
-      font-size: 1.35rem;
-      color: #fff;
-      margin-bottom: 1rem;
-      text-align: center;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-    }
-
-    .section-title .icon {
-      font-size: 1.5rem;
-    }
-
     .back-block {
       text-align: center;
       padding: 1.5rem 2rem 3rem;
@@ -427,13 +380,8 @@
         align-self: flex-end;
       }
 
-      .section-title,
       .accordion-header {
         font-size: 1.1rem;
-      }
-
-      .rules {
-        max-width: 100%;
       }
     }
   </style>
@@ -913,21 +861,6 @@
 
       </div>
     </div>
-  </section>
-
-  <!-- ПРАВИЛА -->
-  <section class="block">
-    <h2 class="section-title">
-      <span class="icon">📜</span>
-      Правила контрактов
-    </h2>
-    <ul class="rules">
-      <li><strong>I.</strong> Контракт — это закон семьи. Нарушение недопустимо.</li>
-      <li><strong>II.</strong> Все условия обсуждаются заранее и фиксируются.</li>
-      <li><strong>III.</strong> Контракты заключает только лидер или куратор.</li>
-      <li><strong>IV.</strong> Нарушение контракта — исключение из семьи.</li>
-      <li><strong>V.</strong> Закрытые контракты хранятся в архиве семьи.</li>
-    </ul>
   </section>
 
   <div class="back-block">
