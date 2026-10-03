@@ -115,10 +115,11 @@
     .page-hero .legend {
       margin-top: 0.75rem;
       font-size: 0.85rem;
-      color: var(--gold);
       position: relative;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
     }
+    .page-hero .legend .gold { color: var(--gold); }
+    .page-hero .legend .green { color: #6fe07a; }
 
     section.block {
       padding: 0.4rem 2rem;
@@ -271,7 +272,7 @@
       min-width: 180px;
     }
 
-    /* ===== Блюда для контрактов ===== */
+    /* ===== Блюда для контрактов (золотые) ===== */
     .cook-table tbody tr.contract-dish {
       background: linear-gradient(90deg, rgba(212, 175, 55, 0.18), rgba(212, 175, 55, 0.04));
       box-shadow: inset 3px 0 0 0 var(--gold);
@@ -289,6 +290,32 @@
       content: "★ ";
       color: var(--gold);
       font-size: 0.8em;
+    }
+
+    /* ===== Блюда, которые нужно готовить (зелёные, заметные) ===== */
+    .cook-table tbody tr.green-dish {
+      background: linear-gradient(90deg, rgba(76, 175, 80, 0.28), rgba(76, 175, 80, 0.06));
+      box-shadow: inset 4px 0 0 0 var(--green), inset 0 0 20px rgba(76, 175, 80, 0.15);
+    }
+
+    .cook-table tbody tr.green-dish:hover {
+      background: linear-gradient(90deg, rgba(76, 175, 80, 0.4), rgba(76, 175, 80, 0.12));
+    }
+
+    .cook-table tbody tr.green-dish .name-cell {
+      color: #6fe07a;
+      text-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+    }
+
+    .cook-table tbody tr.green-dish .name-cell::before {
+      content: "✔ ";
+      color: var(--green);
+      font-size: 0.85em;
+    }
+
+    /* Если блюдо и для контракта, и нужно готовить — показываем и ★, и ✔ */
+    .cook-table tbody tr.contract-dish.green-dish .name-cell::before {
+      content: "★✔ ";
     }
 
     .expand-cell {
@@ -441,7 +468,10 @@
   <section class="page-hero">
     <h1>Прокачка Кулинарии</h1>
     <p>Все рецепты, ингредиенты и бонусы от блюд. Нажми на ⭐ или ⏱ для деталей.</p>
-    <p class="legend">★ — блюда, необходимые для контрактов</p>
+    <p class="legend">
+      <span class="gold">★ — блюда для контрактов</span> &nbsp;|&nbsp;
+      <span class="green">✔ — блюда, которые нужно готовить</span>
+    </p>
   </section>
 
   <!-- ========== ПРОСТЫЕ БЛЮДА ========== -->
@@ -645,7 +675,7 @@
                 </td>
                 <td class="bonus-cell">+10% бег, +100% выносливость (15 мин)</td>
               </tr>
-              <tr>
+              <tr class="green-dish">
                 <td class="name-cell">Жаркое из зайца по-домашнему</td>
                 <td class="craft-cell">500 гр Мясо зайца, ×2 Картошки, ×1 Морковь, ×1 Лук</td>
                 <td class="food-cell">66 | 6</td>
@@ -831,7 +861,7 @@
                 </td>
                 <td class="bonus-cell">Противоядие</td>
               </tr>
-              <tr>
+              <tr class="green-dish">
                 <td class="name-cell">Кулеш</td>
                 <td class="craft-cell">×2 Пшено, 500 гр Мясо зайца, Лук, Вода</td>
                 <td class="food-cell">66 | 11</td>
@@ -1061,7 +1091,7 @@
                 </td>
                 <td class="bonus-cell">Обжорство</td>
               </tr>
-              <tr class="contract-dish">
+              <tr class="contract-dish green-dish">
                 <td class="name-cell">Американские Панкейки</td>
                 <td class="craft-cell">×2 Мука, Молоко, Яйцо, Банан</td>
                 <td class="food-cell">50 | 0</td>
@@ -1269,7 +1299,7 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-              <tr>
+              <tr class="green-dish">
                 <td class="name-cell">Салат Чука</td>
                 <td class="craft-cell">×2 Ламинария, ×1 Огурец, ×1 Травы</td>
                 <td class="food-cell">39 | 33</td>
@@ -1499,7 +1529,7 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-              <tr>
+              <tr class="green-dish">
                 <td class="name-cell">Пшенник</td>
                 <td class="craft-cell">×2 Пшено, ×1 Молоко, ×1 Яйцо, ×1 Клубника</td>
                 <td class="food-cell">72 | 0</td>
@@ -1684,7 +1714,7 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-              <tr class="contract-dish">
+              <tr class="contract-dish green-dish">
                 <td class="name-cell">Вишнёвый пирог «Твин-Пикс»</td>
                 <td class="craft-cell">×2 Мука, ×1 Яйцо, ×1 Сливочное масло, ×2 Вишня, ×1 Мёд</td>
                 <td class="food-cell">61 | 28</td>
@@ -1990,7 +2020,7 @@
                 </td>
                 <td class="bonus-cell">+1 к регенерации здоровья (90 мин), не хочешь кушать и пить (60 мин), иммунитет к болезням (4 ч)</td>
               </tr>
-              <tr>
+              <tr class="green-dish">
                 <td class="name-cell">Стейк из Древней Генерии</td>
                 <td class="craft-cell">1000 гр Древняя гинерия, ×1 Сливочное масло, ×1 Травы, ×1 Перец</td>
                 <td class="food-cell">83 | 0</td>
