@@ -179,7 +179,7 @@
     }
 
     .accordion-content.open {
-      max-height: 1000px;
+      max-height: 3000px;
       margin-top: 0.5rem;
     }
 
@@ -259,6 +259,74 @@
       letter-spacing: 0.3px;
       white-space: nowrap;
       text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+    }
+
+    /* ========== БЛОК РАБОТ ========== */
+    .job-card {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .job-card:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .job-title {
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      color: #fff;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .job-title .icon {
+      font-size: 1.25rem;
+    }
+
+    .job-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .job-row .label {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .job-row .value {
+      color: #fff;
+      font-weight: 700;
+      font-family: 'Overpass', sans-serif;
+    }
+
+    .job-row .value.gold {
+      color: var(--gold);
+      text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+    }
+
+    .job-row .value.premium {
+      color: #4caf50;
+      text-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .job-row .value.cd {
+      color: var(--accent);
     }
 
     .rules {
@@ -360,14 +428,6 @@
         align-self: flex-end;
       }
 
-      .contract-item.centered {
-        align-items: center;
-      }
-
-      .contract-item.centered .contract-payment {
-        align-self: center;
-      }
-
       .section-title,
       .accordion-header {
         font-size: 1.1rem;
@@ -394,7 +454,7 @@
 
   <section class="page-hero">
     <h1>Контракты <em>La Muerte</em></h1>
-    <p>Актуальные цены на контракты.</p>
+    <p>Актуальные закупочные цены на ресурсы для семьи.</p>
   </section>
 
   <!-- МЕТАЛЛУРГИЯ -->
@@ -672,7 +732,6 @@
       </div>
       <div class="accordion-content">
         <div class="contracts-grid">
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🐟</span>
@@ -680,7 +739,6 @@
             </div>
             <span class="contract-payment">78.300$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🐟</span>
@@ -688,7 +746,6 @@
             </div>
             <span class="contract-payment">163.800$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🐟</span>
@@ -696,7 +753,6 @@
             </div>
             <span class="contract-payment">102.600$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🐟</span>
@@ -704,7 +760,6 @@
             </div>
             <span class="contract-payment">189.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🐟</span>
@@ -712,7 +767,6 @@
             </div>
             <span class="contract-payment">121.500$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🐟</span>
@@ -720,7 +774,6 @@
             </div>
             <span class="contract-payment">216.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🐟</span>
@@ -728,7 +781,6 @@
             </div>
             <span class="contract-payment">144.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🐟</span>
@@ -736,8 +788,130 @@
             </div>
             <span class="contract-payment">243.000$</span>
           </div>
-
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ДОПОЛНИТЕЛЬНЫЙ ЗАРАБОТОК -->
+  <section class="block">
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="header-left">
+          <span class="icon">💼</span>
+          <span>Дополнительный заработок</span>
+        </div>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">🍔</span>
+            <span>Курьер фастфуда</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Активация</span>
+            <span class="value">100$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Награда</span>
+            <span class="value gold">23.900$ – 34.100$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Majestic Premium</span>
+            <span class="value premium">29.875$ – 42.625$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">КД</span>
+            <span class="value cd">1 час 30 минут</span>
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">☕</span>
+            <span>Курьер кафе</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Активация</span>
+            <span class="value">200$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Награда</span>
+            <span class="value gold">34.100$ – 45.450$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Majestic Premium</span>
+            <span class="value premium">42.625$ – 56.812$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">КД</span>
+            <span class="value cd">1 час 30 минут</span>
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">🍽️</span>
+            <span>Курьер ресторана</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Активация</span>
+            <span class="value">300$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Награда</span>
+            <span class="value gold">45.450$ – 55.000$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Majestic Premium</span>
+            <span class="value premium">56.812$ – 68.750$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">КД</span>
+            <span class="value cd">1 час 30 минут</span>
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">🔧</span>
+            <span>Тюнинг V</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Активация</span>
+            <span class="value">500$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Награда</span>
+            <span class="value gold">21.380$ – 24.380$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Majestic Premium</span>
+            <span class="value premium">26.725$ – 30.475$</span>
+          </div>
+          <div class="job-row">
+            <span class="label">КД</span>
+            <span class="value cd">2 часа</span>
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-title">
+            <span class="icon">🏠</span>
+            <span>Оплата налога за дом</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Стоимость</span>
+            <span class="value">150 MC</span>
+          </div>
+          <div class="job-row">
+            <span class="label">Выплата</span>
+            <span class="value gold">35.000$</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
