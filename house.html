@@ -894,7 +894,7 @@
       const content = header.nextElementSibling;
 
       if (content.classList.contains('open')) {
-        // Закрытие: фиксируем текущую высоту, потом анимируем в 0
+        // Закрытие
         content.style.height = content.scrollHeight + 'px';
         void content.offsetHeight;
         content.style.height = '0px';
@@ -907,9 +907,21 @@
           }
         });
       } else {
-        // Открытие: анимируем от 0 до реальной высоты содержимого
+        // Открытие
         content.classList.add('open');
         const targetHeight = content.scrollHeight;
         content.style.height = '0px';
         void content.offsetHeight;
-        content
+        content.style.height = targetHeight + 'px';
+
+        content.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName === 'height') {
+            content.style.height = 'auto';
+            content.removeEventListener('transitionend', handler);
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
