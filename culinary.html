@@ -118,12 +118,12 @@
 
     section.block {
       padding: 1rem 2rem;
-      max-width: 1600px;
+      max-width: 1400px;
       margin: 0 auto;
     }
 
     .accordion {
-      max-width: 1500px;
+      max-width: 1300px;
       margin: 0 auto 0.4rem;
     }
 
@@ -197,8 +197,8 @@
     .cook-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1400px;
-      font-size: 0.82rem;
+      min-width: 1000px;
+      font-size: 0.85rem;
     }
 
     .cook-table thead {
@@ -209,7 +209,7 @@
     .cook-table thead th {
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       letter-spacing: 0.5px;
       text-transform: uppercase;
       color: #fff;
@@ -229,11 +229,11 @@
     .cook-table tbody tr:hover { background: rgba(192, 57, 43, 0.08); }
 
     .cook-table tbody td {
-      padding: 0.65rem 0.6rem;
+      padding: 0.75rem 0.6rem;
       vertical-align: top;
       border-right: 1px solid var(--border);
       color: var(--text);
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       line-height: 1.45;
     }
     .cook-table tbody td:last-child { border-right: none; }
@@ -242,14 +242,14 @@
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
       color: #fff;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       white-space: nowrap;
       min-width: 160px;
     }
 
     .cook-table .craft-cell {
       color: var(--muted);
-      min-width: 220px;
+      min-width: 240px;
     }
 
     .cook-table .food-cell {
@@ -260,26 +260,10 @@
       font-family: 'Overpass', sans-serif;
     }
 
-    .cook-table .exp-cell {
-      color: var(--green);
-      font-weight: 700;
-      text-align: center;
-      white-space: nowrap;
-      font-family: 'Overpass', sans-serif;
-    }
-
-    .cook-table .time-cell {
-      color: var(--gold);
-      font-weight: 600;
-      text-align: center;
-      white-space: nowrap;
-      font-family: 'Overpass', sans-serif;
-    }
-
     .cook-table .bonus-cell {
       color: var(--accent);
       font-weight: 600;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       min-width: 180px;
     }
 
@@ -294,6 +278,93 @@
       font-size: 0.85rem;
       padding: 0.75rem !important;
       border-bottom: 2px solid var(--accent) !important;
+    }
+
+    /* ========== РАСКРЫВАЮЩИЕСЯ ЯЧЕЙКИ (Опыт / Время) ========== */
+    .expand-cell {
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+      min-width: 90px;
+    }
+
+    .expand-cell:hover {
+      background: rgba(192, 57, 43, 0.15);
+    }
+
+    .expand-cell .expand-value {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 800;
+    }
+
+    .expand-cell .expand-arrow {
+      font-size: 0.7rem;
+      color: var(--accent);
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+
+    .expand-cell.active .expand-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Опыт — зелёный */
+    .expand-cell.exp .expand-value {
+      color: var(--green);
+    }
+    .expand-cell.exp.active {
+      background: rgba(76, 175, 80, 0.1);
+    }
+
+    /* Время — золотой */
+    .expand-cell.time .expand-value {
+      color: var(--gold);
+    }
+    .expand-cell.time.active {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .expand-details {
+      display: none;
+      margin-top: 0.4rem;
+      padding-top: 0.4rem;
+      border-top: 1px dashed var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    .expand-cell.active .expand-details {
+      display: block;
+    }
+
+    .expand-details .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.1rem 0;
+    }
+
+    .expand-details .detail-row span:first-child {
+      color: var(--muted);
+    }
+
+    .expand-details .detail-row span:last-child {
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .expand-details .detail-row.exp span:last-child {
+      color: var(--green);
+    }
+
+    .expand-details .detail-row.time span:last-child {
+      color: var(--gold);
     }
 
     .back-block {
@@ -358,7 +429,7 @@
 
   <section class="page-hero">
     <h1>Прокачка Кулинарии</h1>
-    <p>Все рецепты, ингредиенты и бонусы от блюд.</p>
+    <p>Все рецепты, ингредиенты и бонусы от блюд. Нажми на ⭐ или ⏱ для деталей.</p>
   </section>
 
   <!-- ========== КУЛИНАРИЯ ========== -->
@@ -379,13 +450,9 @@
               <tr>
                 <th>Название рецепта</th>
                 <th>Что нужно для крафта</th>
-                <th>🍴 Еда и вода</th>
-                <th>⭐ Опыт ×1</th>
-                <th>⭐ Опыт ×2</th>
-                <th>⭐ Опыт ×3</th>
-                <th>⏱ ×1</th>
-                <th>⏱ ×2</th>
-                <th>⏱ ×3</th>
+                <th>🍴 Еда</th>
+                <th>⭐ Опыт</th>
+                <th>⏱ Время</th>
                 <th>🎁 Бонусы</th>
               </tr>
             </thead>
@@ -393,7 +460,7 @@
 
               <!-- КАТЕГОРИЯ -->
               <tr class="category-row">
-                <td colspan="10">🍽 Простые блюда</td>
+                <td colspan="6">🍽 Простые блюда</td>
               </tr>
 
               <!-- Картофель Фри -->
@@ -401,12 +468,22 @@
                 <td class="name-cell">Картофель Фри</td>
                 <td class="craft-cell">×3 Картофель, Сливочное масло, Травы</td>
                 <td class="food-cell">55 | -10</td>
-                <td class="exp-cell">12</td>
-                <td class="exp-cell">24</td>
-                <td class="exp-cell">36</td>
-                <td class="time-cell">3 ч</td>
-                <td class="time-cell">5 ч 2 мин</td>
-                <td class="time-cell">7 ч 34 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">12 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>12 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>24 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>36 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">3 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>3 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>5 ч 2 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>7 ч 34 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">—</td>
               </tr>
 
@@ -415,12 +492,22 @@
                 <td class="name-cell">Английский Завтрак</td>
                 <td class="craft-cell">×3 Яйца, ×1 Консервированные бобы, ×1 Сливочное масло</td>
                 <td class="food-cell">61 | 0</td>
-                <td class="exp-cell">6</td>
-                <td class="exp-cell">12</td>
-                <td class="exp-cell">18</td>
-                <td class="time-cell">2 ч</td>
-                <td class="time-cell">3 ч 22 мин</td>
-                <td class="time-cell">5 ч 2 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">6 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>6 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>12 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>18 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">2 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>2 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>3 ч 22 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>5 ч 2 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">—</td>
               </tr>
 
@@ -429,12 +516,22 @@
                 <td class="name-cell">Грибной Микс</td>
                 <td class="craft-cell">×2 Вёшенки, ×2 Шампиньон, ×1 Гипсизикус, ×1 Подболотник, ×1 Подберёзовик</td>
                 <td class="food-cell">22 | 6</td>
-                <td class="exp-cell">8</td>
-                <td class="exp-cell">16</td>
-                <td class="exp-cell">24</td>
-                <td class="time-cell">1 ч 30 мин</td>
-                <td class="time-cell">2 ч 31 мин</td>
-                <td class="time-cell">3 ч 47 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">8 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>8 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>16 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>24 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">1ч 30м <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>1 ч 30 мин</span></div>
+                    <div class="detail-row time"><span>×2</span><span>2 ч 31 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>3 ч 47 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">—</td>
               </tr>
 
@@ -443,12 +540,22 @@
                 <td class="name-cell">Кукуруза «Элоте»</td>
                 <td class="craft-cell">×3 Кукуруза, ×1 Сливочное масло, ×1 Сыр, ×1 Травы</td>
                 <td class="food-cell">55 | -5</td>
-                <td class="exp-cell">8</td>
-                <td class="exp-cell">16</td>
-                <td class="exp-cell">24</td>
-                <td class="time-cell">2 ч</td>
-                <td class="time-cell">3 ч 22 мин</td>
-                <td class="time-cell">5 ч 2 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">8 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>8 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>16 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>24 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">2 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>2 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>3 ч 22 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>5 ч 2 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">—</td>
               </tr>
 
@@ -457,12 +564,22 @@
                 <td class="name-cell">Ягодный Джем</td>
                 <td class="craft-cell">×2 Клубника, ×1 Черника, ×1 Вишня, ×1 Мёд</td>
                 <td class="food-cell">33 | 17</td>
-                <td class="exp-cell">12</td>
-                <td class="exp-cell">24</td>
-                <td class="exp-cell">36</td>
-                <td class="time-cell">3 ч</td>
-                <td class="time-cell">5 ч 2 мин</td>
-                <td class="time-cell">7 ч 34 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">12 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>12 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>24 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>36 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">3 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>3 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>5 ч 2 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>7 ч 34 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">—</td>
               </tr>
 
@@ -471,12 +588,22 @@
                 <td class="name-cell">Шашлычки из Черемши</td>
                 <td class="craft-cell">500 гр Мясо зайца, ×1 Лук, ×1 Помидор, ×1 Травы</td>
                 <td class="food-cell">66 | 0</td>
-                <td class="exp-cell">16</td>
-                <td class="exp-cell">32</td>
-                <td class="exp-cell">48</td>
-                <td class="time-cell">4 ч</td>
-                <td class="time-cell">6 ч 43 мин</td>
-                <td class="time-cell">10 ч 5 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">16 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>16 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>32 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>48 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">4 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>4 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>6 ч 43 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>10 ч 5 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">—</td>
               </tr>
 
@@ -485,12 +612,22 @@
                 <td class="name-cell">Фруктовый Салат «Тропикана»</td>
                 <td class="craft-cell">×1 Яблоко, ×1 Банан, ×1 Апельсин, Нож</td>
                 <td class="food-cell">44 | 39</td>
-                <td class="exp-cell">16</td>
-                <td class="exp-cell">32</td>
-                <td class="exp-cell">48</td>
-                <td class="time-cell">4 ч</td>
-                <td class="time-cell">6 ч 43 мин</td>
-                <td class="time-cell">10 ч 5 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">16 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>16 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>32 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>48 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">4 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>4 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>6 ч 43 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>10 ч 5 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">—</td>
               </tr>
 
@@ -499,12 +636,22 @@
                 <td class="name-cell">Запечёное яблоко с мёдом</td>
                 <td class="craft-cell">×2 Яблоко, ×1 Мёд, Нож</td>
                 <td class="food-cell">39 | 22</td>
-                <td class="exp-cell">23</td>
-                <td class="exp-cell">46</td>
-                <td class="exp-cell">69</td>
-                <td class="time-cell">6 ч</td>
-                <td class="time-cell">10 ч 5 мин</td>
-                <td class="time-cell">15 ч 7 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">23 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>23 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>46 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>69 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">6 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>6 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>10 ч 5 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>15 ч 7 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">+10% бег, +100% выносливость (15 мин)</td>
               </tr>
 
@@ -513,12 +660,22 @@
                 <td class="name-cell">Жаркое из зайца по-домашнему</td>
                 <td class="craft-cell">500 гр Мясо зайца, ×2 Картошки, ×1 Морковь, ×1 Лук</td>
                 <td class="food-cell">66 | 6</td>
-                <td class="exp-cell">28</td>
-                <td class="exp-cell">56</td>
-                <td class="exp-cell">84</td>
-                <td class="time-cell">8 ч</td>
-                <td class="time-cell">13 ч 26 мин</td>
-                <td class="time-cell">20 ч 10 мин</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">28 <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1</span><span>28 Exp</span></div>
+                    <div class="detail-row exp"><span>×2</span><span>56 Exp</span></div>
+                    <div class="detail-row exp"><span>×3</span><span>84 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">8 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>8 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>13 ч 26 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>20 ч 10 мин</span></div>
+                  </div>
+                </td>
                 <td class="bonus-cell">Вакцины + Противовирусное + Детокс</td>
               </tr>
 
@@ -543,6 +700,10 @@
       header.classList.toggle('active');
       const content = header.nextElementSibling;
       content.classList.toggle('open');
+    }
+
+    function toggleCell(cell) {
+      cell.classList.toggle('active');
     }
   </script>
 </body>
