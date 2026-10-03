@@ -80,7 +80,7 @@
     nav a.active { color: #fff; }
 
     .page-hero {
-      padding: 4rem 2rem 1rem;   /* уменьшили нижний padding */
+      padding: 4rem 2rem 1rem;
       text-align: center;
       position: relative;
     }
@@ -115,12 +115,11 @@
     }
 
     section.block {
-      padding: 1rem 2rem;   /* уменьшили вертикальные отступы */
+      padding: 1rem 2rem;
       max-width: 960px;
       margin: 0 auto;
     }
 
-    /* ========== АККОРДЕОН ========== */
     .accordion {
       max-width: 700px;
       margin: 0 auto;
@@ -184,11 +183,16 @@
       margin-top: 0.5rem;
     }
 
-    /* ========== СЕТКА 2 КОЛОНКИ (для руды и грибов) ========== */
+    /* ========== СЕТКА 2 КОЛОНКИ ========== */
     .contracts-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.5rem;
+    }
+
+    /* ========== ДУБ ПО ЦЕНТРУ ========== */
+    .contract-item.centered {
+      grid-column: 1 / -1;   /* растягивается на 2 колонки */
     }
 
     .contract-item {
@@ -370,10 +374,9 @@
     <p>Актуальные закупочные цены на ресурсы для семьи.</p>
   </section>
 
-  <!-- ========== РАЗДЕЛ 1: МЕТАЛЛУРГИЯ (2 КОЛОНКИ) ========== -->
+  <!-- ========== РАЗДЕЛ 1: МЕТАЛЛУРГИЯ ========== -->
   <section class="block">
     <div class="accordion">
-
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <div class="header-left">
           <span class="icon">⚙️</span>
@@ -384,7 +387,6 @@
 
       <div class="accordion-content">
         <div class="contracts-grid">
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🔨</span>
@@ -392,7 +394,6 @@
             </div>
             <span class="contract-payment">33.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🔨</span>
@@ -400,7 +401,6 @@
             </div>
             <span class="contract-payment">25.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🔨</span>
@@ -408,7 +408,6 @@
             </div>
             <span class="contract-payment">25.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🔨</span>
@@ -416,17 +415,14 @@
             </div>
             <span class="contract-payment">25.000$</span>
           </div>
-
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ========== РАЗДЕЛ 2: ГРИБЫ (2 КОЛОНКИ) ========== -->
+  <!-- ========== РАЗДЕЛ 2: ГРИБЫ ========== -->
   <section class="block">
     <div class="accordion">
-
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <div class="header-left">
           <span class="icon">🍄</span>
@@ -437,7 +433,6 @@
 
       <div class="accordion-content">
         <div class="contracts-grid">
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -445,7 +440,6 @@
             </div>
             <span class="contract-payment">95.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -453,7 +447,6 @@
             </div>
             <span class="contract-payment">140.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -461,7 +454,6 @@
             </div>
             <span class="contract-payment">110.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -469,7 +461,6 @@
             </div>
             <span class="contract-payment">170.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -477,7 +468,6 @@
             </div>
             <span class="contract-payment">130.000$</span>
           </div>
-
           <div class="contract-item">
             <div class="contract-info">
               <span class="contract-icon">🍄‍🟫</span>
@@ -485,10 +475,54 @@
             </div>
             <span class="contract-payment">200.000$</span>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== РАЗДЕЛ 3: ДЕРЕВО ========== -->
+  <section class="block">
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="header-left">
+          <span class="icon">🌳</span>
+          <span>Дерево</span>
+        </div>
+        <span class="arrow">▼</span>
+      </div>
+
+      <div class="accordion-content">
+        <div class="contracts-grid">
+
+          <!-- Сосна -->
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🌲</span>
+              <span class="contract-name">Сосна</span>
+            </div>
+            <span class="contract-payment">140.000$</span>
+          </div>
+
+          <!-- Берёза -->
+          <div class="contract-item">
+            <div class="contract-info">
+              <span class="contract-icon">🌲</span>
+              <span class="contract-name">Берёза</span>
+            </div>
+            <span class="contract-payment">210.000$</span>
+          </div>
+
+          <!-- Дуб — по центру -->
+          <div class="contract-item centered">
+            <div class="contract-info">
+              <span class="contract-icon">🌲</span>
+              <span class="contract-name">Дуб</span>
+            </div>
+            <span class="contract-payment">173.000$</span>
+          </div>
 
         </div>
       </div>
-
     </div>
   </section>
 
