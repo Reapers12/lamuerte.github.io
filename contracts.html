@@ -15,6 +15,7 @@
       --text: #eaeaea;
       --muted: #999;
       --accent: #c0392b;
+      --gold: #d4af37;
     }
 
     body {
@@ -116,13 +117,110 @@
       max-width: 960px;
       margin: 0 auto;
     }
-    section.block p {
-      color: var(--muted);
-      margin-bottom: 1rem;
+
+    /* ========== ЗАГОЛОВОК РАЗДЕЛА ========== */
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 1.5rem;
       text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .section-title .icon {
+      font-size: 1.75rem;
+    }
+
+    /* ========== СПИСОК КОНТРАКТОВ ========== */
+    .contracts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
       max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
+    }
+
+    .contract-item {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .contract-item:hover {
+      transform: translateX(6px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.2);
+    }
+
+    .contract-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .contract-icon {
+      font-size: 2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .contract-name {
+      font-family: 'Cinzel', serif;
+      color: #fff;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+    }
+
+    .contract-payment {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+    }
+
+    /* ========== ПРАВИЛА ========== */
+    .rules {
+      list-style: none;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .rules li {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.85rem;
+      color: var(--text);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .rules li:hover {
+      transform: translateX(6px);
+      border-color: var(--accent);
+    }
+    .rules li strong {
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      margin-right: 0.5rem;
     }
 
     .back-block {
@@ -161,6 +259,20 @@
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; }
       nav a { margin-left: 0; margin-right: 1rem; }
+
+      .contract-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .contract-payment {
+        align-self: flex-end;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
@@ -179,11 +291,70 @@
 
   <section class="page-hero">
     <h1>Контракты <em>La Muerte</em></h1>
-    <p>Здесь скоро появятся контракты семьи.</p>
+    <p>Актуальные закупочные цены на ресурсы для семьи.</p>
   </section>
 
+  <!-- ========== РАЗДЕЛ: МЕТАЛЛУРГИЯ ========== -->
   <section class="block">
-    <p>Информация о контрактах появится позже.</p>
+    <h2 class="section-title">
+      <span class="icon">⚙️</span>
+      Металлургия
+    </h2>
+
+    <div class="contracts-list">
+
+      <!-- ===== Олово ===== -->
+      <div class="contract-item">
+        <div class="contract-info">
+          <span class="contract-icon">🥫</span>
+          <span class="contract-name">Олово</span>
+        </div>
+        <span class="contract-payment">Оплата 33.000$</span>
+      </div>
+
+      <!-- ===== Медная руда ===== -->
+      <div class="contract-item">
+        <div class="contract-info">
+          <span class="contract-icon">🟠</span>
+          <span class="contract-name">Медная руда</span>
+        </div>
+        <span class="contract-payment">Оплата 25.000$</span>
+      </div>
+
+      <!-- ===== Серебряная руда ===== -->
+      <div class="contract-item">
+        <div class="contract-info">
+          <span class="contract-icon">⚪</span>
+          <span class="contract-name">Серебряная руда</span>
+        </div>
+        <span class="contract-payment">Оплата 25.000$</span>
+      </div>
+
+      <!-- ===== Железная руда ===== -->
+      <div class="contract-item">
+        <div class="contract-info">
+          <span class="contract-icon">🔩</span>
+          <span class="contract-name">Железная руда</span>
+        </div>
+        <span class="contract-payment">Оплата 25.000$</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== ПРАВИЛА ========== -->
+  <section class="block">
+    <h2 class="section-title">
+      <span class="icon">📜</span>
+      Правила контрактов
+    </h2>
+    <ul class="rules">
+      <li><strong>I.</strong> Контракт — это закон семьи. Нарушение недопустимо.</li>
+      <li><strong>II.</strong> Все условия обсуждаются заранее и фиксируются.</li>
+      <li><strong>III.</strong> Контракты заключает только лидер или куратор.</li>
+      <li><strong>IV.</strong> Нарушение контракта — исключение из семьи.</li>
+      <li><strong>V.</strong> Закрытые контракты хранятся в архиве семьи.</li>
+    </ul>
   </section>
 
   <div class="back-block">
