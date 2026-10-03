@@ -152,35 +152,6 @@
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
-    }
-    .card {
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .card:hover {
-      border-color: var(--accent);
-      transform: translateY(-4px);
-    }
-    .card h3 {
-      font-family: 'Overpass', sans-serif;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
-    }
-    .card p {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
     .family-intro {
       text-align: center;
       color: var(--muted);
@@ -417,7 +388,6 @@
       <a href="transport.html">О транспорте</a>
       <a href="contracts.html">Контракты</a>
       <a onclick="openModal()">Вступить в семью</a>
-      <a href="#about">О нас</a>
     </nav>
   </header>
 
@@ -436,24 +406,6 @@
     </p>
     <div style="text-align:center;margin-top:2rem;">
       <a href="family.html" class="btn" style="display:inline-block;padding:0.9rem 2rem;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;letter-spacing:1px;">Узнать больше о семье →</a>
-    </div>
-  </section>
-
-  <section class="block" id="about">
-    <h2>О нас</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>Единство</h3>
-        <p>Мы держимся вместе — в делах, в идеях и в жизни.</p>
-      </div>
-      <div class="card">
-        <h3>Верность</h3>
-        <p>Слово, данное семье, не нарушается. Никогда.</p>
-      </div>
-      <div class="card">
-        <h3>Развитие</h3>
-        <p>Каждый растёт — и вместе с ним растёт вся семья.</p>
-      </div>
     </div>
   </section>
 
