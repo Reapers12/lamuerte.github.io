@@ -80,8 +80,9 @@
     nav a:hover { color: #fff; }
     nav a.active { color: #fff; }
 
+    /* ========== HERO — КОМПАКТНЕЕ ========== */
     .page-hero {
-      padding: 5rem 2rem 2rem;
+      padding: 2.5rem 2rem 0.5rem;
       text-align: center;
       position: relative;
     }
@@ -95,10 +96,10 @@
     .page-hero h1 {
       font-family: 'Overpass', sans-serif;
       font-weight: 800;
-      font-size: clamp(2rem, 5vw, 3rem);
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
       letter-spacing: 1px;
       color: #fff;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       position: relative;
       text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
     }
@@ -108,36 +109,38 @@
     }
     .page-hero p {
       color: #ccc;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       max-width: 640px;
       margin: 0 auto;
       position: relative;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
     }
 
+    /* ========== БЛОКИ — КОМПАКТНО ========== */
     section.block {
-      padding: 1rem 2rem;
+      padding: 0.3rem 2rem;
       max-width: 1400px;
       margin: 0 auto;
     }
 
     .accordion {
       max-width: 1300px;
-      margin: 0 auto 0.75rem;
+      margin: 0 auto 0.4rem;
     }
 
+    /* ========== ВКЛАДКА — КОМПАКТНЕЕ ========== */
     .accordion-header {
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
-      font-size: 1.35rem;
+      font-size: 1.1rem;
       color: #fff;
       letter-spacing: 0.5px;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.6rem;
-      padding: 0.85rem 1.25rem;
+      gap: 0.5rem;
+      padding: 0.55rem 1rem;
       background: var(--panel);
       backdrop-filter: blur(6px);
       border: 1px solid var(--border);
@@ -156,15 +159,15 @@
     .accordion-header .header-left {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
 
     .accordion-header .icon {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
     }
 
     .accordion-header .arrow {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--accent);
       transition: transform 0.3s ease;
     }
@@ -181,7 +184,7 @@
 
     .accordion-content.open {
       max-height: 5000px;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
     }
 
     .table-wrapper {
@@ -295,7 +298,7 @@
 
     .back-block {
       text-align: center;
-      padding: 2rem 2rem 4rem;
+      padding: 1.5rem 2rem 3rem;
       display: flex;
       justify-content: center;
       gap: 1rem;
@@ -304,7 +307,7 @@
 
     .btn-back {
       display: inline-block;
-      padding: 0.8rem 1.75rem;
+      padding: 0.7rem 1.5rem;
       background: transparent;
       color: var(--text);
       border: 1px solid var(--border);
@@ -312,6 +315,7 @@
       text-decoration: none;
       font-weight: 600;
       letter-spacing: 1px;
+      font-size: 0.9rem;
       transition: border-color 0.2s, color 0.2s, transform 0.15s;
     }
     .btn-back:hover {
@@ -326,15 +330,16 @@
       border-top: 1px solid var(--border);
       color: #666;
       text-align: center;
-      padding: 1.5rem;
-      font-size: 0.9rem;
+      padding: 1.25rem;
+      font-size: 0.85rem;
     }
     footer span { color: var(--accent); }
 
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; }
       nav a { margin-left: 0; margin-right: 1rem; }
-      section.block { padding: 1rem 0.75rem; }
+      section.block { padding: 0.3rem 0.75rem; }
+      .accordion-header { font-size: 1rem; padding: 0.5rem 0.85rem; }
     }
   </style>
 </head>
