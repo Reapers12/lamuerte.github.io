@@ -179,14 +179,14 @@
       transform: rotate(180deg);
     }
 
+    /* ===== Аккордеон: JS-анимация через height ===== */
     .accordion-content {
-      max-height: 0;
       overflow: hidden;
-      transition: max-height 0.6s ease, margin-top 0.3s ease;
+      height: 0;
+      transition: height 0.3s ease, margin-top 0.2s ease;
     }
 
     .accordion-content.open {
-      max-height: 50000px;
       margin-top: 0.4rem;
     }
 
@@ -272,48 +272,36 @@
       min-width: 180px;
     }
 
-    /* ===== Блюда для контрактов (золотые) ===== */
     .cook-table tbody tr.contract-dish {
       background: linear-gradient(90deg, rgba(212, 175, 55, 0.18), rgba(212, 175, 55, 0.04));
       box-shadow: inset 3px 0 0 0 var(--gold);
     }
-
     .cook-table tbody tr.contract-dish:hover {
       background: linear-gradient(90deg, rgba(212, 175, 55, 0.28), rgba(212, 175, 55, 0.08));
     }
-
-    .cook-table tbody tr.contract-dish .name-cell {
-      color: var(--gold);
-    }
-
+    .cook-table tbody tr.contract-dish .name-cell { color: var(--gold); }
     .cook-table tbody tr.contract-dish .name-cell::before {
       content: "★ ";
       color: var(--gold);
       font-size: 0.8em;
     }
 
-    /* ===== Блюда, которые нужно готовить (зелёные, заметные) ===== */
     .cook-table tbody tr.green-dish {
       background: linear-gradient(90deg, rgba(76, 175, 80, 0.28), rgba(76, 175, 80, 0.06));
       box-shadow: inset 4px 0 0 0 var(--green), inset 0 0 20px rgba(76, 175, 80, 0.15);
     }
-
     .cook-table tbody tr.green-dish:hover {
       background: linear-gradient(90deg, rgba(76, 175, 80, 0.4), rgba(76, 175, 80, 0.12));
     }
-
     .cook-table tbody tr.green-dish .name-cell {
       color: #6fe07a;
       text-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
     }
-
     .cook-table tbody tr.green-dish .name-cell::before {
       content: "✔ ";
       color: var(--green);
       font-size: 0.85em;
     }
-
-    /* Если блюдо и для контракта, и нужно готовить — показываем и ★, и ✔ */
     .cook-table tbody tr.contract-dish.green-dish .name-cell::before {
       content: "★✔ ";
     }
@@ -326,10 +314,7 @@
       transition: background 0.2s;
       min-width: 120px;
     }
-
-    .expand-cell:hover {
-      background: rgba(192, 57, 43, 0.15);
-    }
+    .expand-cell:hover { background: rgba(192, 57, 43, 0.15); }
 
     .expand-cell .expand-value {
       display: inline-flex;
@@ -338,31 +323,18 @@
       font-family: 'Overpass', sans-serif;
       font-weight: 800;
     }
-
     .expand-cell .expand-arrow {
       font-size: 0.7rem;
       color: var(--accent);
       transition: transform 0.3s ease;
       display: inline-block;
     }
+    .expand-cell.active .expand-arrow { transform: rotate(180deg); }
 
-    .expand-cell.active .expand-arrow {
-      transform: rotate(180deg);
-    }
-
-    .expand-cell.exp .expand-value {
-      color: var(--green);
-    }
-    .expand-cell.exp.active {
-      background: rgba(76, 175, 80, 0.1);
-    }
-
-    .expand-cell.time .expand-value {
-      color: var(--gold);
-    }
-    .expand-cell.time.active {
-      background: rgba(212, 175, 55, 0.1);
-    }
+    .expand-cell.exp .expand-value { color: var(--green); }
+    .expand-cell.exp.active { background: rgba(76, 175, 80, 0.1); }
+    .expand-cell.time .expand-value { color: var(--gold); }
+    .expand-cell.time.active { background: rgba(212, 175, 55, 0.1); }
 
     .expand-details {
       display: none;
@@ -373,10 +345,7 @@
       color: var(--muted);
       text-align: left;
     }
-
-    .expand-cell.active .expand-details {
-      display: block;
-    }
+    .expand-cell.active .expand-details { display: block; }
 
     .expand-details .detail-row {
       display: flex;
@@ -384,26 +353,18 @@
       padding: 0.1rem 0;
       gap: 0.5rem;
     }
-
     .expand-details .detail-row span:first-child {
       color: var(--muted);
       font-weight: 600;
       min-width: 85px;
     }
-
     .expand-details .detail-row span:last-child {
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
       color: var(--text);
     }
-
-    .expand-details .detail-row.exp span:last-child {
-      color: var(--green);
-    }
-
-    .expand-details .detail-row.time span:last-child {
-      color: var(--gold);
-    }
+    .expand-details .detail-row.exp span:last-child { color: var(--green); }
+    .expand-details .detail-row.time span:last-child { color: var(--gold); }
 
     .back-block {
       text-align: center;
@@ -2293,7 +2254,35 @@
     function toggleAccordion(header) {
       header.classList.toggle('active');
       const content = header.nextElementSibling;
-      content.classList.toggle('open');
+
+      if (content.classList.contains('open')) {
+        // Закрытие
+        content.style.height = content.scrollHeight + 'px';
+        void content.offsetHeight;
+        content.style.height = '0px';
+        content.classList.remove('open');
+
+        content.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName === 'height') {
+            content.style.height = '';
+            content.removeEventListener('transitionend', handler);
+          }
+        });
+      } else {
+        // Открытие
+        content.classList.add('open');
+        const targetHeight = content.scrollHeight;
+        content.style.height = '0px';
+        void content.offsetHeight;
+        content.style.height = targetHeight + 'px';
+
+        content.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName === 'height') {
+            content.style.height = 'auto';
+            content.removeEventListener('transitionend', handler);
+          }
+        });
+      }
     }
 
     function toggleCell(cell) {
