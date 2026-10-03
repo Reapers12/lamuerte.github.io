@@ -103,10 +103,6 @@
       position: relative;
       text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
     }
-    .page-hero h1 em {
-      color: var(--accent);
-      font-style: normal;
-    }
     .page-hero p {
       color: #ccc;
       font-size: 0.95rem;
@@ -419,7 +415,7 @@
     <p>Все рецепты, ингредиенты и бонусы от блюд. Нажми на ⭐ или ⏱ для деталей.</p>
   </section>
 
-  <!-- ========== КУЛИНАРИЯ ========== -->
+  <!-- ========== ПРОСТЫЕ БЛЮДА ========== -->
   <section class="block">
     <div class="accordion">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -444,8 +440,6 @@
               </tr>
             </thead>
             <tbody>
-
-              <!-- Картофель Фри -->
               <tr>
                 <td class="name-cell">Картофель Фри</td>
                 <td class="craft-cell">×3 Картофель, Сливочное масло, Травы</td>
@@ -468,8 +462,6 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-
-              <!-- Английский Завтрак -->
               <tr>
                 <td class="name-cell">Английский Завтрак</td>
                 <td class="craft-cell">×3 Яйца, ×1 Консервированные бобы, ×1 Сливочное масло</td>
@@ -492,8 +484,6 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-
-              <!-- Грибной Микс -->
               <tr>
                 <td class="name-cell">Грибной Микс</td>
                 <td class="craft-cell">×2 Вёшенки, ×2 Шампиньон, ×1 Гипсизикус, ×1 Подболотник, ×1 Подберёзовик</td>
@@ -516,8 +506,6 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-
-              <!-- Кукуруза "Элоте" -->
               <tr>
                 <td class="name-cell">Кукуруза «Элоте»</td>
                 <td class="craft-cell">×3 Кукуруза, ×1 Сливочное масло, ×1 Сыр, ×1 Травы</td>
@@ -540,8 +528,6 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-
-              <!-- Ягодный Джем -->
               <tr>
                 <td class="name-cell">Ягодный Джем</td>
                 <td class="craft-cell">×2 Клубника, ×1 Черника, ×1 Вишня, ×1 Мёд</td>
@@ -564,8 +550,6 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-
-              <!-- Шашлычки из Черемши -->
               <tr>
                 <td class="name-cell">Шашлычки из Черемши</td>
                 <td class="craft-cell">500 гр Мясо зайца, ×1 Лук, ×1 Помидор, ×1 Травы</td>
@@ -588,8 +572,6 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-
-              <!-- Фруктовый Салат "Тропикана" -->
               <tr>
                 <td class="name-cell">Фруктовый Салат «Тропикана»</td>
                 <td class="craft-cell">×1 Яблоко, ×1 Банан, ×1 Апельсин, Нож</td>
@@ -612,8 +594,6 @@
                 </td>
                 <td class="bonus-cell">—</td>
               </tr>
-
-              <!-- Запеченое яблоко с медом -->
               <tr>
                 <td class="name-cell">Запечёное яблоко с мёдом</td>
                 <td class="craft-cell">×2 Яблоко, ×1 Мёд, Нож</td>
@@ -636,8 +616,6 @@
                 </td>
                 <td class="bonus-cell">+10% бег, +100% выносливость (15 мин)</td>
               </tr>
-
-              <!-- Жаркое из зайца по домашнему -->
               <tr>
                 <td class="name-cell">Жаркое из зайца по-домашнему</td>
                 <td class="craft-cell">500 гр Мясо зайца, ×2 Картошки, ×1 Морковь, ×1 Лук</td>
@@ -659,6 +637,254 @@
                   </div>
                 </td>
                 <td class="bonus-cell">Вакцины + Противовирусное + Детокс</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ОБЫЧНЫЕ БЛЮДА ========== -->
+  <section class="block">
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="header-left">
+          <span class="icon">🍲</span>
+          <span>Кулинария: Обычные Блюда</span>
+        </div>
+        <span class="arrow">▼</span>
+      </div>
+
+      <div class="accordion-content">
+        <div class="table-wrapper">
+          <table class="cook-table">
+            <thead>
+              <tr>
+                <th>Название рецепта</th>
+                <th>Что нужно для крафта</th>
+                <th>🍴 Еда</th>
+                <th>⭐ Опыт</th>
+                <th>⏱ Время</th>
+                <th>🎁 Бонусы</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- Шакшука -->
+              <tr>
+                <td class="name-cell">Шакшука</td>
+                <td class="craft-cell">×2 Помидор, Перец, Лук, ×2 Яйцо</td>
+                <td class="food-cell">61 | 0</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">11 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>11 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>22 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>33 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">2 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>2 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>3 ч 22 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>5 ч 2 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Рататуй -->
+              <tr>
+                <td class="name-cell">Рататуй</td>
+                <td class="craft-cell">Баклажан, Помидор, Перец, Лук, Трава</td>
+                <td class="food-cell">55 | 17</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">17 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>17 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>34 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>51 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">3 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>3 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>5 ч 2 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>7 ч 34 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">+30% к восстановлению ХП через предметы (30 мин)</td>
+              </tr>
+
+              <!-- Пшенная каша с тыквой -->
+              <tr>
+                <td class="name-cell">Пшённая каша с тыквой</td>
+                <td class="craft-cell">×2 Пшено, Тыква, Молоко, Сливочное масло</td>
+                <td class="food-cell">66 | 6</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">21 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>21 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>42 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>63 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">4 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>4 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>6 ч 43 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>10 ч 5 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Азиатский Вок с Зайцем -->
+              <tr>
+                <td class="name-cell">Азиатский Вок с Зайцем</td>
+                <td class="craft-cell">×2 Лапша, 500 гр Мясо зайца, Морковь, Лук, Перец</td>
+                <td class="food-cell">72 | -5</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">21 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>21 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>42 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>63 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">4 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>4 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>6 ч 43 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>10 ч 5 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">Иммунитет к Перевесу (1 час)</td>
+              </tr>
+
+              <!-- Жареный Рис по-китайски -->
+              <tr>
+                <td class="name-cell">Жареный Рис по-китайски</td>
+                <td class="craft-cell">×2 Рис, Яйцо, Морковь, Лук, Кастрюля</td>
+                <td class="food-cell">61 | 0</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">30 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>30 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>60 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>90 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">6 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>6 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>10 ч 5 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>15 ч 7 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Смузи "Мультифрукт" -->
+              <tr>
+                <td class="name-cell">Смузи «Мультифрукт»</td>
+                <td class="craft-cell">Яблоко, Апельсин, Банан, Молоко</td>
+                <td class="food-cell">28 | 55</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">32 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>32 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>64 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>96 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">6 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>6 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>10 ч 5 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>15 ч 7 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">Противоядие</td>
+              </tr>
+
+              <!-- Кулеш -->
+              <tr>
+                <td class="name-cell">Кулеш</td>
+                <td class="craft-cell">×2 Пшено, 500 гр Мясо зайца, Лук, Вода</td>
+                <td class="food-cell">66 | 11</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">41 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>41 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>82 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>123 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">8 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>8 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>13 ч 26 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>20 ч 10 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Винегрет -->
+              <tr>
+                <td class="name-cell">Винегрет</td>
+                <td class="craft-cell">×2 Свёкла, Картошка, Огурец, Лук</td>
+                <td class="food-cell">50 | 22</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">40 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>40 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>80 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>120 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">8 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>8 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>13 ч 26 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>20 ч 10 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">—</td>
+              </tr>
+
+              <!-- Крем-суп из тыквы -->
+              <tr>
+                <td class="name-cell">Крем-суп из тыквы</td>
+                <td class="craft-cell">×2 Тыква, Молоко, Трава</td>
+                <td class="food-cell">61 | 22</td>
+                <td class="expand-cell exp" onclick="toggleCell(this)">
+                  <span class="expand-value">40 Exp <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row exp"><span>×1 Блюдо</span><span>40 Exp</span></div>
+                    <div class="detail-row exp"><span>×2 Блюда</span><span>80 Exp</span></div>
+                    <div class="detail-row exp"><span>×3 Блюд</span><span>120 Exp</span></div>
+                  </div>
+                </td>
+                <td class="expand-cell time" onclick="toggleCell(this)">
+                  <span class="expand-value">8 ч <span class="expand-arrow">▼</span></span>
+                  <div class="expand-details">
+                    <div class="detail-row time"><span>×1</span><span>8 ч</span></div>
+                    <div class="detail-row time"><span>×2</span><span>13 ч 26 мин</span></div>
+                    <div class="detail-row time"><span>×3</span><span>20 ч 10 мин</span></div>
+                  </div>
+                </td>
+                <td class="bonus-cell">—</td>
               </tr>
 
             </tbody>
