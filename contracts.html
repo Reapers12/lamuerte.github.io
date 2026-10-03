@@ -37,12 +37,12 @@
       pointer-events: none;
     }
 
-    /* ========== HEADER — уменьшенный ========== */
+    /* ========== HEADER — стандартный ========== */
     header {
       background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
-      padding: 0.7rem 1.5rem;       /* было 1rem 2rem */
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -50,13 +50,13 @@
       top: 0;
       z-index: 10;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 1rem;
     }
 
     header .logo {
       font-family: 'Cinzel', serif;
-      font-size: 1.1rem;             /* было 1.25rem */
-      letter-spacing: 2.5px;         /* было 3px */
+      font-size: 1.25rem;
+      letter-spacing: 3px;
       color: #fff;
       text-decoration: none;
       cursor: pointer;
@@ -68,9 +68,9 @@
 
     nav a {
       color: var(--muted);
-      margin-left: 1.1rem;           /* было 1.5rem */
+      margin-left: 1.5rem;
       text-decoration: none;
-      font-size: 0.85rem;            /* было 0.95rem */
+      font-size: 0.95rem;
       transition: color 0.2s;
       cursor: pointer;
       white-space: nowrap;
@@ -259,7 +259,7 @@
 
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; }
-      nav a { margin-left: 0; margin-right: 0.8rem; font-size: 0.8rem; }
+      nav a { margin-left: 0; margin-right: 1rem; }
 
       .contract-item {
         flex-direction: column;
