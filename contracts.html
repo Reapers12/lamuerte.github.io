@@ -116,7 +116,7 @@
     }
 
     section.block {
-      padding: 1rem 2rem;
+      padding: 0.4rem 2rem;
       max-width: 960px;
       margin: 0 auto;
     }
@@ -129,15 +129,15 @@
     .accordion-header {
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
-      font-size: 1.35rem;
+      font-size: 1.05rem;
       color: #fff;
       letter-spacing: 0.5px;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.6rem;
-      padding: 0.85rem 1.25rem;
+      gap: 0.5rem;
+      padding: 0.45rem 1rem;
       background: var(--panel);
       backdrop-filter: blur(6px);
       border: 1px solid var(--border);
@@ -156,17 +156,20 @@
     .accordion-header .header-left {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
 
     .accordion-header .icon {
-      font-size: 1.5rem;
+      font-size: 1.15rem;
+      line-height: 1;
     }
 
     .accordion-header .arrow {
-      font-size: 1rem;
+      font-size: 0.75rem;
+      line-height: 1;
       color: var(--accent);
       transition: transform 0.3s ease;
+      margin-top: -1px;
     }
 
     .accordion-header.active .arrow {
@@ -181,7 +184,7 @@
     }
 
     .accordion-content.open {
-      margin-top: 0.5rem;
+      margin-top: 0.4rem;
     }
 
     .contracts-grid {
@@ -418,7 +421,8 @@
       }
 
       .accordion-header {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        padding: 0.4rem 0.85rem;
       }
     }
   </style>
@@ -943,7 +947,7 @@
       const content = header.nextElementSibling;
 
       if (content.classList.contains('open')) {
-        // Закрытие: фиксируем текущую высоту, затем анимируем в 0
+        // Закрытие
         content.style.height = content.scrollHeight + 'px';
         void content.offsetHeight;
         content.style.height = '0px';
@@ -956,7 +960,7 @@
           }
         });
       } else {
-        // Открытие: анимируем от 0 до реальной высоты
+        // Открытие
         content.classList.add('open');
         const targetHeight = content.scrollHeight;
         content.style.height = '0px';
