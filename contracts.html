@@ -4,243 +4,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Контракты — La Muerte</title>
+  
+  <!-- Скрипт против вспышки -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     /* ===== Светлая тема (по умолчанию) ===== */
     :root {
-      --bg: #f4f4f7;
-      --panel: rgba(255, 255, 255, 0.92);
-      --border: #e0e0e6;
-      --text: #1a1a1a;
-      --muted: #666;
-      --accent: #c0392b;
-      --gold: #b8860b;
-      --green: #2e7d32;
-      --bg-image: none;
-      --bg-overlay: rgba(255, 255, 255, 0.9);
+      --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
+      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32; --blue: #3498db;
+      --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
 
     /* ===== Тёмная тема ===== */
     html.dark {
-      --bg: #0a0a0a;
-      --panel: rgba(17, 17, 17, 0.95);
-      --border: #222;
-      --text: #eaeaea;
-      --muted: #999;
-      --gold: #d4af37;
-      --green: #4caf50;
+      --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
+      --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
       --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
       --bg-overlay: rgba(0, 0, 0, 0.85);
     }
 
     html, body { transition: background 0.4s ease, color 0.4s ease; }
-
     body {
-      font-family: 'Overpass', sans-serif;
-      background: var(--bg-image) center/cover no-repeat fixed;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-      position: relative;
+      font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed;
+      background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative;
     }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: var(--bg-overlay);
-      z-index: -1;
-      pointer-events: none;
-      transition: background 0.4s ease;
-    }
+    body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
 
     /* ===== Шапка ===== */
     header {
-      background: var(--panel);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      flex-wrap: wrap;
-      gap: 1rem;
+      background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
       transition: background 0.4s ease, border-color 0.4s ease;
     }
-
-    header .logo {
-      font-family: 'Overpass', sans-serif;
-      font-weight: 800;
-      font-size: 1.25rem;
-      letter-spacing: 3px;
-      color: var(--text);
-      text-decoration: none;
-      cursor: pointer;
-      transition: opacity 0.2s;
-      display: inline-block;
-    }
-    header .logo:hover { opacity: 0.75; }
+    header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
     header .logo span { color: var(--accent); }
-
-    /* Контейнер правой части (Меню + Переключатель) */
-    .header-right {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 1rem;
-      flex: 1;
-      flex-wrap: wrap;
-    }
-
-    /* ===== Навигация ===== */
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.2rem;
-      justify-content: flex-end;
-    }
-
+    
+    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
+    nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem; }
+    
     nav a {
-      position: relative;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-      padding: 0.35rem 0.75rem;
-      border-radius: 6px;
-      overflow: hidden;
-      white-space: nowrap;
-      transition: color 0.2s, background 0.2s, box-shadow 0.3s;
+      position: relative; color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500;
+      padding: 0.35rem 0.75rem; border-radius: 6px; overflow: hidden; white-space: nowrap; transition: 0.2s;
     }
+    nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35); }
+    nav a.active { color: var(--text); background: rgba(192, 57, 43, 0.14); }
 
-    nav a:hover {
-      color: var(--text);
-      background: rgba(192, 57, 43, 0.08);
-      box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35);
-    }
-
-    nav a.active {
-      color: var(--text);
-      background: rgba(192, 57, 43, 0.14);
-    }
-
-    /* Кнопка ЛК */
     .profile-btn {
-      color: var(--gold) !important;
-      font-weight: 700 !important;
-      margin-left: 0.5rem;
-      border-left: 1px solid var(--border);
-      padding-left: 1rem !important;
-      border-radius: 0 !important;
+      color: var(--gold) !important; font-weight: 700 !important; margin-left: 0.5rem;
+      border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important;
     }
-    .profile-btn:hover {
-      background: transparent !important;
-      box-shadow: none !important;
-      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-    }
+    .profile-btn:hover { background: transparent !important; box-shadow: none !important; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
 
-    /* Молнии в навигации */
-    nav a .lightning {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
-      filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9));
-      opacity: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
+    /* Молнии */
+    nav a .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
     nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
     nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
     nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
-
-    nav a .spark {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 3px; height: 3px;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-50%);
-      z-index: 1;
-    }
-
+    nav a .spark { position: absolute; top: 50%; left: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
     nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
     nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
     nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
     nav a:hover .spark.s2 { animation-delay: 0.12s; }
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
 
-    /* ===== Переключатель День/Ночь ===== */
-    .spark-switch { 
-      display: inline-block; 
-      font-size: 20px; 
-      flex-shrink: 0; /* Запрещаем сжиматься */
-      margin-left: 0.5rem;
-    }
-    .spark-switch input { display: none; }
-    .spark-switch .track {
-      position: relative;
-      width: 5em; height: 2.5em;
-      background: #080e27;
-      border-radius: 1.25em;
-      cursor: pointer;
-      overflow: hidden;
-      border: 0.1em solid rgba(255, 255, 255, 0.15);
-      box-shadow: inset 0 0.2em 0.5em rgba(0, 0, 0, 0.6), 0 0.2em 0.4em rgba(0, 0, 0, 0.2);
-      transition: all 0.4s ease;
-    }
-    .spark-switch .track::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, #3478f6, #f5ba1f);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .spark-switch .knob {
-      position: absolute;
-      top: 0.15em; left: 0.15em;
-      width: 2em; height: 2em;
-      background: #f7f7f7;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 0.1em 0.3em rgba(0, 0, 0, 0.3);
-    }
-    .spark-switch .knob svg { width: 1.2em; height: 1.2em; color: #272727; transition: color 0.4s ease, transform 0.4s ease; }
-    .spark-switch input:checked + .track { border-color: rgba(245, 186, 31, 0.8); box-shadow: inset 0 0.1em 0.3em rgba(0, 0, 0, 0.4), 0 0 0.6em 0.1em rgba(245, 186, 31, 0.4); }
-    .spark-switch input:checked + .track .knob { transform: translateX(2.5em); }
-    .spark-switch input:checked + .track::before { opacity: 1; }
-    .spark-switch input:checked + .track .knob svg { color: #f5ba1f; transform: scale(1.1); }
+    /* Кнопка темы */
+    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
+    .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
+    .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
+    .theme-btn .icon-moon { display: none; }
+    html.dark .theme-btn .icon-sun { display: none; }
+    html.dark .theme-btn .icon-moon { display: block; }
+    html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
 
-    .spark-switch .stars { position: absolute; inset: 0; z-index: 1; }
-    .spark-switch .star { position: absolute; background: #f7f7f7; border-radius: 50%; transition: width 0.3s, height 0.3s, background 0.3s, border-radius 0.3s; }
-    .spark-switch .star:nth-child(1) { top: 0.4em; left: 100%; width: 0.15em; height: 0.15em; animation: drift 3s linear infinite; }
-    .spark-switch .star:nth-child(2) { top: 1.2em; left: 100%; width: 0.2em;  height: 0.2em;  animation: drift 4s linear infinite 1s; }
-    .spark-switch .star:nth-child(3) { top: 2em;   left: 100%; width: 0.1em;  height: 0.1em;  animation: drift 2.5s linear infinite 0.5s; }
-    .spark-switch .star:nth-child(4) { top: 0.8em; left: 100%; width: 0.15em; height: 0.15em; animation: drift 5s linear infinite 2s; }
-    .spark-switch input:checked + .track .star { width: 1.5em; height: 0.1em; border-radius: 0.05em; background: rgba(255, 255, 255, 0.9); }
-    .spark-switch input:checked + .track .star:nth-child(1) { animation: warp 0.4s linear infinite; }
-    .spark-switch input:checked + .track .star:nth-child(2) { animation: warp 0.6s linear infinite 0.1s; }
-    .spark-switch input:checked + .track .star:nth-child(3) { animation: warp 0.3s linear infinite 0.2s; }
-    .spark-switch input:checked + .track .star:nth-child(4) { animation: warp 0.5s linear infinite 0.15s; }
-
-    @keyframes drift { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateX(-6em); opacity: 0; } }
-    @keyframes warp { 0% { transform: translateX(0) scaleX(1); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateX(-6em) scaleX(2); opacity: 0; } }
+    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
+    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
+    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
     /* ===== Контент ===== */
     .page-hero { padding: 4rem 2rem 1rem; text-align: center; position: relative; }
@@ -253,60 +99,29 @@
     .accordion { max-width: 700px; margin: 0 auto; }
 
     .accordion-header {
-      font-family: 'Overpass', sans-serif;
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--text);
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.45rem 1rem;
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      cursor: pointer;
-      user-select: none;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.2s, transform 0.2s, box-shadow 0.3s, background 0.4s;
+      font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.5px;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+      padding: 0.45rem 1rem; background: var(--panel); backdrop-filter: blur(6px);
+      border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px;
+      cursor: pointer; user-select: none; position: relative; overflow: hidden; transition: 0.2s;
     }
     .accordion-header:hover { border-color: var(--accent); transform: translateX(4px); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.4), 0 0 20px rgba(192, 57, 43, 0.35); }
-
     .accordion-header .header-left { display: flex; align-items: center; gap: 0.5rem; position: relative; z-index: 2; }
     .accordion-header .icon { font-size: 1.15rem; line-height: 1; }
     .accordion-header .arrow { font-size: 0.75rem; line-height: 1; color: var(--accent); transition: transform 0.3s ease; margin-top: -1px; position: relative; z-index: 2; }
     .accordion-header.active .arrow { transform: rotate(180deg); }
 
-    .accordion-header .lightning {
-      position: absolute; top: 0; bottom: 0; width: 2px;
-      background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
-      filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9));
-      opacity: 0; pointer-events: none; z-index: 1;
-    }
+    .accordion-header .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
     .accordion-header .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
     .accordion-header .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
     .accordion-header .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
-
-    .accordion-header .spark {
-      position: absolute; top: 50%; left: 0; width: 4px; height: 4px;
-      border-radius: 50%; background: #fff;
-      box-shadow: 0 0 8px 2px rgba(255, 230, 100, 0.9), 0 0 14px 4px rgba(192, 57, 43, 0.7);
-      opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1;
-    }
+    .accordion-header .spark { position: absolute; top: 50%; left: 0; width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 2px rgba(255, 230, 100, 0.9), 0 0 14px 4px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
 
     .accordion-header:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
     .accordion-header:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
     .accordion-header:hover .spark { animation: sparkFly 0.9s ease-out; }
     .accordion-header:hover .spark.s2 { animation-delay: 0.12s; }
     .accordion-header:hover .spark.s3 { animation-delay: 0.24s; }
-
-    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
-    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
-    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
     .accordion-content { overflow: hidden; height: 0; transition: height 0.3s ease, margin-top 0.2s ease; }
     .accordion-content.open { margin-top: 0.4rem; }
@@ -315,17 +130,8 @@
     .contracts-list { display: flex; flex-direction: column; gap: 0.5rem; }
 
     .contract-item {
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      padding: 0.5rem 0.75rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.6rem;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s, background 0.4s;
+      background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+      border-radius: 8px; padding: 0.5rem 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; transition: 0.2s;
     }
     .contract-item:hover { transform: translateX(6px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(192, 57, 43, 0.2); }
     .contract-item.centered { grid-column: 1 / -1; justify-content: center; gap: 1rem; }
@@ -337,16 +143,7 @@
     .contract-name { font-weight: 600; color: var(--text); font-size: 0.9rem; letter-spacing: 0.3px; }
     .contract-payment { font-weight: 800; color: var(--gold); font-size: 0.9rem; letter-spacing: 0.3px; white-space: nowrap; text-shadow: 0 0 12px rgba(212, 175, 55, 0.3); }
 
-    .job-card {
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 0.5rem;
-      transition: border-color 0.2s, transform 0.2s, background 0.4s;
-    }
+    .job-card { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 0.5rem; transition: 0.2s; }
     .job-card:last-child { margin-bottom: 0; }
     .job-card:hover { border-color: var(--accent); transform: translateX(4px); }
 
@@ -370,12 +167,12 @@
     .btn-back { display: inline-block; padding: 0.7rem 1.5rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; transition: 0.2s; }
     .btn-back:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
-    footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: background 0.4s ease, border-color 0.4s ease; }
+    footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
     footer span { color: var(--accent); }
 
     @media (max-width: 850px) {
       header { flex-direction: column; align-items: flex-start; }
-      .header-right { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      .header-right { width: 100%; justify-content: space-between; }
       nav { justify-content: flex-start; }
     }
     @media (max-width: 600px) {
@@ -398,25 +195,12 @@
         <a href="contracts.html" class="active">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         
-        <a href="#" onclick="goToProfile(event)" class="profile-btn">
-          👤 Личный кабинет
-        </a>
+        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
+        <button class="theme-btn" id="themeToggle" title="Переключить тему">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
       </nav>
-
-      <label class="spark-switch" title="Переключить тему">
-        <input type="checkbox" id="themeSwitch">
-        <span class="track">
-          <span class="knob">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="4"/>
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-            </svg>
-          </span>
-          <span class="stars">
-            <span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span>
-          </span>
-        </span>
-      </label>
     </div>
   </header>
 
@@ -576,10 +360,7 @@
           <div class="job-row"><span class="label">💵 Награда</span><span class="value gold">23.900$ – 34.100$</span></div>
           <div class="job-row"><span class="label">💎 Majestic Premium</span><span class="value premium">29.875$ – 42.625$</span></div>
           <div class="job-row"><span class="label">⏰ Cooldown</span><span class="value cd">1 час 30 минут</span></div>
-          <div class="job-dishes">
-            <span class="dishes-label">Требуются блюда:</span>
-            <ul><li>Картошка Фри — 3 шт</li><li>Смузи «Мульти-фрукт» — 3 шт</li><li>Американские Панкейки — 3 шт</li></ul>
-          </div>
+          <div class="job-dishes"><span class="dishes-label">Требуются блюда:</span><ul><li>Картошка Фри — 3 шт</li><li>Смузи «Мульти-фрукт» — 3 шт</li><li>Американские Панкейки — 3 шт</li></ul></div>
         </div>
 
         <div class="job-card">
@@ -588,10 +369,7 @@
           <div class="job-row"><span class="label">💵 Награда</span><span class="value gold">34.100$ – 45.450$</span></div>
           <div class="job-row"><span class="label">💎 Majestic Premium</span><span class="value premium">42.625$ – 56.812$</span></div>
           <div class="job-row"><span class="label">⏰ Cooldown</span><span class="value cd">1 час 30 минут</span></div>
-          <div class="job-dishes">
-            <span class="dishes-label">Требуются блюда:</span>
-            <ul><li>Креветки Темпура — 3 шт</li><li>Суши Роллы с Сериолой — 3 шт</li><li>Вишнёвый пирог «Твин-Пикс» — 3 шт</li></ul>
-          </div>
+          <div class="job-dishes"><span class="dishes-label">Требуются блюда:</span><ul><li>Креветки Темпура — 3 шт</li><li>Суши Роллы с Сериолой — 3 шт</li><li>Вишнёвый пирог «Твин-Пикс» — 3 шт</li></ul></div>
         </div>
 
         <div class="job-card">
@@ -600,10 +378,7 @@
           <div class="job-row"><span class="label">💵 Награда</span><span class="value gold">45.450$ – 55.000$</span></div>
           <div class="job-row"><span class="label">💎 Majestic Premium</span><span class="value premium">56.812$ – 68.750$</span></div>
           <div class="job-row"><span class="label">⏰ Cooldown</span><span class="value cd">1 час 30 минут</span></div>
-          <div class="job-dishes">
-            <span class="dishes-label">Требуются блюда:</span>
-            <ul><li>Биск из Лобстера — 3 шт</li><li>Токсичный Ролл — 3 шт</li><li>Стейк «Томагавк» — 3 шт</li></ul>
-          </div>
+          <div class="job-dishes"><span class="dishes-label">Требуются блюда:</span><ul><li>Биск из Лобстера — 3 шт</li><li>Токсичный Ролл — 3 шт</li><li>Стейк «Томагавк» — 3 шт</li></ul></div>
         </div>
 
         <div class="job-card">
@@ -654,34 +429,19 @@
       }
     }
 
-    /* ===== Переключатель темы ===== */
-    (function () {
-      const switchEl = document.getElementById('themeSwitch');
-      if (!switchEl) return;
-      const saved = localStorage.getItem('theme');
-      if (saved === 'dark') {
-        document.documentElement.classList.add('dark');
-        switchEl.checked = true;
-      }
-      switchEl.addEventListener('change', () => {
-        if (switchEl.checked) {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
-        }
+    /* ===== Кнопка темы ===== */
+    const toggleBtn = document.getElementById('themeToggle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
       });
-    })();
+    }
 
     /* ===== Переход в ЛК ===== */
     function goToProfile(e) {
       if (e) e.preventDefault();
-      if (localStorage.getItem('lm_logged') === 'true') {
-        window.location.href = 'profile.html';
-      } else {
-        window.location.href = 'login.html';
-      }
+      window.location.href = 'profile.html';
     }
   </script>
 </body>
