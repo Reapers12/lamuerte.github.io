@@ -115,7 +115,6 @@
     footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
     footer span { color: var(--accent); }
     
-    /* МОДАЛЬНОЕ ОКНО */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(6px); z-index: 100; justify-content: center; align-items: center; padding: 2rem; }
     .modal-overlay.active { display: flex; }
     .modal-content { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 12px; padding: 2.5rem; max-width: 500px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
@@ -438,7 +437,7 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // НОВЫЙ ВЕБХУК
+    // ВАШ НОВЫЙ ВЕБХУК
     const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563663528131428535/bKmM1iMBGXyK-0s-ilngZ7f-ZwDa5j4AhivQS56TlLHLgj3dxJZEZ0wx5YAJMcCbh4Zi';
 
     const toggleBtn = document.getElementById('themeToggle');
@@ -622,11 +621,11 @@
       };
 
       try {
-        // ОТПРАВЛЯЕМ ЗАПРОСЫ ПАРАЛЛЕЛЬНО (В DISCORD И SUPABASE)
+        // ОТПРАВЛЯЕМ ЗАПРОСЫ ПАРАЛЛЕЛЬНО
         const [discordRes, supabaseRes] = await Promise.all([
           fetch(DISCORD_WEBHOOK_URL, {
             method: 'POST',
-            mode: 'no-cors', // <--- ДОБАВЛЕНО ДЛЯ ОБХОДА CORS
+            mode: 'no-cors', // ОБХОД CORS
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           }),
@@ -646,10 +645,8 @@
 
         if (supabaseRes.error) throw supabaseRes.error;
 
-        // МГНОВЕННО ЗАКРЫВАЕМ ОКНО
         closeForm();
         
-        // ОЧИЩАЕМ ФОРМУ ДЛЯ СЛЕДУЮЩЕГО РАЗА
         document.getElementById('payoutForm').reset();
         document.getElementById('resourceGroup').classList.remove('visible');
         document.getElementById('qtyGroup').classList.remove('visible');
