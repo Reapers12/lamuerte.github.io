@@ -144,10 +144,15 @@
         });
         if (authError) throw authError;
 
-        // При регистрации выдаем роль "Стажер"
+        // ИСПОЛЬЗУЕМ UPSERT ВМЕСТО INSERT, ЧТОБЫ ИЗБЕЖАТЬ ОШИБКИ DUPLICATE KEY
         const { error: dbError } = await supabase
           .from('profiles')
-          .insert([{ id: authData.user.id, nickname: nickname, role: 'Стажер' }]);
+          .upsert({ 
+            id: authData.user.id, 
+            nickname: nickname, 
+            role: 'Стажер',
+            balance: 0
+          }, { onConflict: 'id' });
 
         if (dbError) throw dbError;
 
