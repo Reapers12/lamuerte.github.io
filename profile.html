@@ -20,7 +20,7 @@
     /* Шапка */
     header {
       background: rgba(5,5,5,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
     }
     header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: #fff; text-decoration: none; }
     header .logo span { color: var(--accent); }
@@ -29,67 +29,64 @@
 
     /* Контент */
     section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; }
-    
-    .profile-grid {
-      display: grid; grid-template-columns: 280px 1fr; gap: 2rem;
-    }
+    .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
 
-    /* Левая панель (Аватар) */
+    /* Левая панель */
     .profile-card {
       background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
-      padding: 2rem; text-align: center; border-top: 3px solid var(--accent);
+      padding: 2rem; text-align: center; border-top: 3px solid var(--accent); height: fit-content;
     }
-    .avatar-wrapper {
-      position: relative; width: 140px; height: 140px; margin: 0 auto 1.5rem;
-      border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;
-      font-size: 3.5rem; font-weight: 800; color: var(--accent); border: 3px solid var(--border);
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    }
-    .avatar-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: none; }
     
-    .profile-name { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.2rem; color: #fff; }
+    .avatar-wrapper {
+      position: relative; width: 150px; height: 150px; margin: 0 auto 1.5rem;
+      border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; font-weight: 800; color: var(--accent); border: 3px solid var(--border);
+      box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden;
+    }
+    .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    
+    .profile-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; color: #fff; word-break: break-all; }
     .profile-status { font-size: 0.85rem; color: var(--green); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
     
     .btn-outline {
       display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text);
       border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600;
-      transition: all 0.2s; text-decoration: none; font-size: 0.9rem;
+      transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%;
     }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
 
-    /* Правая панель (Статистика) */
-    .stats-card {
-      background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem;
-    }
-    .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    /* Правая панель */
+    .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+    .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: #fff; }
     
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
     .stat-item {
       background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 1rem;
       display: flex; flex-direction: column; gap: 0.3rem;
     }
-    .stat-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-    .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
+    .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
     .stat-value.money { color: var(--green); }
 
     /* Настройки */
     .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
     .form-group input {
-      width: 100%; padding: 0.7rem; background: #050505; border: 1px solid #333; color: #fff;
-      border-radius: 6px; font-family: inherit; transition: border 0.2s;
+      width: 100%; padding: 0.8rem; background: #050505; border: 1px solid #333; color: #fff;
+      border-radius: 6px; font-family: inherit; transition: border 0.2s; font-size: 0.95rem;
     }
     .form-group input:focus { outline: none; border-color: var(--accent); }
     
     .btn-save {
-      padding: 0.7rem 1.5rem; background: var(--accent); color: #fff; border: none;
-      border-radius: 6px; font-weight: 700; cursor: pointer; transition: background 0.2s;
+      padding: 0.8rem 1.5rem; background: var(--accent); color: #fff; border: none;
+      border-radius: 6px; font-weight: 700; cursor: pointer; transition: background 0.2s; font-size: 0.95rem;
     }
     .btn-save:hover { background: #a93226; }
 
     @media (max-width: 768px) {
       .profile-grid { grid-template-columns: 1fr; }
       header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      nav a { margin-left: 0; margin-right: 1rem; }
     }
   </style>
 </head>
@@ -99,9 +96,9 @@
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
     <nav>
       <a href="index.html">Главная</a>
-      <a href="tables.html">Таблицы</a>
       <a href="contracts.html">Контракты</a>
-      <a href="#" onclick="logout()" style="color: var(--accent);">Выйти</a>
+      <a href="tables.html">Таблицы</a>
+      <a href="#" onclick="logout()" style="color: var(--accent); font-weight: 700;">Выйти</a>
     </nav>
   </header>
 
@@ -129,7 +126,7 @@
             <span class="stat-value money" id="statMoney">0</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Выполнено контрактов</span>
+            <span class="stat-label">Контракты</span>
             <span class="stat-value" id="statContracts">0</span>
           </div>
           <div class="stat-item">
@@ -144,8 +141,8 @@
           <input type="text" id="inputName" placeholder="Введите ник">
         </div>
         <div class="form-group">
-          <label>Ссылка на аватар (URL)</label>
-          <input type="text" id="inputAvatar" placeholder="https://...">
+          <label>Ссылка на аватар (URL картинки)</label>
+          <input type="text" id="inputAvatar" placeholder="https://example.com/avatar.png">
         </div>
         <button class="btn-save" onclick="saveProfile()">Сохранить изменения</button>
       </div>
@@ -154,17 +151,18 @@
   </section>
 
   <script>
-    // 1. Защита страницы (если не залогинен — на вход)
+    // 1. Защита страницы (если не залогинен — кидаем на вход)
     if (localStorage.getItem('lm_logged') !== 'true') {
       window.location.href = 'login.html';
     }
 
-    // 2. Загрузка данных
+    // 2. Загрузка данных пользователя
     const user = localStorage.getItem('lm_user') || 'Неизвестный';
     document.getElementById('displayName').textContent = user;
     document.getElementById('avatarBox').textContent = user.charAt(0).toUpperCase();
+    document.getElementById('inputName').value = user;
     
-    // Загружаем доп. настройки, если есть
+    // Загружаем аватар, если он был сохранен
     const savedAvatar = localStorage.getItem('lm_avatar');
     if (savedAvatar) {
       const img = document.createElement('img');
@@ -177,9 +175,7 @@
       document.getElementById('inputAvatar').value = savedAvatar;
     }
 
-    document.getElementById('inputName').value = user;
-
-    // 3. Сохранение
+    // 3. Сохранение изменений
     function saveProfile() {
       const newName = document.getElementById('inputName').value.trim();
       const newAvatar = document.getElementById('inputAvatar').value.trim();
@@ -201,7 +197,10 @@
       } else {
         box.textContent = newName.charAt(0).toUpperCase();
       }
-      alert('Профиль обновлён!');
+      
+      // Легкая визуальная вспышка при сохранении
+      box.style.borderColor = '#4caf50';
+      setTimeout(() => box.style.borderColor = 'var(--border)', 500);
     }
 
     // 4. Выход
@@ -210,9 +209,9 @@
       window.location.href = 'login.html';
     }
 
-    // 5. Сброс
+    // 5. Полный сброс
     function resetProfile() {
-      if(confirm('Удалить все данные профиля?')) {
+      if(confirm('Вы уверены? Все данные профиля будут удалены.')) {
         localStorage.clear();
         window.location.href = 'login.html';
       }
