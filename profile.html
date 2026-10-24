@@ -86,7 +86,7 @@
     .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Аккордеон внутри настроек */
+    /* Аккордеон */
     .settings-accordion { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.05); }
     .settings-header { padding: 1rem 1.5rem; font-weight: 700; font-size: 1.1rem; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; background: var(--panel); }
     .settings-header:hover { background: rgba(192, 57, 43, 0.05); color: var(--accent); }
@@ -130,7 +130,7 @@
     footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; margin-top: 4rem; }
     footer span { color: var(--accent); }
 
-    /* Скелетон для загрузки (Skeleton Loading) */
+    /* Скелетон для загрузки */
     .skeleton {
       background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
       background-size: 200% 100%;
@@ -163,6 +163,9 @@
         <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
+        <!-- ССЫЛКИ "РУЛЕТКА" И "ЛИЧНЫЙ КАБИНЕТ" УДАЛЕНЫ -->
+        
         <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
       </nav>
 
@@ -284,7 +287,6 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    /* ===== Переключатель темы ===== */
     (function () {
       const toggleBtn = document.getElementById('themeToggle');
       if (!toggleBtn) return;
@@ -298,7 +300,6 @@
     let currentUser = null;
     let currentDiscordId = null;
 
-    // Переключение вкладок
     window.switchTab = function(evt, tabId) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -311,7 +312,6 @@
       }
     }
 
-    // Функция аккордеона
     window.toggleSettingsAccordion = function(header) {
       header.classList.toggle('active');
       const body = header.nextElementSibling;
@@ -344,7 +344,6 @@
       }
     }
 
-    // ОПТИМИЗИРОВАННАЯ ЗАГРУЗКА (Без setTimeout)
     async function initProfile() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { window.location.href = 'login.html'; return; }
@@ -352,7 +351,6 @@
       currentUser = session.user;
       const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
 
-      // Убираем класс "skeleton" (загрузка)
       document.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton'));
 
       if (error || !data) {
@@ -389,7 +387,6 @@
       currentDiscordId = data.discord_id || localStorage.getItem('discordId');
     }
 
-    // Запускаем сразу (без таймера)
     initProfile();
 
     async function loadHistory(discordId) {
@@ -444,7 +441,6 @@
       }
     }
 
-    // Смена пароля
     document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const newPass = document.getElementById('newPassword').value;
