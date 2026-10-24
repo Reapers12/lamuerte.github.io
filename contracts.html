@@ -131,6 +131,22 @@
     .status-msg { text-align: center; margin-top: 1rem; font-weight: 600; display: none; }
     .status-msg.success { color: var(--green); display: block; }
     .status-msg.error { color: var(--accent); display: block; }
+
+    /* КАСТОМНЫЙ СЕЛЕКТ С ПОИСКОМ */
+    .custom-select-wrapper { position: relative; user-select: none; width: 100%; }
+    .custom-select-trigger { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; cursor: pointer; font-size: 0.95rem; transition: border 0.2s; }
+    .custom-select-trigger:hover, .custom-select-trigger.active { border-color: var(--accent); }
+    .custom-select-trigger .arrow { font-size: 0.7rem; transition: transform 0.3s; color: var(--muted); }
+    .custom-select-trigger.active .arrow { transform: rotate(180deg); }
+    .custom-select-options { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 6px; max-height: 250px; overflow-y: auto; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none; }
+    .custom-select-options.open { display: block; }
+    .custom-search-input { width: 100%; padding: 0.8rem; background: var(--bg); border: none; border-bottom: 1px solid var(--border); color: var(--text); font-family: inherit; font-size: 0.9rem; outline: none; position: sticky; top: 0; z-index: 2; border-radius: 6px 6px 0 0; }
+    .custom-option-group { padding: 0.4rem 0.8rem; font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; background: var(--panel); position: sticky; top: 46px; z-index: 1; border-bottom: 1px solid var(--border); }
+    .custom-option { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.9rem; color: var(--text); display: flex; justify-content: space-between; transition: background 0.15s; }
+    .custom-option:hover, .custom-option.selected { background: rgba(192, 57, 43, 0.1); color: var(--accent); }
+    .custom-option .price { color: var(--gold); font-weight: 700; font-size: 0.85rem; }
+    .custom-option.no-result { color: var(--muted); cursor: default; justify-content: center; }
+
     @media (max-width: 850px) { header { flex-direction: column; align-items: flex-start; } .header-right { width: 100%; justify-content: space-between; } nav { justify-content: flex-start; } }
     @media (max-width: 600px) { .contracts-grid { grid-template-columns: 1fr; } .contract-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; } .contract-payment { align-self: flex-end; } .accordion-header { font-size: 1rem; padding: 0.4rem 0.85rem; } .modal-content { padding: 1.5rem; } }
   </style>
@@ -369,55 +385,23 @@
           <input type="text" id="nickname" placeholder="Например: Kai Muerte" required>
         </div>
 
-        <!-- СПИСОК РЕСУРСОВ -->
+        <!-- КАСТОМНЫЙ СЕЛЕКТ С ПОИСКОМ -->
         <div class="form-group">
           <label>Что сдали?</label>
-          <select id="resourceSelect" required onchange="updateReward()">
-            <option value="" disabled selected>Выберите ресурс...</option>
-            <optgroup label="Металлургия">
-              <option value="Олово" data-price="33000">Олово (33.000$)</option>
-              <option value="Медь" data-price="25000">Медь (25.000$)</option>
-              <option value="Серебро" data-price="25000">Серебро (25.000$)</option>
-              <option value="Железо" data-price="25000">Железо (25.000$)</option>
-            </optgroup>
-            <optgroup label="Грибы">
-              <option value="Шампиньоны" data-price="95000">Шампиньоны (95.000$)</option>
-              <option value="Мухоморы" data-price="140000">Мухоморы (140.000$)</option>
-              <option value="Вёшенки" data-price="110000">Вёшенки (110.000$)</option>
-              <option value="Подболотники" data-price="170000">Подболотники (170.000$)</option>
-              <option value="Гипсизигусы" data-price="130000">Гипсизигусы (130.000$)</option>
-              <option value="Подберёзовики" data-price="200000">Подберёзовики (200.000$)</option>
-            </optgroup>
-            <optgroup label="Дерево">
-              <option value="Сосна" data-price="140000">Сосна (140.000$)</option>
-              <option value="Берёза" data-price="210000">Берёза (210.000$)</option>
-              <option value="Дуб" data-price="173000">Дуб (173.000$)</option>
-            </optgroup>
-            <optgroup label="Ферма">
-              <option value="Апельсины" data-price="88500">Апельсины (88.500$)</option>
-              <option value="Пшеница" data-price="102000">Пшеница (102.000$)</option>
-              <option value="Картофель" data-price="120000">Картофель (120.000$)</option>
-              <option value="Капуста" data-price="140000">Капуста (140.000$)</option>
-              <option value="Кукуруза" data-price="165000">Кукуруза (165.000$)</option>
-              <option value="Тыква" data-price="190000">Тыква (190.000$)</option>
-            </optgroup>
-            <optgroup label="Рыба (ранги)">
-              <option value="1 ранг" data-price="78300">1 ранг (78.300$)</option>
-              <option value="2 ранг" data-price="102600">2 ранг (102.600$)</option>
-              <option value="3 ранг" data-price="121500">3 ранг (121.500$)</option>
-              <option value="4 ранг" data-price="144000">4 ранг (144.000$)</option>
-              <option value="5 ранг" data-price="163800">5 ранг (163.800$)</option>
-              <option value="6 ранг" data-price="189000">6 ранг (189.000$)</option>
-              <option value="7 ранг" data-price="216000">7 ранг (216.000$)</option>
-              <option value="8 ранг" data-price="243000">8 ранг (243.000$)</option>
-            </optgroup>
-            <optgroup label="Прочее">
-              <option value="Ателье (Активация)" data-price="12000">Ателье (Активация) - 12.000$</option>
-              <option value="Ателье (Форма)" data-price="1700">Ателье (1 форма) - 1.700$</option>
-              <option value="Самолёт (Активация)" data-price="16000">Товар с самолёта (Активация) - 16.000$</option>
-              <option value="Самолёт (Выплата)" data-price="30000">Товар с самолёта (Выплата) - 30.000$</option>
-            </optgroup>
-          </select>
+          <!-- Скрытые инпуты для хранения значений -->
+          <input type="hidden" id="resourceSelect" required>
+          <input type="hidden" id="resourceCategory" required>
+          
+          <div class="custom-select-wrapper" id="customSelectWrapper">
+            <div class="custom-select-trigger" id="customSelectTrigger" onclick="toggleCustomSelect(event)">
+              <span id="customSelectLabel">Выберите ресурс...</span>
+              <span class="arrow">▼</span>
+            </div>
+            <div class="custom-select-options" id="customSelectOptions">
+              <input type="text" class="custom-search-input" id="customSearchInput" placeholder="🔍 Начните вводить название..." onkeyup="filterCustomSelect()" onclick="event.stopPropagation()">
+              <div id="customOptionsList"></div>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
@@ -498,14 +482,159 @@
       document.getElementById('formModal').classList.remove('active');
     }
 
-    // АВТОПОДСТАНОВКА СУММЫ
-    window.updateReward = function() {
-      const select = document.getElementById('resourceSelect');
-      const selectedOption = select.options[select.selectedIndex];
-      const price = selectedOption.getAttribute('data-price');
-      document.getElementById('reward').value = price || '';
+    // ==========================================
+    // КАСТОМНЫЙ СЕЛЕКТ С ПОИСКОМ
+    // ==========================================
+
+    // 1. База данных ресурсов
+    const RESOURCES = {
+      'Металлургия': [
+        { name: 'Олово', price: 33000 }, { name: 'Медь', price: 25000 },
+        { name: 'Серебро', price: 25000 }, { name: 'Железо', price: 25000 }
+      ],
+      'Грибы': [
+        { name: 'Шампиньоны', price: 95000 }, { name: 'Мухоморы', price: 140000 },
+        { name: 'Вёшенки', price: 110000 }, { name: 'Подболотники', price: 170000 },
+        { name: 'Гипсизигусы', price: 130000 }, { name: 'Подберёзовики', price: 200000 }
+      ],
+      'Дерево': [
+        { name: 'Сосна', price: 140000 }, { name: 'Берёза', price: 210000 },
+        { name: 'Дуб', price: 173000 }
+      ],
+      'Ферма': [
+        { name: 'Апельсины', price: 88500 }, { name: 'Пшеница', price: 102000 },
+        { name: 'Картофель', price: 120000 }, { name: 'Капуста', price: 140000 },
+        { name: 'Кукуруза', price: 165000 }, { name: 'Тыква', price: 190000 }
+      ],
+      'Рыба': [
+        { name: '1 ранг', price: 78300 }, { name: '2 ранг', price: 102600 },
+        { name: '3 ранг', price: 121500 }, { name: '4 ранг', price: 144000 },
+        { name: '5 ранг', price: 163800 }, { name: '6 ранг', price: 189000 },
+        { name: '7 ранг', price: 216000 }, { name: '8 ранг', price: 243000 }
+      ],
+      'Ателье': [
+        { name: 'Активация', price: 12000 }, { name: '1 форма', price: 1700 }
+      ],
+      'Товар с самолёта': [
+        { name: 'Активация', price: 16000 }, { name: 'Выплата', price: 30000 }
+      ]
     };
 
+    // 2. Инициализация кастомного селекта при загрузке
+    function initCustomSelect() {
+      const list = document.getElementById('customOptionsList');
+      if (!list) return;
+      list.innerHTML = '';
+
+      for (const [category, items] of Object.entries(RESOURCES)) {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'custom-option-group';
+        groupDiv.textContent = category;
+        list.appendChild(groupDiv);
+
+        items.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'custom-option';
+          div.innerHTML = `<span>${item.name}</span><span class="price">${item.price.toLocaleString('ru-RU')}$</span>`;
+          
+          div.onclick = (e) => {
+            e.stopPropagation();
+            document.getElementById('resourceSelect').value = item.name;
+            document.getElementById('resourceCategory').value = category;
+            document.getElementById('reward').value = item.price;
+            
+            const label = document.getElementById('customSelectLabel');
+            label.textContent = `${item.name} (${item.price.toLocaleString('ru-RU')}$)`;
+            label.style.color = 'var(--text)';
+            
+            closeCustomSelect();
+            document.getElementById('customSearchInput').value = '';
+            filterCustomSelect();
+          };
+          list.appendChild(div);
+        });
+      }
+    }
+
+    // 3. Управление открытием/закрытием
+    window.toggleCustomSelect = function(e) {
+      if (e) e.stopPropagation();
+      const options = document.getElementById('customSelectOptions');
+      const trigger = document.getElementById('customSelectTrigger');
+      
+      if (options.classList.contains('open')) {
+        closeCustomSelect();
+      } else {
+        options.classList.add('open');
+        trigger.classList.add('active');
+        document.getElementById('customSearchInput').focus();
+      }
+    }
+
+    function closeCustomSelect() {
+      document.getElementById('customSelectOptions').classList.remove('open');
+      document.getElementById('customSelectTrigger').classList.remove('active');
+    }
+
+    document.addEventListener('click', (e) => {
+      const wrapper = document.getElementById('customSelectWrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        closeCustomSelect();
+      }
+    });
+
+    // 4. Поиск (фильтрация)
+    window.filterCustomSelect = function() {
+      const query = document.getElementById('customSearchInput').value.toLowerCase();
+      const groups = document.querySelectorAll('.custom-option-group');
+      const options = document.querySelectorAll('.custom-option:not(.no-result)');
+      
+      let hasResults = false;
+
+      options.forEach(opt => {
+        const text = opt.textContent.toLowerCase();
+        if (text.includes(query)) {
+          opt.style.display = 'flex';
+          hasResults = true;
+        } else {
+          opt.style.display = 'none';
+        }
+      });
+
+      groups.forEach(group => {
+        let nextEl = group.nextElementSibling;
+        let groupHasVisible = false;
+        while (nextEl && !nextEl.classList.contains('custom-option-group')) {
+          if (nextEl.classList.contains('custom-option') && nextEl.style.display !== 'none') {
+            groupHasVisible = true;
+            break;
+          }
+          nextEl = nextEl.nextElementSibling;
+        }
+        group.style.display = groupHasVisible ? 'block' : 'none';
+      });
+
+      let noResult = document.getElementById('noResultMsg');
+      if (!hasResults) {
+        if (!noResult) {
+          noResult = document.createElement('div');
+          noResult.id = 'noResultMsg';
+          noResult.className = 'custom-option no-result';
+          noResult.textContent = 'Ничего не найдено 😔';
+          document.getElementById('customOptionsList').appendChild(noResult);
+        }
+        noResult.style.display = 'flex';
+      } else if (noResult) {
+        noResult.style.display = 'none';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initCustomSelect);
+
+    // ==========================================
+    // ОТПРАВКА ФОРМЫ
+    // ==========================================
+    
     document.getElementById('payoutForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
@@ -514,6 +643,7 @@
       
       const nickname = document.getElementById('nickname').value.trim();
       const resource = document.getElementById('resourceSelect').value;
+      const category = document.getElementById('resourceCategory').value;
       const reward = parseInt(document.getElementById('reward').value);
       const screenshot = document.getElementById('screenshot').value.trim();
       const discordId = document.getElementById('discordId').value.trim();
@@ -533,9 +663,10 @@
           fields: [
             { name: "👤 Никнейм", value: nickname, inline: true },
             { name: "🎮 Discord ID", value: discordId, inline: true },
-            { name: "📂 Ресурс", value: resource, inline: false },
+            { name: "📂 Категория", value: category, inline: true },
+            { name: "📦 Ресурс", value: resource, inline: true },
             { name: "💵 Сумма", value: reward + " $", inline: true },
-            { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: true },
+            { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: false },
             { name: "💬 Комментарий", value: comment, inline: false }
           ],
           image: { url: screenshot },
@@ -555,8 +686,8 @@
           .from('payout_requests')
           .insert([{
             nickname: nickname,
-            category: resource, // Используем название ресурса
-            details: resource,
+            category: category, // Используем категорию
+            details: resource,  // Сам ресурс
             amount: reward,
             screenshot: screenshot,
             discord: discordId,
@@ -568,7 +699,15 @@
 
         statusMsg.textContent = '✅ Заявка отправлена! Ожидайте подтверждения от Админа.';
         statusMsg.className = 'status-msg success';
+        
+        // Сброс формы
         this.reset();
+        document.getElementById('customSelectLabel').textContent = 'Выберите ресурс...';
+        document.getElementById('customSelectLabel').style.color = 'var(--muted)';
+        document.getElementById('resourceSelect').value = '';
+        document.getElementById('resourceCategory').value = '';
+        document.getElementById('reward').value = '';
+
         setTimeout(() => closeForm(), 3000);
       } catch (error) {
         console.error(error);
