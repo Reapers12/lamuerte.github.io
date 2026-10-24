@@ -105,7 +105,6 @@
   <section class="block">
     <div class="profile-grid">
       
-      <!-- Левая колонка -->
       <div class="profile-card">
         <div class="avatar-wrapper" id="avatarBox">?</div>
         <div class="profile-name" id="displayName">Загрузка...</div>
@@ -113,26 +112,13 @@
         <a href="#" class="btn-outline" onclick="resetProfile()">Сбросить профиль</a>
       </div>
 
-      <!-- Правая колонка -->
       <div class="stats-card">
         <div class="stats-title">📊 Статистика персонажа</div>
         <div class="stats-grid">
-          <div class="stat-item">
-            <span class="stat-label">Уровень</span>
-            <span class="stat-value" id="statLevel">1</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Баланс ($)</span>
-            <span class="stat-value money" id="statMoney">0</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Контракты</span>
-            <span class="stat-value" id="statContracts">0</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Часов в игре</span>
-            <span class="stat-value" id="statHours">0</span>
-          </div>
+          <div class="stat-item"><span class="stat-label">Уровень</span><span class="stat-value" id="statLevel">1</span></div>
+          <div class="stat-item"><span class="stat-label">Баланс ($)</span><span class="stat-value money" id="statMoney">0</span></div>
+          <div class="stat-item"><span class="stat-label">Контракты</span><span class="stat-value" id="statContracts">0</span></div>
+          <div class="stat-item"><span class="stat-label">Часов в игре</span><span class="stat-value" id="statHours">0</span></div>
         </div>
 
         <div class="stats-title">⚙️ Настройки профиля</div>
@@ -141,7 +127,7 @@
           <input type="text" id="inputName" placeholder="Введите ник">
         </div>
         <div class="form-group">
-          <label>Ссылка на аватар (URL картинки)</label>
+          <label>Ссылка на аватар (URL)</label>
           <input type="text" id="inputAvatar" placeholder="https://example.com/avatar.png">
         </div>
         <button class="btn-save" onclick="saveProfile()">Сохранить изменения</button>
@@ -151,18 +137,17 @@
   </section>
 
   <script>
-    // 1. Защита страницы (если не залогинен — кидаем на вход)
+    // Защита страницы
     if (localStorage.getItem('lm_logged') !== 'true') {
       window.location.href = 'login.html';
     }
 
-    // 2. Загрузка данных пользователя
+    // Загрузка
     const user = localStorage.getItem('lm_user') || 'Неизвестный';
     document.getElementById('displayName').textContent = user;
     document.getElementById('avatarBox').textContent = user.charAt(0).toUpperCase();
     document.getElementById('inputName').value = user;
     
-    // Загружаем аватар, если он был сохранен
     const savedAvatar = localStorage.getItem('lm_avatar');
     if (savedAvatar) {
       const img = document.createElement('img');
@@ -175,7 +160,6 @@
       document.getElementById('inputAvatar').value = savedAvatar;
     }
 
-    // 3. Сохранение изменений
     function saveProfile() {
       const newName = document.getElementById('inputName').value.trim();
       const newAvatar = document.getElementById('inputAvatar').value.trim();
@@ -197,19 +181,15 @@
       } else {
         box.textContent = newName.charAt(0).toUpperCase();
       }
-      
-      // Легкая визуальная вспышка при сохранении
       box.style.borderColor = '#4caf50';
       setTimeout(() => box.style.borderColor = 'var(--border)', 500);
     }
 
-    // 4. Выход
     function logout() {
       localStorage.removeItem('lm_logged');
       window.location.href = 'login.html';
     }
 
-    // 5. Полный сброс
     function resetProfile() {
       if(confirm('Вы уверены? Все данные профиля будут удалены.')) {
         localStorage.clear();
