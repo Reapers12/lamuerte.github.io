@@ -76,7 +76,8 @@
     };
 
     let currentAdmin = null;
-    let isCurrentUserSuperAdmin = false;
+    let currentRole = '';
+    let isSuperAdmin = false;
 
     async function init() {
       await new Promise(r => setTimeout(r, 500));
@@ -85,18 +86,18 @@
       if (!session) { window.location.href = 'login.html'; return; }
       currentAdmin = session.user;
 
-      // Получаем роль текущего пользователя
       const { data: profile } = await supabase.from('profiles').select('role').eq('id', currentAdmin.id).single();
 
-      // Если это Глава или Администратор — даем доступ к панели
-      if (!profile || (profile.role !== 'Глава' && profile.role !== 'Администратор')) {
-        document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh; color:#c0392b;">Доступ запрещён!</h1><p style="text-align:center;">Вы не имеете прав на это действие.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
-        return;
+      // Проверяем, кто зашел
+      if (profile) {
+        currentRole = profile.role;
+        if (currentRole === 'Администратор') isSuperAdmin = true;
       }
 
-      // Если он сам Админ — он "Супер-Админ" (видит скрытую роль)
-      if (profile.role === 'Администратор') {
-        isCurrentUserSuperAdmin = true;
+      // Пускаем Главу, Админа и Заместителя. Остальным — отказ.
+      if (!profile || !['Глава', 'Администратор', 'Заместитель'].includes(currentRole)) {
+        document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh; color:#c0392b;">Доступ запрещён!</h1><p style="text-align:center;">Вы не имеете прав на это действие.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
+        return;
       }
 
       loadUsers();
@@ -119,17 +120,22 @@
         const card = document.createElement('div');
         card.className = 'user-card';
         
-        // Формируем опции селекта
-        let roleOptions = `
-          <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
-          <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
-          <option value="Кровь Семьи" ${user.role === 'Кровь Семьи' ? 'selected' : ''}>Кровь Семьи</option>
-          <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
-        `;
-
-        // Если текущий пользователь — сам Администратор, добавляем скрытую опцию
-        if (isCurrentUserSuperAdmin) {
-          roleOptions += `<option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>⭐ Администратор</option>`;
+        // Блок с ролью. Если Заместитель — просто текст. Если Глава/Админ — селект.
+        let roleHtml = '';
+        if (['Глава', 'Администратор'].includes(currentRole)) {
+          let roleOptions = `
+            <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
+            <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
+            <option value="Кровь Семьи" ${user.role === 'Кровь Семьи' ? 'selected' : ''}>Кровь Семьи</option>
+            <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
+          `;
+          if (isSuperAdmin) {
+            roleOptions += `<option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>⭐ Администратор</option>`;
+          }
+          roleHtml = `<select onchange="changeRole('${user.id}', this.value)">${roleOptions}</select>`;
+        } else {
+          // Для Заместителя просто показываем текст
+          roleHtml = `<span style="color: var(--muted); font-size: 0.9rem;">Роль: ${user.role}</span>`;
         }
 
         card.innerHTML = `
@@ -144,9 +150,7 @@
               </div>
             </div>
             <div>
-              <select onchange="changeRole('${user.id}', this.value)">
-                ${roleOptions}
-              </select>
+              ${roleHtml}
             </div>
           </div>
           
@@ -162,6 +166,11 @@
     }
 
     window.changeRole = async function(userId, newRole) {
+      // Дополнительная проверка безопасности
+      if (!['Глава', 'Администратор'].includes(currentRole)) {
+        alert('У вас нет прав на изменение ролей!');
+        return;
+      }
       const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
       if (error) alert('Ошибка: ' + error.message);
       else location.reload(); 
