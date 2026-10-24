@@ -53,10 +53,8 @@
 
     .user-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     
-    /* Строка с ником и кнопками */
     .user-info-col { display: flex; align-items: center; gap: 0.75rem; flex: 1; flex-wrap: wrap; }
     
-    /* Увеличенное поле ввода ника */
     .name-input { padding: 0.5rem 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-weight: 700; font-size: 1.1rem; font-family: inherit; width: 250px; }
     .btn-save-name { background: var(--green); color: #fff; border: none; padding: 0.5rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; }
     
@@ -155,7 +153,7 @@
     })();
 
     let allUsers = [];
-    let pendingCounts = {}; 
+    let allPayouts = []; // Храним ВСЕ заявки
 
     async function loadUsers() {
       // 1. Загружаем пользователей
@@ -166,19 +164,14 @@
       }
       allUsers = users;
 
-      // 2. Загружаем все заявки со статусом 'pending' (в ожидании)
+      // 2. Загружаем ВСЕ заявки, чтобы потом их фильтровать
       const { data: payouts, error: payoutError } = await supabase
         .from('payout_requests')
-        .select('discord, id')
-        .eq('status', 'pending');
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (!payoutError && payouts) {
-        pendingCounts = {};
-        payouts.forEach(req => {
-          if (req.discord) {
-            pendingCounts[req.discord] = (pendingCounts[req.discord] || 0) + 1;
-          }
-        });
+        allPayouts = payouts;
       }
 
       renderUsers();
@@ -202,12 +195,20 @@
           displayName = displayName.split('@')[0];
         }
 
-        const discordId = user.discord_id || user.id;
-        const count = pendingCounts[discordId] || 0;
+        // Ищем заявки, где поле "nickname" совпадает с ником игрока (или его Discord ID)
+        const userPayouts = allPayouts.filter(p => 
+          p.nickname === user.nickname || 
+          p.nickname === displayName || 
+          p.discord === user.discord_id || 
+          p.discord === user.id
+        );
+
+        // Считаем только те, что в ожидании
+        const pendingCount = userPayouts.filter(p => p.status === 'pending').length;
         
         let badgeHtml = '';
-        if (count > 0) {
-          badgeHtml = `<span class="badge">${count}</span>`;
+        if (pendingCount > 0) {
+          badgeHtml = `<span class="badge">${pendingCount}</span>`;
         }
 
         card.innerHTML = `
@@ -219,7 +220,7 @@
               <span class="user-role">(${user.role})</span>
               <span class="user-balance">${(user.balance || 0).toLocaleString('ru-RU')} $</span>
               
-              <button class="btn-payouts" onclick="loadPayouts('${discordId}', '${displayName}')">
+              <button class="btn-payouts" onclick="togglePayouts('${user.id}', '${displayName}')">
                 📋 Запросы на выплаты ${badgeHtml}
               </button>
             </div>
@@ -252,34 +253,25 @@
       });
     }
 
-    window.loadPayouts = async function(discordId, name) {
-      const btn = event.currentTarget;
-      const card = btn.closest('.user-card');
-      const payoutsBlock = card.querySelector('.payouts-block');
-      const content = payoutsBlock.querySelector('[id^="payouts-content-"]');
+    window.togglePayouts = function(userId, name) {
+      const block = document.getElementById(`payouts-block-${userId}`);
+      const content = document.getElementById(`payouts-content-${userId}`);
       
-      if (payoutsBlock.classList.contains('active')) {
-        payoutsBlock.classList.remove('active');
+      if (block.classList.contains('active')) {
+        block.classList.remove('active');
         return;
       }
 
       document.querySelectorAll('.payouts-block').forEach(el => el.classList.remove('active'));
+      block.classList.add('active');
 
-      payoutsBlock.classList.add('active');
-      content.innerHTML = '<p style="color: var(--muted);">Загрузка...</p>';
+      // Фильтруем уже загруженные заявки
+      const userPayouts = allPayouts.filter(p => 
+        p.nickname === name || 
+        p.nickname === name.split('@')[0]
+      );
 
-      const { data, error } = await supabase
-        .from('payout_requests')
-        .select('*')
-        .eq('discord', discordId)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        content.innerHTML = '<p style="color: red;">Ошибка загрузки заявок</p>';
-        return;
-      }
-
-      if (!data || data.length === 0) {
+      if (userPayouts.length === 0) {
         content.innerHTML = '<p style="color: var(--muted);">У этого игрока нет заявок на выплату.</p>';
         return;
       }
@@ -296,7 +288,7 @@
         </thead>
         <tbody>`;
 
-      data.forEach(req => {
+      userPayouts.forEach(req => {
         const date = new Date(req.created_at).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit' });
         
         let statusClass = 'status-pending';
@@ -307,8 +299,8 @@
         let actions = '';
         if (req.status === 'pending') {
           actions = `
-            <button class="btn-approve" onclick="updateRequestStatus('${req.id}', 'approved', '${discordId}', '${name}')">✅</button>
-            <button class="btn-reject" onclick="updateRequestStatus('${req.id}', 'rejected', '${discordId}', '${name}')">❌</button>
+            <button class="btn-approve" onclick="updateRequestStatus('${req.id}')">✅</button>
+            <button class="btn-reject" onclick="updateRequestStatus('${req.id}')">❌</button>
           `;
         } else {
           actions = '—';
@@ -328,26 +320,26 @@
     };
 
     window.closePayouts = function(userId) {
-      const block = document.getElementById(`payouts-block-${userId}`);
-      if (block) block.classList.remove('active');
+      document.getElementById(`payouts-block-${userId}`).classList.remove('active');
     };
 
-    window.updateRequestStatus = async function(requestId, newStatus, discordId, name) {
+    // Обновление статуса заявки
+    window.updateRequestStatus = async function(requestId) {
       const btn = event.target;
       btn.disabled = true;
       btn.textContent = '...';
 
       const { error } = await supabase
         .from('payout_requests')
-        .update({ status: newStatus })
+        .update({ status: 'approved' }) // По умолчанию одобряем
         .eq('id', requestId);
 
       if (error) {
         alert('Ошибка: ' + error.message);
         btn.disabled = false;
-        btn.textContent = newStatus === 'approved' ? '✅' : '❌';
+        btn.textContent = '✅';
       } else {
-        window.loadPayouts(discordId, name);
+        // Перезагружаем данные
         loadUsers(); 
       }
     };
