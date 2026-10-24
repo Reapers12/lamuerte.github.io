@@ -4,33 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Muerte — Семья</title>
+  
+  <!-- Скрипт против вспышки -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ===== Светлая тема (по умолчанию) ===== */
+    /* ===== Светлая тема ===== */
     :root {
-      --bg: #f4f4f7;
-      --panel: rgba(255, 255, 255, 0.92);
-      --border: #e0e0e6;
-      --text: #1a1a1a;
-      --muted: #666;
-      --accent: #c0392b;
-      --gold: #b8860b;
-      --green: #2e7d32;
-      --bg-image: none;
-      --bg-overlay: rgba(255, 255, 255, 0.9);
+      --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
+      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
+      --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
 
     /* ===== Тёмная тема ===== */
     html.dark {
-      --bg: #0a0a0a;
-      --panel: rgba(17, 17, 17, 0.95);
-      --border: #222;
-      --text: #eaeaea;
-      --muted: #999;
-      --gold: #d4af37;
-      --green: #4caf50;
+      --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
+      --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
       --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
       --bg-overlay: rgba(0, 0, 0, 0.85);
     }
@@ -214,7 +210,7 @@
     @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
     @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
-    /* ===== Герой (Главный экран) ===== */
+    /* ===== Герой ===== */
     .hero {
       padding: 6rem 2rem 5rem;
       text-align: center;
@@ -506,11 +502,14 @@
     
     <div class="header-right">
       <nav>
-        <a href="index.html" class="active">Главная</a>
-        <a href="family.html">О семье</a>
-        <a href="transport.html">О транспорте</a>
-        <a href="contracts.html">Контракты</a>
-        <a href="tables.html">Таблицы</a>
+        <a href="index.html" class="active">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
+        <!-- ПЕРЕИМЕНОВАНО В ПРАВИЛА -->
+        <a href="family.html">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
+        <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         
         <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
 
@@ -537,8 +536,6 @@
   <section class="hero" id="home">
     <h1>Добро пожаловать <br>в семью <em>La Muerte</em></h1>
     <p>Мы не просто команда. Мы — семья. Здесь каждый найдёт своё место!</p>
-    
-    <!-- ИЗМЕНЕН ТЕКСТ КНОПКИ -->
     <a onclick="openModal()" class="btn">Вступить в семью</a>
   </section>
 
@@ -622,11 +619,7 @@
     /* ===== Переход в ЛК ===== */
     function goToProfile(e) {
       if (e) e.preventDefault();
-      if (localStorage.getItem('lm_logged') === 'true') {
-        window.location.href = 'profile.html';
-      } else {
-        window.location.href = 'login.html';
-      }
+      window.location.href = 'profile.html';
     }
 
     /* ===== Модальное окно ===== */
