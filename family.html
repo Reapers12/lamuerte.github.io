@@ -3,78 +3,355 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>О семье — La Muerte</title>
+  <title>Правила — La Muerte</title>
+  
+  <!-- Скрипт против вспышки -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222; --text: #eaeaea; --muted: #999; --accent: #c0392b; --gold: #d4af37; }
-    body { font-family: 'Overpass', sans-serif; background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover fixed; background-color: #050505; color: var(--text); line-height: 1.6; min-height: 100vh; position: relative; }
-    body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
-    header { background: rgba(5,5,5,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; flex-wrap: wrap; gap: 1rem; }
-    header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: #fff; text-decoration: none; }
+
+    /* ===== Светлая тема ===== */
+    :root {
+      --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
+      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
+      --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ===== Тёмная тема ===== */
+    html.dark {
+      --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
+      --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
+      --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
+      --bg-overlay: rgba(0, 0, 0, 0.85);
+    }
+
+    html, body { transition: background 0.4s ease, color 0.4s ease; }
+
+    body {
+      font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed;
+      background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative;
+    }
+    body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
+
+    /* ===== Шапка ===== */
+    header {
+      background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; flex-wrap: wrap; gap: 1rem;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+    header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
     header .logo span { color: var(--accent); }
-    nav { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
-    nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; padding: 0.35rem 0.75rem; border-radius: 6px; transition: color 0.2s, background 0.2s; }
-    nav a:hover { color: #fff; background: rgba(192, 57, 43, 0.08); }
-    nav a.active { color: #fff; background: rgba(192, 57, 43, 0.14); }
     
-    .page-hero { padding: 4rem 2rem 1rem; text-align: center; }
-    .page-hero h1 { font-size: clamp(1.75rem, 4.5vw, 2.5rem); font-weight: 800; color: #fff; margin-bottom: 0.75rem; }
+    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
+    nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem; }
+    
+    nav a {
+      position: relative; color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500;
+      padding: 0.35rem 0.75rem; border-radius: 6px; overflow: hidden; white-space: nowrap; transition: 0.2s;
+    }
+    nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35); }
+    nav a.active { color: var(--text); background: rgba(192, 57, 43, 0.14); }
+
+    .profile-btn {
+      color: var(--gold) !important; font-weight: 700 !important; margin-left: 0.5rem;
+      border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important;
+    }
+    .profile-btn:hover { background: transparent !important; box-shadow: none !important; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+
+    /* Молнии */
+    nav a .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
+    nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
+    nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
+    nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
+    nav a .spark { position: absolute; top: 50%; left: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
+    nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
+    nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
+    nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
+    nav a:hover .spark.s2 { animation-delay: 0.12s; }
+    nav a:hover .spark.s3 { animation-delay: 0.24s; }
+
+    /* Кнопка темы */
+    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
+    .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
+    .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
+    .theme-btn .icon-moon { display: none; }
+    html.dark .theme-btn .icon-sun { display: none; }
+    html.dark .theme-btn .icon-moon { display: block; }
+    html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
+
+    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
+    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
+    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
+
+    /* ===== Контент ===== */
+    .page-hero {
+      padding: 4rem 2rem 1rem;
+      text-align: center;
+      position: relative;
+    }
+    .page-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.3), transparent 60%);
+      pointer-events: none;
+    }
+    .page-hero h1 {
+      font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      position: relative;
+    }
     .page-hero h1 em { color: var(--accent); font-style: normal; }
+    .page-hero p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    section.block {
+      padding: 1rem 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .intro-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: var(--muted);
+      transition: background 0.4s ease;
+    }
+    .intro-box p { margin-bottom: 0.5rem; }
+    .intro-box p:last-child { margin-bottom: 0; }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .rule-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 1.5rem 2rem;
+      transition: transform 0.2s, border-color 0.2s, background 0.4s;
+    }
+    .rule-card:hover {
+      transform: translateX(6px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.15);
+    }
+    .rule-card h2 {
+      color: var(--text);
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
     
-    section.block { padding: 2rem; max-width: 960px; margin: 0 auto; }
-    .content-box { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 2rem; }
-    .content-box h2 { color: #fff; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-    .content-box p { color: var(--muted); margin-bottom: 1rem; }
-    .content-box ul { list-style: none; padding-left: 0; }
-    .content-box li { padding: 0.3rem 0; color: var(--text); }
-    .content-box li::before { content: "▸ "; color: var(--accent); font-weight: bold; }
-    
-    footer { text-align: center; padding: 2rem; color: #666; font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+    .rule-list {
+      list-style: none;
+      padding: 0;
+    }
+    .rule-list li {
+      color: var(--text);
+      padding: 0.4rem 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .rule-list li::before {
+      content: "▸ ";
+      color: var(--accent);
+      font-weight: bold;
+      margin-right: 0.25rem;
+    }
+
+    .highlight-box {
+      background: rgba(192, 57, 43, 0.1);
+      border: 1px dashed var(--accent);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .highlight-box ul { list-style: none; padding: 0; }
+    .highlight-box li::before { content: "🔸 "; margin-right: 0.5rem; }
+
+    .back-block { text-align: center; padding: 1.5rem 2rem 3rem; }
+    .btn-back {
+      display: inline-block; padding: 0.7rem 1.5rem; background: transparent; color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px; text-decoration: none; font-weight: 600;
+      font-size: 0.9rem; letter-spacing: 1px; transition: 0.2s;
+    }
+    .btn-back:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    footer {
+      background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border);
+      color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s;
+    }
     footer span { color: var(--accent); }
+
+    @media (max-width: 850px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .header-right { width: 100%; justify-content: space-between; }
+      nav { justify-content: flex-start; }
+    }
+    @media (max-width: 600px) {
+      section.block { padding: 0.5rem 1rem; }
+      .rule-card, .intro-box { padding: 1rem 1.25rem; }
+    }
   </style>
 </head>
 <body>
   <header>
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
-    <nav>
-      <a href="index.html">Главная</a>
-      <a href="family.html" class="active">О семье</a>
-      <a href="transport.html">О транспорте</a>
-      <a href="contracts.html">Контракты</a>
-      <a href="tables.html">Таблицы</a>
-      <a href="#" onclick="goToProfile(event)" style="color: var(--gold); font-weight: 700; margin-left: 0.5rem; border-left: 1px solid #333; padding-left: 1rem;">👤 Личный кабинет</a>
-    </nav>
+    
+    <div class="header-right">
+      <nav>
+        <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="family.html" class="active">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
+        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
+        <button class="theme-btn" id="themeToggle" title="Переключить тему">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </nav>
+    </div>
   </header>
 
   <section class="page-hero">
-    <h1>О семье <em>La Muerte</em></h1>
+    <h1>Правила <em>La Muerte</em></h1>
+    <p>Данные правила действуют для всех членов семьи. Их соблюдение помогает сохранять порядок, уважение и комфортную атмосферу.</p>
   </section>
 
   <section class="block">
-    <div class="content-box">
-      <h2>Наша история</h2>
-      <p>La Muerte — это не просто клан, это семья. Мы начинали с малого, но благодаря сплоченности и дисциплине смогли занять лидирующие позиции на сервере.</p>
-      
-      <h2>Наши принципы</h2>
-      <ul>
-        <li><strong>Верность:</strong> Мы никогда не предаем своих.</li>
-        <li><strong>Уважение:</strong> Каждый член семьи имеет право голоса.</li>
-        <li><strong>Развитие:</strong> Мы помогаем новичкам встать на ноги.</li>
-      </ul>
-
-      <h2>Иерархия</h2>
-      <p>У нас строгая структура, которая позволяет эффективно управлять бизнесом и решать конфликты.</p>
+    
+    <div class="intro-box">
+      <p><em>Правила следует воспринимать как общую договорённость между участниками.</em></p>
     </div>
+
+    <div class="rules-grid">
+      
+      <!-- Обязательный критерий -->
+      <div class="rule-card">
+        <h2><span>🛡️</span> Обязательный критерий</h2>
+        <div class="highlight-box">
+          <ul>
+            <li>Адекватность</li>
+            <li>Возраст: от 20 лет</li>
+            <li>Форма никнейма в Discord: Никнейм в игре | Имя в жизни</li>
+            <li>Пример: John Majestic | Александр</li>
+          </ul>
+        </div>
+        <ul class="rule-list">
+          <li>1. (данное правило для тех, кто желает приводить других людей/друзей)</li>
+          <li>2. (чтобы Мы приняли людей, приведенных Вами - обратитесь к высшим рангам/в чат)</li>
+        </ul>
+      </div>
+
+      <!-- Общение в Discord -->
+      <div class="rule-card">
+        <h2><span>💬</span> Общение в Discord</h2>
+        <ul class="rule-list">
+          <li>1. Уважительное общение между участниками семьи.</li>
+          <li style="padding-left: 1.5rem; color: var(--muted);">1.1. Добровольный мягкий тон укрепляет уважение внутри семьи.</li>
+          <li style="padding-left: 1.5rem; color: var(--muted);">1.2. Позитивная тональность приветствуется — это отражает дух семьи.</li>
+          <li>2. Сохраняем спокойствие и контроль даже в спорных ситуациях.</li>
+          <li>3. Используем чат по назначению: отдельные каналы — для разных тем.</li>
+          <li>4. Не используем бессмысленные упоминания (@everyone, @here) без необходимости.</li>
+          <li>5. Не игнорируем вопросы/обращения, если можешь ответить — сделай это.</li>
+        </ul>
+      </div>
+
+      <!-- Оскорбления и конфликты -->
+      <div class="rule-card">
+        <h2><span>⚔️</span> Оскорбления и конфликты</h2>
+        <ul class="rule-list">
+          <li>1. Не оскорблять участников семьи.</li>
+          <li style="padding-left: 1.5rem; color: var(--muted);">1.1. Приветствуются только дружеские оскорбления без жесткой грубости.</li>
+          <li>2. Любые конфликты/обиды решаем спокойно (в отдельном от других канале/в лс/через старших рангов).</li>
+          <li>3. Не провоцируем конфликты и не подливаем масла в огонь.</li>
+          <li>4. Любые угрозы, давление или троллинг в адрес членов семьи недопустимы.</li>
+          <li>5. Запрещено издеваться/высмеивать игроков с физическими, речевыми или другими особенностями.</li>
+        </ul>
+      </div>
+
+      <!-- Обязанности внутри семьи -->
+      <div class="rule-card">
+        <h2><span>📋</span> Обязанности внутри семьи</h2>
+        <ul class="rule-list">
+          <li>1. Взяли семейный транспорт — не оставляйте в нем меньше 50% топлива.</li>
+          <li>2. По возможности выполняйте контракты.</li>
+          <li>3. Поддерживаем порядок в общих ресурсах семьи (багажники т/с, склады).</li>
+          <li>4. Красть чужое со склада без договоренности — недопустимо. Смотрите учет склада — <span style="color: var(--green);">♻️┆склад</span></li>
+          <li>5. Помогаем выполнять совместные контракты.</li>
+        </ul>
+      </div>
+
+      <!-- Прочее -->
+      <div class="rule-card">
+        <h2><span>📌</span> Прочее</h2>
+        <ul class="rule-list">
+          <li>1. Все новые инициативы согласуем с высшими рангами.</li>
+          <li>2. Планируется инактив больше 5 дней — пиши в <span style="color: var(--green);">✈️┆отпуск</span>.</li>
+          <li>3. Помогаем новичкам освоиться и обучаем их.</li>
+          <li>4. Инактив больше 2 месяцев без причин — вылет с семьи.</li>
+          <li>5. Не нарушаем правила сервера.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="intro-box" style="margin-top: 2rem; border-left-color: var(--gold); color: var(--text);">
+      <p><strong>Правила могут дополняться/меняться со временем.</strong></p>
+    </div>
+
   </section>
+
+  <div class="back-block">
+    <a href="index.html" class="btn-back">← На главную</a>
+  </div>
 
   <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script>
+    /* ===== Кнопка темы ===== */
+    const toggleBtn = document.getElementById('themeToggle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      });
+    }
+
+    /* ===== Переход в ЛК ===== */
     function goToProfile(e) {
       if (e) e.preventDefault();
-      if (localStorage.getItem('lm_logged') === 'true') { window.location.href = 'profile.html'; }
-      else { window.location.href = 'login.html'; }
+      window.location.href = 'profile.html';
     }
   </script>
 </body>
