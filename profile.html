@@ -44,11 +44,13 @@
     section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; }
     .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
     .profile-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; border-top: 3px solid var(--accent); height: fit-content; transition: 0.4s; }
+    
     .avatar-wrapper { position: relative; width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: 800; color: var(--accent); border: 3px solid var(--border); box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: 0.2s; }
     .avatar-wrapper:hover { border-color: var(--accent); transform: scale(1.02); }
     .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
     .avatar-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; color: #fff; }
     .avatar-wrapper:hover .avatar-overlay { opacity: 1; }
+    
     .profile-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; color: var(--text); word-break: break-all; }
     .profile-status { font-size: 0.85rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
     .btn-outline { display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%; margin-bottom: 0.5rem; }
@@ -162,7 +164,6 @@
       document.getElementById('inputName').value = data.nickname;
       document.getElementById('userRoleDisplay').textContent = data.role;
 
-      // Показываем панель, если роль Глава или Администратор
       if (data.role === 'Глава' || data.role === 'Администратор') {
         document.getElementById('adminPanelBtn').style.display = 'block';
       }
@@ -183,28 +184,74 @@
 
     setTimeout(initProfile, 500);
 
+    // ЗАГРУЗКА ФАЙЛА В SUPABASE STORAGE
     window.uploadAvatar = async function(event) {
       const file = event.target.files[0];
       if (!file) return;
-      if (file.size > 2 * 1024 * 1024) { alert('Файл больше 2 МБ!'); return; }
+      
+      if (file.size > 5 * 1024 * 1024) { 
+        alert('Файл больше 5 МБ!'); 
+        return; 
+      }
 
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const base64String = e.target.result;
-        const { error } = await supabase.from('profiles').update({ avatar: base64String }).eq('id', currentUser.id);
-        if (error) { alert('Ошибка: ' + error.message); } 
-        else {
-          document.getElementById('avatarImg').src = base64String;
-          document.getElementById('avatarImg').style.display = 'block';
-          document.getElementById('avatarLetter').style.display = 'none';
-          document.getElementById('avatarUrlInput').value = '';
-        }
-      };
-      reader.readAsDataURL(file);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      // Загружаем файл в хранилище
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) {
+        alert('Ошибка загрузки: ' + uploadError.message);
+        return;
+      }
+
+      // Получаем публичную ссылку
+      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      const publicUrl = data.publicUrl;
+
+      // Сохраняем ссылку в базу
+      const { error: dbError } = await supabase
+        .from('profiles')
+        .update({ avatar: publicUrl })
+        .eq('id', currentUser.id);
+
+      if (dbError) {
+        alert('Ошибка базы: ' + dbError.message);
+      } else {
+        document.getElementById('avatarImg').src = publicUrl;
+        document.getElementById('avatarImg').style.display = 'block';
+        document.getElementById('avatarLetter').style.display = 'none';
+        document.getElementById('avatarUrlInput').value = publicUrl;
+      }
     };
 
+    // СОХРАНЕНИЕ ПО ССЫЛКЕ
     window.saveAvatarUrl = async function() {
       const url = document.getElementById('avatarUrlInput').value.trim();
       if (!url) return;
+
       const { error } = await supabase.from('profiles').update({ avatar: url }).eq('id', currentUser.id);
-      if (error) { alert('Ошибка
+      
+      if (error) { 
+        alert('Ошибка: ' + error.message); 
+      } else {
+        document.getElementById('avatarImg').src = url;
+        document.getElementById('avatarImg').style.display = 'block';
+        document.getElementById('avatarLetter').style.display = 'none';
+      }
+    };
+
+    window.logout = async function() {
+      await supabase.auth.signOut();
+      window.location.href = 'login.html';
+    };
+
+    window.resetProfile = function() {
+      if(confirm('Вы уверены?')) window.logout();
+    };
+  </script>
+</body>
+</html>
