@@ -4,11 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Личный кабинет — La Muerte</title>
+  
+  <!-- СКРИПТ ПРОТИВ ВСПЫШКИ (должен быть до стилей) -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ===== СВЕТЛАЯ ТЕМА (по умолчанию) ===== */
+    /* ===== СВЕТЛАЯ ТЕМА ===== */
     :root {
       --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
       --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
@@ -54,7 +62,7 @@
       margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important;
     }
 
-    /* Кнопка переключения тем */
+    /* Кнопка темы */
     .theme-btn { 
       background: transparent; border: 1px solid var(--border); border-radius: 50%; 
       width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; 
@@ -145,7 +153,6 @@
         <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
       </nav>
 
-      <!-- Кнопка темы -->
       <button class="theme-btn" id="themeToggle" title="Переключить тему">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -200,16 +207,14 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    /* ===== ЛОГИКА ТЕМЫ ===== */
+    /* Тема (вспышка убрана, так как тема применяется в head) */
     const toggleBtn = document.getElementById('themeToggle');
-    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
-    
     toggleBtn.addEventListener('click', () => {
       document.documentElement.classList.toggle('dark');
       localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
     });
 
-    /* ===== ПРОФИЛЬ ===== */
+    /* Профиль */
     let currentUser = null;
 
     async function initProfile() {
@@ -217,9 +222,7 @@
       if (!session) { window.location.href = 'login.html'; return; }
 
       currentUser = session.user;
-
-      const { data, error } = await supabase
-        .from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
 
       if (error || !data) {
         document.getElementById('displayName').textContent = 'Ошибка данных';
