@@ -177,13 +177,15 @@
     async function sendDiscordLog(webhookUrl, nickname, amount, statusText, color, discordId) {
       if (!webhookUrl || webhookUrl.includes('ССЫЛКА')) return;
       
+      // Формируем строку с пингом, если есть ID
       const pingText = discordId ? `<@${discordId}>` : nickname;
+      const actionText = statusText === '✅ Выплата одобрена' ? 'одобрена' : 'отклонена';
       
       const payload = {
         username: "La Muerte | Логи", 
         avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
-        content: `${pingText}, ваша заявка на ${amount} $ была ${statusText === '✅ Выплата одобрена' ? 'одобрена' : 'отклонена'}!`,
-        allowed_mentions: { parse: ["users"] }, // Разрешаем пинговать
+        content: `${pingText}, ваша заявка на ${amount} $ была ${actionText}!`,
+        allowed_mentions: { parse: ["users"] }, // Разрешаем пинг
         embeds: [{ 
           title: statusText, 
           color: color, 
