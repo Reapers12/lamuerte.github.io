@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Прокачка Дома — La Muerte</title>
+  <script>
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +34,7 @@
     header { background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; flex-wrap: wrap; gap: 1rem; transition: 0.4s; }
     header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
     header .logo span { color: var(--accent); }
-    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
+    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; flex: 1; flex-wrap: wrap; }
     nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem; }
     nav a { position: relative; color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; padding: 0.35rem 0.75rem; border-radius: 6px; overflow: hidden; white-space: nowrap; transition: 0.2s; }
     nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35); }
@@ -52,9 +55,9 @@
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
 
     /* Кнопка темы */
-    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
+    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.75rem; flex-shrink: 0; }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); transform: rotate(15deg) scale(1.05); }
-    .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
+    .theme-btn svg { width: 16px; height: 16px; transition: transform 0.4s ease; }
     .theme-btn .icon-moon { display: none; }
     html.dark .theme-btn .icon-sun { display: none; }
     html.dark .theme-btn .icon-moon { display: block; }
@@ -121,17 +124,22 @@
     <div class="header-right">
       <nav>
         <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="family.html">О семье <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
+        <!-- Изменено "О семье" на "Правила" -->
+        <a href="family.html">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
         <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html" class="active">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         
-        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
-        <button class="theme-btn" id="themeToggle" title="Переключить тему">
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </button>
+        <!-- Добавлены молнии для ЛК -->
+        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
       </nav>
+
+      <button class="theme-btn" id="themeToggle" title="Переключить тему">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
     </div>
   </header>
 
