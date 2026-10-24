@@ -448,7 +448,7 @@
     <div class="modal-content">
       <button class="modal-close" onclick="closeForm()">×</button>
       <h2 style="text-align: center; margin-bottom: 0.5rem;">Заявка на выплаты</h2>
-      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Заполни форму, и заявка улетит в Discord</p>
+      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Заполни форму, и заявка улетит в Discord и Админу</p>
 
       <form id="payoutForm">
         <div class="form-group">
@@ -477,13 +477,12 @@
         </div>
 
         <div class="form-group">
-          <label>Сумма к выплате</label>
-          <input type="text" id="reward" placeholder="Например: 50.000$" required>
+          <label>Сумма к выплате (только цифры)</label>
+          <input type="number" id="reward" placeholder="Например: 50000" required>
         </div>
 
-        <!-- НОВОЕ ПОЛЕ: ССЫЛКА НА СКРИНШОТ -->
         <div class="form-group">
-          <label>Ссылка на скриншот (доказательство)</label>
+          <label>Ссылка на скриншот</label>
           <input type="url" id="screenshot" placeholder="https://imgur.com/..." required>
         </div>
 
@@ -503,8 +502,13 @@
     </div>
   </div>
 
-  <script>
-    // ===== НАСТРОЙКИ =====
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const SUPABASE_URL = 'https://drumwcypxzwmwmtozrhd.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
     const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563566473048363151/VXoV8tvq2aWftQ1gdaM7_x8jUK8ZA7PrNXF4ZwLjJJwp-QyL9HDetom-diFpjELUCtbY';
 
     // Тема
@@ -517,7 +521,7 @@
     }
 
     // Аккордеон
-    function toggleAccordion(header) {
+    window.toggleAccordion = function(header) {
       header.classList.toggle('active');
       const content = header.nextElementSibling;
       if (content.classList.contains('open')) {
@@ -540,21 +544,19 @@
       }
     }
 
-    // Переход в ЛК
-    function goToProfile(e) {
+    window.goToProfile = function(e) {
       if (e) e.preventDefault();
       window.location.href = 'profile.html';
     }
 
-    // Модальное окно
-    function openForm() {
+    window.openForm = function() {
       document.getElementById('formModal').classList.add('active');
     }
-    function closeForm() {
+    window.closeForm = function() {
       document.getElementById('formModal').classList.remove('active');
     }
 
-    // Отправка формы в Discord
+    // Отправка формы
     document.getElementById('payoutForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
@@ -564,7 +566,7 @@
       const nickname = document.getElementById('nickname').value.trim();
       const category = document.getElementById('category').value;
       const details = document.getElementById('details').value.trim();
-      const reward = document.getElementById('reward').value.trim();
+      const reward = parseInt(document.getElementById('reward').value);
       const screenshot = document.getElementById('screenshot').value.trim();
       const discord = document.getElementById('discord').value.trim();
       const comment = document.getElementById('comment').value.trim() || 'Нет';
@@ -574,6 +576,7 @@
       statusMsg.className = 'status-msg';
       statusMsg.style.display = 'none';
 
+      // 1. Отправляем в Discord
       const payload = {
         username: "La Muerte | Выплаты",
         avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
@@ -585,33 +588,46 @@
             { name: "🎮 Discord", value: discord, inline: true },
             { name: "📂 Категория", value: category, inline: false },
             { name: "📋 Выполнено", value: details, inline: false },
-            { name: "💵 Сумма", value: reward, inline: true },
+            { name: "💵 Сумма", value: reward + " $", inline: true },
             { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: true },
             { name: "💬 Комментарий", value: comment, inline: false }
           ],
-          image: { url: screenshot }, // Прикрепляем скриншот как картинку к сообщению
-          footer: { text: "Заявка с сайта La Muerte" },
+          image: { url: screenshot },
+          footer: { text: "Заявка ожидает подтверждения в админке" },
           timestamp: new Date().toISOString()
         }]
       };
 
       try {
-        const response = await fetch(DISCORD_WEBHOOK_URL, {
+        await fetch(DISCORD_WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        if (response.ok) {
-          statusMsg.textContent = '✅ Заявка отправлена!';
-          statusMsg.className = 'status-msg success';
-          this.reset();
-          setTimeout(() => closeForm(), 2000);
-        } else {
-          throw new Error('Ошибка сервера');
-        }
+        // 2. Сохраняем в Supabase
+        const { error } = await supabase
+          .from('payout_requests')
+          .insert([{
+            nickname: nickname,
+            category: category,
+            details: details,
+            amount: reward,
+            screenshot: screenshot,
+            discord: discord,
+            comment: comment,
+            status: 'pending'
+          }]);
+
+        if (error) throw error;
+
+        statusMsg.textContent = '✅ Заявка отправлена! Ожидайте подтверждения от Админа.';
+        statusMsg.className = 'status-msg success';
+        this.reset();
+        setTimeout(() => closeForm(), 3000);
       } catch (error) {
-        statusMsg.textContent = '❌ Ошибка отправки.';
+        console.error(error);
+        statusMsg.textContent = '❌ Ошибка отправки. Попробуйте позже.';
         statusMsg.className = 'status-msg error';
       } finally {
         btn.disabled = false;
