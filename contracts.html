@@ -437,7 +437,7 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ВАШ НОВЫЙ ВЕБХУК
+    // ВАШ ВЕБХУК (БЕЗ NO-CORS)
     const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563663528131428535/bKmM1iMBGXyK-0s-ilngZ7f-ZwDa5j4AhivQS56TlLHLgj3dxJZEZ0wx5YAJMcCbh4Zi';
 
     const toggleBtn = document.getElementById('themeToggle');
@@ -621,11 +621,10 @@
       };
 
       try {
-        // ОТПРАВЛЯЕМ ЗАПРОСЫ ПАРАЛЛЕЛЬНО
+        // ПАРАЛЛЕЛЬНАЯ ОТПРАВКА БЕЗ NO-CORS
         const [discordRes, supabaseRes] = await Promise.all([
           fetch(DISCORD_WEBHOOK_URL, {
             method: 'POST',
-            mode: 'no-cors', // ОБХОД CORS
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           }),
