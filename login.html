@@ -7,85 +7,188 @@
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --accent: #c0392b; --gold: #d4af37; --text: #eaeaea; }
-    
+    :root { 
+      --bg: #0a0a0a; --panel: rgba(17,17,17,0.95); --border: #222; 
+      --text: #eaeaea; --muted: #999; --accent: #c0392b; --green: #4caf50; 
+    }
     body {
-      font-family: 'Overpass', sans-serif; background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
-      background-color: #050505; color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+      font-family: 'Overpass', sans-serif; background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover fixed;
+      background-color: #050505; color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh;
     }
     body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
     
-    .login-box {
-      background: rgba(17, 17, 17, 0.95); border: 1px solid #222; border-left: 3px solid var(--accent);
-      padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      backdrop-filter: blur(8px);
+    .auth-box {
+      background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+      padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
+    .auth-box h1 { text-align: center; margin-bottom: 1.5rem; font-size: 1.8rem; font-weight: 800; }
+    .auth-box h1 span { color: var(--accent); }
+
+    /* Табы Вход / Регистрация */
+    .tabs { display: flex; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .tabs button {
+      flex: 1; padding: 0.8rem; background: transparent; border: none; color: var(--muted);
+      font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent;
+    }
+    .tabs button.active { color: #fff; border-bottom-color: var(--accent); }
     
-    .login-box h1 { text-align: center; margin-bottom: 1.5rem; font-size: 1.8rem; letter-spacing: 2px; font-weight: 800; }
-    .login-box h1 span { color: var(--accent); }
-    
-    .input-group { margin-bottom: 1.2rem; }
-    .input-group label { display: block; font-size: 0.85rem; color: #999; margin-bottom: 0.4rem; font-weight: 600; }
-    .input-group input {
+    .form-group { margin-bottom: 1.2rem; display: none; }
+    .form-group.active { display: block; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
+    .form-group input {
       width: 100%; padding: 0.8rem; background: #050505; border: 1px solid #333; color: #fff;
       border-radius: 6px; font-family: inherit; transition: border 0.2s; font-size: 1rem;
     }
-    .input-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(192,57,43,0.3); }
+    .form-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(192,57,43,0.3); }
     
     .btn {
       width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none;
-      border-radius: 6px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; font-size: 1rem; letter-spacing: 1px;
+      border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; letter-spacing: 1px;
     }
     .btn:hover { background: #a93226; transform: translateY(-2px); }
     
-    .msg { text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #4caf50; display: none; font-weight: 600; }
-    .msg.error { color: #c0392b; }
+    .msg { text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--green); display: none; font-weight: 600; }
+    .msg.error { color: var(--accent); }
     
-    .back-link { display: block; text-align: center; margin-top: 1.5rem; color: #666; text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    .back-link { display: block; text-align: center; margin-top: 1.5rem; color: #666; text-decoration: none; font-size: 0.85rem; transition: 0.2s; }
     .back-link:hover { color: #fff; }
   </style>
 </head>
 <body>
 
-  <div class="login-box">
+  <div class="auth-box">
     <h1>LA <span>MUERTE</span></h1>
-    <div class="input-group">
-      <label>Никнейм (из игры)</label>
-      <input type="text" id="loginUser" placeholder="Например: John_Doe">
+    
+    <div class="tabs">
+      <button class="active" onclick="switchTab('login')" id="tabLogin">Вход</button>
+      <button onclick="switchTab('register')" id="tabRegister">Регистрация</button>
     </div>
-    <div class="input-group">
-      <label>Пароль</label>
-      <input type="password" id="loginPass" placeholder="••••••••">
+
+    <!-- Форма ВХОДА -->
+    <div class="form-group active" id="loginForm">
+      <div class="form-group">
+        <label>Логин</label>
+        <input type="text" id="loginUser" placeholder="Ваш логин">
+      </div>
+      <div class="form-group">
+        <label>Пароль</label>
+        <input type="password" id="loginPass" placeholder="••••••••">
+      </div>
+      <button class="btn" onclick="doLogin()">Войти</button>
     </div>
-    <button class="btn" onclick="doLogin()">Войти / Зарегистрироваться</button>
-    <div class="msg" id="loginMsg"></div>
+
+    <!-- Форма РЕГИСТРАЦИИ -->
+    <div class="form-group" id="registerForm">
+      <div class="form-group">
+        <label>Придумайте Логин</label>
+        <input type="text" id="regUser" placeholder="Например: John_Doe">
+      </div>
+      <div class="form-group">
+        <label>Придумайте Пароль</label>
+        <input type="password" id="regPass" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Повторите Пароль</label>
+        <input type="password" id="regPassConfirm" placeholder="••••••••">
+      </div>
+      <button class="btn" onclick="doRegister()">Зарегистрироваться</button>
+    </div>
+
+    <div class="msg" id="authMsg"></div>
     <a href="index.html" class="back-link">← Вернуться на главную</a>
   </div>
 
   <script>
-    function doLogin() {
-      const user = document.getElementById('loginUser').value.trim();
-      const pass = document.getElementById('loginPass').value.trim();
-      const msg = document.getElementById('loginMsg');
+    // Простая функция хэширования (для защиты пароля от прямого прочтения в localStorage)
+    function hashPassword(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0; // Convert to 32bit integer
+      }
+      return hash.toString();
+    }
 
-      if (!user || !pass) {
-        msg.textContent = 'Заполните все поля!';
-        msg.className = 'msg error';
-        msg.style.display = 'block';
-        return;
+    function switchTab(tab) {
+      document.getElementById('tabLogin').classList.remove('active');
+      document.getElementById('tabRegister').classList.remove('active');
+      document.getElementById('loginForm').classList.remove('active');
+      document.getElementById('registerForm').classList.remove('active');
+      
+      if (tab === 'login') {
+        document.getElementById('tabLogin').classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+      } else {
+        document.getElementById('tabRegister').classList.add('active');
+        document.getElementById('registerForm').classList.add('active');
+      }
+      hideMsg();
+    }
+
+    function showMsg(text, isError = false) {
+      const msg = document.getElementById('authMsg');
+      msg.textContent = text;
+      msg.className = isError ? 'msg error' : 'msg';
+      msg.style.display = 'block';
+    }
+
+    function hideMsg() {
+      document.getElementById('authMsg').style.display = 'none';
+    }
+
+    // === РЕГИСТРАЦИЯ ===
+    function doRegister() {
+      const user = document.getElementById('regUser').value.trim();
+      const pass = document.getElementById('regPass').value;
+      const passConfirm = document.getElementById('regPassConfirm').value;
+
+      if (!user || !pass || !passConfirm) return showMsg('Заполните все поля!', true);
+      if (pass !== passConfirm) return showMsg('Пароли не совпадают!', true);
+      if (pass.length < 4) return showMsg('Пароль должен быть от 4 символов!', true);
+
+      // Проверяем, существует ли уже такой пользователь
+      const existingUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
+      if (existingUsers[user]) {
+        return showMsg('Этот логин уже занят!', true);
       }
 
-      // Имитация регистрации (сохранение в браузере)
-      localStorage.setItem('lm_user', user);
-      localStorage.setItem('lm_pass', pass);
-      localStorage.setItem('lm_logged', 'true');
-      
-      msg.textContent = 'Успешно! Загрузка...';
-      msg.className = 'msg';
-      msg.style.display = 'block';
+      // Сохраняем нового пользователя (логин -> хэш пароля)
+      existingUsers[user] = hashPassword(pass);
+      localStorage.setItem('lm_users', JSON.stringify(existingUsers));
 
-      // Переход в ЛК через 800мс
-      setTimeout(() => { window.location.href = 'profile.html'; }, 800);
+      // Автоматический вход
+      localStorage.setItem('lm_logged', 'true');
+      localStorage.setItem('lm_user', user);
+
+      showMsg('Успешная регистрация! Переход...');
+      setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
+    }
+
+    // === ВХОД ===
+    function doLogin() {
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value;
+
+      if (!user || !pass) return showMsg('Заполните все поля!', true);
+
+      const existingUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
+      
+      // Проверка: есть ли такой пользователь и совпадает ли хэш пароля
+      if (!existingUsers[user]) {
+        return showMsg('Пользователь не найден. Зарегистрируйтесь.', true);
+      }
+
+      if (existingUsers[user] !== hashPassword(pass)) {
+        return showMsg('Неверный пароль!', true);
+      }
+
+      // Успешный вход
+      localStorage.setItem('lm_logged', 'true');
+      localStorage.setItem('lm_user', user);
+
+      showMsg('Успешный вход! Переход...');
+      setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
     }
   </script>
 </body>
