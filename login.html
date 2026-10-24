@@ -69,7 +69,6 @@
     <div class="auth-view active" id="loginForm">
       <div class="form-group">
         <label>Email (почта)</label>
-        <!-- Здесь строго Email -->
         <input type="email" id="loginEmail" placeholder="your@email.com">
       </div>
       <div class="form-group">
@@ -134,7 +133,7 @@
 
     function hideMsg() { document.getElementById('authMsg').style.display = 'none'; }
 
-    // РЕГИСТРАЦИЯ
+    // РЕГИСТРАЦИЯ (С АВТОМАТИЧЕСКИМ ВХОДОМ ДЛЯ ОБХОДА RLS)
     window.doRegister = async function() {
       const nickname = document.getElementById('regNickname').value.trim();
       const email = document.getElementById('regEmail').value.trim();
@@ -144,7 +143,7 @@
       if (pass.length < 6) return showMsg('Пароль должен быть от 6 символов!', true);
 
       try {
-        // Создаем пользователя (по Email и паролю)
+        // 1. Создаем аккаунт
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: email,
           password: pass,
@@ -152,7 +151,15 @@
 
         if (authError) throw authError;
 
-        // Сохраняем никнейм и роль в базу
+        // 2. СРАЗУ ВХОДИМ (чтобы получить активную сессию для записи в базу)
+        const { error: loginError } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: pass,
+        });
+        
+        if (loginError) throw loginError;
+
+        // 3. Теперь вставляем профиль (сессия активна, RLS пропустит)
         const { error: dbError } = await supabase
           .from('profiles')
           .insert([
