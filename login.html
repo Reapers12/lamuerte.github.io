@@ -47,7 +47,7 @@
       width: 100%; padding: 0.8rem; background: #050505; border: 1px solid #333; color: #fff;
       border-radius: 6px; font-family: inherit; transition: border 0.2s; font-size: 1rem;
     }
-    .form-group input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(192,57,43,0.3); }
+    .form-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(192,57,43,0.3); }
 
     .toggle-password {
       position: absolute; right: 10px; background: transparent; border: none; color: var(--muted);
@@ -55,11 +55,6 @@
     }
     .toggle-password:hover { color: var(--text); }
     .toggle-password svg { width: 20px; height: 20px; }
-    
-    select {
-      width: 100%; padding: 0.8rem; background: #050505; border: 1px solid #333; color: #fff;
-      border-radius: 6px; font-family: inherit; font-size: 1rem; cursor: pointer;
-    }
 
     .btn {
       width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none;
@@ -102,7 +97,7 @@
       <button class="btn" onclick="doLogin()">Войти</button>
     </div>
 
-    <!-- РЕГИСТРАЦИЯ -->
+    <!-- РЕГИСТРАЦИЯ (БЕЗ ВЫБОРА РОЛИ) -->
     <div class="auth-view" id="registerForm">
       <div class="form-group">
         <label>Придумайте Логин</label>
@@ -125,15 +120,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
           </button>
         </div>
-      </div>
-      <div class="form-group">
-        <label>Выберите роль (для теста)</label>
-        <select id="regRole">
-          <option value="Боец">Боец</option>
-          <option value="Заместитель">Заместитель</option>
-          <option value="Начальник">Начальник</option>
-          <option value="Администратор">Администратор</option>
-        </select>
       </div>
       <button class="btn" onclick="doRegister()">Зарегистрироваться</button>
     </div>
@@ -194,7 +180,6 @@
       const user = document.getElementById('regUser').value.trim();
       const pass = document.getElementById('regPass').value;
       const passConfirm = document.getElementById('regPassConfirm').value;
-      const role = document.getElementById('regRole').value;
 
       if (!user || !pass || !passConfirm) return showMsg('Заполните все поля!', true);
       if (pass !== passConfirm) return showMsg('Пароли не совпадают!', true);
@@ -203,7 +188,15 @@
       const existingUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
       if (existingUsers[user]) return showMsg('Этот логин уже занят!', true);
 
-      existingUsers[user] = { pass: hashPassword(pass), role: role };
+      // ЛОГИКА АВТОМАТИЧЕСКОЙ ВЫДАЧИ РОЛЕЙ
+      // Если база пользователей пуста — выдаем роль Администратора.
+      // Если кто-то уже есть — выдаем роль Бойца.
+      let assignedRole = 'Боец';
+      if (Object.keys(existingUsers).length === 0) {
+        assignedRole = 'Администратор';
+      }
+
+      existingUsers[user] = { pass: hashPassword(pass), role: assignedRole };
       localStorage.setItem('lm_users', JSON.stringify(existingUsers));
       localStorage.setItem('lm_logged', 'true');
       localStorage.setItem('lm_user', user);
