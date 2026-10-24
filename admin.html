@@ -418,15 +418,31 @@
       btn.textContent = '...';
 
       if (newStatus === 'approved') {
-        // 1. Запрашиваем текущие данные
-        const { data: userData, error: userError } = await supabase
+        // 1. Ищем игрока по нику (без учета регистра и лишних пробелов)
+        let userData = null;
+        let userError = null;
+
+        const { data: exactMatch, error: err1 } = await supabase
           .from('profiles')
           .select('id, balance, contracts')
-          .eq('nickname', nickname)
-          .single();
+          .eq('nickname', nickname.trim())
+          .maybeSingle();
+
+        if (exactMatch) {
+          userData = exactMatch;
+        } else {
+          const { data: fuzzyMatch, error: err2 } = await supabase
+            .from('profiles')
+            .select('id, balance, contracts')
+            .ilike('nickname', nickname.trim())
+            .maybeSingle();
+
+          if (fuzzyMatch) userData = fuzzyMatch;
+          else userError = err1 || err2;
+        }
 
         if (userError || !userData) {
-          alert('Ошибка: Игрок с таким ником не найден!');
+          alert(`Ошибка: Игрок с ником "${nickname}" не найден в профилях. Проверьте, совпадает ли ник в заявке с ником в базе.`);
           btn.disabled = false;
           btn.textContent = '✅';
           return;
@@ -434,7 +450,7 @@
 
         // 2. Считаем новые значения
         const currentBalance = Number(userData.balance) || 0;
-        const currentContracts = Number(userData.contracts) || 0; // Если в базе null, будет 0
+        const currentContracts = Number(userData.contracts) || 0;
 
         const newBalance = currentBalance + amount;
         const newContracts = currentContracts + 1;
@@ -449,7 +465,7 @@
           .eq('id', userData.id);
 
         if (updateError) {
-          alert('Ошибка обновления: ' + updateError.message);
+          alert('Ошибка обновления профиля: ' + updateError.message);
           btn.disabled = false;
           btn.textContent = '✅';
           return;
@@ -469,7 +485,7 @@
         .eq('id', reqId);
 
       if (error) {
-        alert('Ошибка: ' + error.message);
+        alert('Ошибка смены статуса: ' + error.message);
         btn.disabled = false;
         btn.textContent = newStatus === 'approved' ? '✅' : '❌';
       } else {
