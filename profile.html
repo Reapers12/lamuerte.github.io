@@ -28,11 +28,28 @@
     header { background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10; transition: 0.4s; }
     header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
     header .logo span { color: var(--accent); }
-    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
+    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; flex: 1; flex-wrap: wrap; }
     nav { display: flex; align-items: center; gap: 0.2rem; flex-wrap: wrap; }
     nav a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 0.35rem 0.75rem; border-radius: 6px; transition: 0.2s; }
     nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); }
     .logout-btn { color: var(--accent) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
+    
+    /* Молнии */
+    nav a .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
+    nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
+    nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
+    nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
+    nav a .spark { position: absolute; top: 50%; left: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
+    nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
+    nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
+    nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
+    nav a:hover .spark.s2 { animation-delay: 0.12s; }
+    nav a:hover .spark.s3 { animation-delay: 0.24s; }
+
+    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
+    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
+    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
+
     .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.75rem; flex-shrink: 0; }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
     .theme-btn svg { width: 16px; height: 16px; transition: transform 0.4s ease; }
@@ -59,7 +76,7 @@
     
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     
-    /* Вкладки внутри карточки */
+    /* Вкладки */
     .tabs-header { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; flex-wrap: wrap; }
     .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 700; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
     .tab-btn:hover { color: var(--text); }
@@ -82,7 +99,6 @@
     .form-group input { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem; }
     .form-group input:focus { outline: none; border-color: var(--accent); }
     
-    /* Кнопка сохранения пароля */
     .btn-save { width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; margin-top: 1rem; }
     .btn-save:hover { background: #a93226; transform: translateY(-2px); }
     .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
@@ -90,7 +106,6 @@
     .status-msg.success { color: var(--green); display: block; }
     .status-msg.error { color: var(--accent); display: block; }
 
-    /* Таблица истории */
     .history-table { width: 100%; border-collapse: collapse; }
     .history-table th, .history-table td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
     .history-table th { font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
@@ -121,11 +136,12 @@
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
     <div class="header-right">
       <nav>
-        <a href="index.html">Главная</a>
-        <a href="family.html">Правила</a>
-        <a href="transport.html">О транспорте</a>
-        <a href="contracts.html">Контракты</a>
-        <a href="tables.html">Таблицы</a>
+        <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="family.html">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="roulette.html">Рулетка <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
       </nav>
 
@@ -155,7 +171,7 @@
         <a href="#" class="btn-outline" onclick="resetProfile()" style="border-color: #333;">Сбросить профиль</a>
       </div>
 
-      <!-- ПРАВАЯ КОЛОНКА (Статистика и История) -->
+      <!-- ПРАВАЯ КОЛОНКА (Статистика, История, Настройки) -->
       <div class="stats-card">
         
         <!-- Вкладки -->
@@ -212,7 +228,7 @@
           </div>
         </div>
 
-        <!-- Вкладка: Настройки -->
+        <!-- Вкладка: Настройки (Смена пароля) -->
         <div id="tab-settings" class="tab-content">
           <div class="stats-title">⚙️ Смена пароля</div>
           
@@ -258,14 +274,21 @@
     let currentUser = null;
     let currentDiscordId = null;
 
-    // Переключение вкладок
+    // 🔥 ГЛАВНАЯ ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК
     window.switchTab = function(evt, tabId) {
+      // 1. Убираем класс active у всех кнопок
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // 2. Убираем класс active у всех блоков с контентом
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
       
+      // 3. Добавляем класс active нажатой кнопке
       evt.currentTarget.classList.add('active');
+      
+      // 4. Показываем нужный блок
       document.getElementById(tabId).classList.add('active');
 
+      // Если открыли вкладку истории - подгружаем данные
       if (tabId === 'tab-history' && currentDiscordId) {
         loadHistory(currentDiscordId);
       }
