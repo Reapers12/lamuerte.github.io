@@ -243,7 +243,6 @@
     <h1>Контракты <em>La Muerte</em></h1>
     <p>Актуальные цены на контракты в семье!</p>
 
-    <!-- Кнопка открывает модальное окно -->
     <button onclick="openForm()" style="display: inline-block; margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; text-decoration: none; font-weight: 700; font-family: inherit; font-size: 1rem; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
       📝 Подать заявку на выплаты
     </button>
@@ -482,6 +481,12 @@
           <input type="text" id="reward" placeholder="Например: 50.000$" required>
         </div>
 
+        <!-- НОВОЕ ПОЛЕ: ССЫЛКА НА СКРИНШОТ -->
+        <div class="form-group">
+          <label>Ссылка на скриншот (доказательство)</label>
+          <input type="url" id="screenshot" placeholder="https://imgur.com/..." required>
+        </div>
+
         <div class="form-group">
           <label>Ваш Discord</label>
           <input type="text" id="discord" placeholder="Например: username" required>
@@ -560,6 +565,7 @@
       const category = document.getElementById('category').value;
       const details = document.getElementById('details').value.trim();
       const reward = document.getElementById('reward').value.trim();
+      const screenshot = document.getElementById('screenshot').value.trim();
       const discord = document.getElementById('discord').value.trim();
       const comment = document.getElementById('comment').value.trim() || 'Нет';
 
@@ -580,8 +586,10 @@
             { name: "📂 Категория", value: category, inline: false },
             { name: "📋 Выполнено", value: details, inline: false },
             { name: "💵 Сумма", value: reward, inline: true },
+            { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: true },
             { name: "💬 Комментарий", value: comment, inline: false }
           ],
+          image: { url: screenshot }, // Прикрепляем скриншот как картинку к сообщению
           footer: { text: "Заявка с сайта La Muerte" },
           timestamp: new Date().toISOString()
         }]
