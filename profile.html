@@ -52,11 +52,6 @@
     }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
     .btn-admin { border-color: var(--accent) !important; color: var(--accent) !important; font-weight: 700 !important; }
-    .btn-admin:hover { background: rgba(192, 57, 43, 0.1) !important; }
-    
-    /* Стили для кнопки восстановления */
-    .btn-restore { border-color: #f39c12 !important; color: #f39c12 !important; font-weight: 700 !important; }
-    .btn-restore:hover { background: rgba(243, 156, 18, 0.1) !important; }
 
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
     .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: #fff; }
@@ -111,13 +106,9 @@
         <div class="profile-name" id="displayName">Загрузка...</div>
         <div class="profile-status" id="userRoleDisplay">Загрузка...</div>
         
-        <!-- Кнопки управления -->
         <a href="admin.html" id="adminPanelBtn" class="btn-outline btn-admin" style="display: none;">⚙️ Панель управления</a>
         
-        <!-- Кнопка восстановления прав (показывается всем) -->
-        <button id="restoreAdminBtn" class="btn-outline btn-restore" onclick="restoreAdmin()">🔧 Восстановить права Админа</button>
-        
-        <a href="#" class="btn-outline" onclick="resetProfile()" style="border-color: #333; margin-top: 0.5rem;">Сбросить профиль</a>
+        <a href="#" class="btn-outline" onclick="resetProfile()" style="border-color: #333;">Сбросить профиль</a>
       </div>
 
       <div class="stats-card">
@@ -131,7 +122,7 @@
 
         <div class="stats-title">⚙️ Настройки профиля</div>
         <div class="form-group">
-          <label>Ваш Логин</label>
+          <label>Ваш Никнейм</label>
           <input type="text" id="inputName" readonly style="opacity: 0.7;">
         </div>
         <div class="form-group">
@@ -144,86 +135,95 @@
     </div>
   </section>
 
-  <script>
-    if (localStorage.getItem('lm_logged') !== 'true') {
-      window.location.href = 'login.html';
-    }
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    const user = localStorage.getItem('lm_user') || 'Неизвестный';
-    const allUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
-    const userData = allUsers[user];
+    const SUPABASE_URL = 'https://drumwcypxzwmwmtozrhd.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
 
-    document.getElementById('displayName').textContent = user;
-    document.getElementById('avatarBox').textContent = user.charAt(0).toUpperCase();
-    document.getElementById('inputName').value = user;
-    
-    // Проверка роли
-    if (userData) {
-      document.getElementById('userRoleDisplay').textContent = userData.role;
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+    let userData = null;
+
+    // Проверка авторизации
+    async function checkUser() {
+      const { data: { session } } = await supabase.auth.getSession();
       
-      // Если Админ — показываем кнопку панели управления и скрываем кнопку восстановления
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      currentUser = session.user;
+
+      // Получаем данные из таблицы profiles
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+
+      if (error) {
+        console.error('Ошибка загрузки профиля:', error);
+        document.getElementById('displayName').textContent = 'Ошибка данных';
+        return;
+      }
+
+      userData = data;
+      
+      document.getElementById('displayName').textContent = userData.nickname;
+      document.getElementById('inputName').value = userData.nickname;
+      document.getElementById('avatarBox').textContent = userData.nickname.charAt(0).toUpperCase();
+      document.getElementById('userRoleDisplay').textContent = userData.role;
+
       if (userData.role === 'Администратор') {
         document.getElementById('adminPanelBtn').style.display = 'block';
-        document.getElementById('restoreAdminBtn').style.display = 'none';
-      } else {
-        // Если не Админ — показываем кнопку восстановления
-        document.getElementById('restoreAdminBtn').style.display = 'block';
       }
-    } else {
-      document.getElementById('userRoleDisplay').textContent = 'Ошибка данных';
-    }
-    
-    const savedAvatar = localStorage.getItem('lm_avatar');
-    if (savedAvatar) {
-      const img = document.createElement('img');
-      img.src = savedAvatar;
-      img.onload = () => {
-        document.getElementById('avatarBox').textContent = '';
-        document.getElementById('avatarBox').appendChild(img);
-        img.style.display = 'block';
-      };
-      document.getElementById('inputAvatar').value = savedAvatar;
-    }
 
-    function saveProfile() {
-      const newAvatar = document.getElementById('inputAvatar').value.trim();
-      localStorage.setItem('lm_avatar', newAvatar);
-
-      const box = document.getElementById('avatarBox');
-      box.innerHTML = '';
-      if (newAvatar) {
+      const savedAvatar = userData.avatar;
+      if (savedAvatar) {
         const img = document.createElement('img');
-        img.src = newAvatar;
-        img.style.display = 'block';
-        box.appendChild(img);
-      } else {
-        box.textContent = user.charAt(0).toUpperCase();
+        img.src = savedAvatar;
+        img.onload = () => {
+          document.getElementById('avatarBox').textContent = '';
+          document.getElementById('avatarBox').appendChild(img);
+          img.style.display = 'block';
+        };
+        document.getElementById('inputAvatar').value = savedAvatar;
       }
-      box.style.borderColor = '#4caf50';
-      setTimeout(() => box.style.borderColor = 'var(--border)', 500);
     }
 
-    function logout() {
-      localStorage.removeItem('lm_logged');
+    checkUser();
+
+    // Выход
+    window.logout = async function() {
+      await supabase.auth.signOut();
       window.location.href = 'login.html';
-    }
+    };
 
-    function resetProfile() {
-      if(confirm('Вы уверены? Все данные профиля будут удалены.')) {
-        localStorage.clear();
-        window.location.href = 'login.html';
-      }
-    }
+    // Сохранение
+    window.saveProfile = async function() {
+      const newAvatar = document.getElementById('inputAvatar').value.trim();
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update({ avatar: newAvatar })
+        .eq('id', currentUser.id);
 
-    // ФУНКЦИЯ ВОССТАНОВЛЕНИЯ ПРАВ АДМИНИСТРАТОРА
-    function restoreAdmin() {
-      if (userData) {
-        userData.role = 'Администратор';
-        localStorage.setItem('lm_users', JSON.stringify(allUsers));
-        alert('✅ Права Администратора успешно восстановлены! Страница сейчас перезагрузится.');
+      if (error) {
+        alert('Ошибка сохранения: ' + error.message);
+      } else {
+        alert('Профиль обновлён!');
         location.reload();
       }
-    }
+    };
+
+    window.resetProfile = function() {
+      if(confirm('Вы уверены? Вы выйдете из аккаунта.')) {
+        window.logout();
+      }
+    };
   </script>
 </body>
 </html>
