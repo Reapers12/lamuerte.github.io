@@ -83,7 +83,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 0.5rem; /* Уменьшил gap, чтобы все влезало плотнее */
+      gap: 0.5rem;
       flex: 1;
       flex-wrap: wrap;
     }
@@ -155,12 +155,12 @@
     nav a:hover .spark.s2 { animation-delay: 0.12s; }
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
 
-    /* ===== Круглая кнопка переключения тем (ВЫРОВНЕНА) ===== */
+    /* ===== Круглая кнопка переключения тем ===== */
     .theme-btn {
       background: transparent;
       border: 1px solid var(--border);
       border-radius: 50%;
-      width: 32px;  /* Уменьшил с 36px до 32px для аккуратности */
+      width: 32px;
       height: 32px; 
       display: flex;
       align-items: center;
@@ -168,7 +168,7 @@
       cursor: pointer;
       color: var(--muted);
       transition: all 0.3s ease;
-      margin-left: 0.75rem; /* Сделал нормальный отступ */
+      margin-left: 0.75rem;
       flex-shrink: 0;
     }
     
@@ -180,7 +180,7 @@
     }
 
     .theme-btn svg {
-      width: 16px; /* Чуть уменьшил иконку */
+      width: 16px;
       height: 16px;
       transition: transform 0.4s ease;
     }
@@ -273,7 +273,8 @@
     <div class="header-right">
       <nav>
         <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="family.html">О семье <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <!-- Изменено "О семье" на "Правила" -->
+        <a href="family.html">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="transport.html" class="active">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
