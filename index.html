@@ -17,6 +17,7 @@
       --muted: #666;
       --accent: #c0392b;
       --gold: #b8860b;
+      --green: #2e7d32;
       --bg-image: none;
       --bg-overlay: rgba(255, 255, 255, 0.9);
     }
@@ -29,6 +30,7 @@
       --text: #eaeaea;
       --muted: #999;
       --gold: #d4af37;
+      --green: #4caf50;
       --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
       --bg-overlay: rgba(0, 0, 0, 0.85);
     }
@@ -138,29 +140,7 @@
       text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
     }
 
-    /* Молнии */
-    nav a .lightning {
-      position: absolute; top: 0; bottom: 0; width: 2px;
-      background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
-      filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9));
-      opacity: 0; pointer-events: none; z-index: 1;
-    }
-    nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
-    nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
-    nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
-    nav a .spark {
-      position: absolute; top: 50%; left: 0; width: 3px; height: 3px;
-      border-radius: 50%; background: #fff;
-      box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7);
-      opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1;
-    }
-    nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
-    nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
-    nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
-    nav a:hover .spark.s2 { animation-delay: 0.12s; }
-    nav a:hover .spark.s3 { animation-delay: 0.24s; }
-
-    /* ===== НОВЫЙ ДИЗАЙН ПЕРЕКЛЮЧАТЕЛЯ (КРУГЛАЯ КНОПКА) ===== */
+    /* ===== Круглая кнопка переключения тем ===== */
     .theme-btn {
       background: transparent;
       border: 1px solid var(--border);
@@ -190,36 +170,294 @@
       transition: transform 0.4s ease;
     }
 
-    /* Прячем иконку луны, пока не включена тёмная тема */
     .theme-btn .icon-moon { display: none; }
     html.dark .theme-btn .icon-sun { display: none; }
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
 
-    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
-    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
-    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
+    /* ===== Герой (Главный экран) ===== */
+    .hero {
+      padding: 6rem 2rem 5rem;
+      text-align: center;
+      position: relative;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.3), transparent 60%);
+      pointer-events: none;
+    }
 
-    /* ===== Контент ===== */
-    .page-hero { padding: 6rem 2rem 3rem; text-align: center; position: relative; }
-    .page-hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.3), transparent 60%); pointer-events: none; }
-    .page-hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: 1px; color: var(--text); margin-bottom: 1rem; position: relative; }
-    .page-hero h1 em { color: var(--accent); font-style: normal; }
-    .page-hero p { color: var(--muted); max-width: 640px; margin: 0 auto; font-size: 1.1rem; position: relative; }
-    
-    .container { max-width: 1000px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-    .card { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.5rem; transition: transform 0.2s, border-color 0.2s; }
-    .card:hover { transform: translateY(-5px); border-color: var(--accent); }
-    .card h3 { color: var(--text); margin-bottom: 0.5rem; font-size: 1.2rem; }
-    .card p { color: var(--muted); font-size: 0.95rem; }
+    .hero h1 {
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: 1px;
+      color: var(--text);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .hero h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
 
-    footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 2rem; background: var(--panel); transition: background 0.4s ease, border-color 0.4s ease; }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      position: relative;
+    }
+
+    .hero .btn {
+      display: inline-block;
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .hero .btn:hover {
+      background: #e04a3a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.5);
+    }
+
+    section.block {
+      padding: 4rem 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    section.block h2 {
+      font-weight: 700;
+      font-size: 1.75rem;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .family-intro {
+      text-align: center;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 2rem;
+      font-size: 1.05rem;
+    }
+    .family-intro em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    /* ===== Модальное окно ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3rem 1rem 1rem;
+      overflow-y: auto;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .modal {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      max-width: 520px;
+      width: 100%;
+      position: relative;
+      animation: slideUp 0.3s ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      margin-bottom: 2rem;
+    }
+
+    .modal h2 {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .modal .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 1.75rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s, transform 0.2s;
+      padding: 0.25rem 0.5rem;
+    }
+    .modal-close:hover {
+      color: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    .form-group { margin-bottom: 1.25rem; }
+
+    .form-group label {
+      display: block;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: 'Overpass', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.25);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit:hover {
+      background: #e04a3a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.5);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .form-status {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      min-height: 1.2rem;
+    }
+    .form-status.ok { color: var(--green); }
+    .form-status.err { color: var(--accent); }
+
+    .success-block {
+      display: none;
+      text-align: center;
+      padding: 1rem 0 0;
+    }
+    .success-block.show { display: block; }
+
+    .success-message {
+      color: var(--green);
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-discord {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-discord:hover {
+      background: #e04a3a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.5);
+    }
+
+    footer {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
     footer span { color: var(--accent); }
 
     @media (max-width: 850px) {
       header { flex-direction: column; align-items: flex-start; }
-      .header-right { width: 100%; justify-content: flex-start; }
+      .header-right { width: 100%; justify-content: space-between; }
       nav { justify-content: flex-start; }
+    }
+    @media (max-width: 600px) {
+      .modal { padding: 2rem 1.25rem; }
+      .modal-overlay { padding: 1.5rem 1rem 1rem; }
     }
   </style>
 </head>
@@ -229,17 +467,17 @@
     
     <div class="header-right">
       <nav>
-        <a href="index.html" class="active">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="family.html">О семье <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="index.html" class="active">Главная</a>
+        <a href="family.html">О семье</a>
+        <a href="transport.html">О транспорте</a>
+        <a href="contracts.html">Контракты</a>
+        <a onclick="openModal()">Вступить в семью</a>
+        <a href="tables.html">Таблицы</a>
         
         <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
 
-        <!-- НОВАЯ КНОПКА ПЕРЕКЛЮЧАТЕЛЯ ТЕМЫ -->
+        <!-- Новая кнопка переключателя темы -->
         <button class="theme-btn" id="themeToggle" title="Переключить тему">
-          <!-- Иконка солнца (для светлой темы) -->
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -251,7 +489,6 @@
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
-          <!-- Иконка луны (для тёмной темы) -->
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
@@ -260,45 +497,88 @@
     </div>
   </header>
 
-  <section class="page-hero">
-    <h1>Добро пожаловать в <em>La Muerte</em></h1>
-    <p>Мы — семья, которая доминирует на сервере. Присоединяйся к нам!</p>
+  <section class="hero" id="home">
+    <h1>Добро пожаловать <br>в семью <em>La Muerte</em></h1>
+    <p>Мы не просто команда. Мы — семья. Здесь каждый найдёт своё место, своё дело и своих людей.</p>
+    <a onclick="openModal()" class="btn">Вступить</a>
   </section>
 
-  <div class="container">
-    <div class="card">
-      <h3>🏆 Наши правила</h3>
-      <p>Уважай братьев, помогай новичкам и никогда не сдавай своих.</p>
+  <section class="block" id="family">
+    <h2>О семье</h2>
+    <p class="family-intro">
+      <em>La Muerte</em> — это не просто название. Это братство, проверенное временем,
+      делом и словом. Здесь не спрашивают, откуда ты пришёл — здесь смотрят, кто ты есть.
+      Мы держимся друг за друга, потому что поодиночке не выживают.
+    </p>
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="family.html" class="btn" style="display:inline-block;padding:0.9rem 2rem;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;letter-spacing:1px;">Узнать больше о семье →</a>
     </div>
-    <div class="card">
-      <h3>💰 Бизнес</h3>
-      <p>Мы контролируем металлургию, ферму и рыболовство. Вступай в бизнес-структуру.</p>
-    </div>
-    <div class="card">
-      <h3>⚔️ Войны</h3>
-      <p>Участвуй в захватах территорий и получай лучшие награды сервера.</p>
+  </section>
+
+  <!-- МОДАЛЬНОЕ ОКНО -->
+  <div class="modal-overlay" id="joinModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h2>Вступить в La Muerte</h2>
+      <p class="subtitle">Заполни заявку — и стань частью семьи</p>
+
+      <form id="joinForm">
+        <div class="form-group">
+          <label for="realName">Реальное имя</label>
+          <input type="text" id="realName" name="realName" placeholder="Например: Александр" required>
+        </div>
+
+        <div class="form-group">
+          <label for="age">Возраст</label>
+          <input type="number" id="age" name="age" min="14" max="99" placeholder="Например: 18" required>
+        </div>
+
+        <div class="form-group">
+          <label for="icName">IC имя</label>
+          <input type="text" id="icName" name="icName" placeholder="Имя персонажа в игре" required>
+        </div>
+
+        <div class="form-group">
+          <label for="discord">Ваш Discord для связи</label>
+          <input type="text" id="discord" name="discord" placeholder="Например: username или username#1234" required>
+        </div>
+
+        <div class="form-group">
+          <label for="plans">Чем планируешь заниматься в семье?</label>
+          <textarea id="plans" name="plans" placeholder="Например: помогать с набором, участвовать в мероприятиях, развивать автопарк..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">Отправить заявку</button>
+        <p class="form-note">Заявка уходит прямо в Discord семьи.</p>
+        <p class="form-status" id="formStatus"></p>
+      </form>
+
+      <div class="success-block" id="successBlock">
+        <p class="success-message">✅ Заявка отправлена в Discord! Ожидайте ответа в Кратчайшие сроки!</p>
+        <a href="https://discord.gg/gv4arpXuvj" target="_blank" rel="noopener" class="btn-discord">
+          💬 Открыть Discord
+        </a>
+      </div>
     </div>
   </div>
 
-  <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
+  <footer>
+    © 2024–2026 <span>La Muerte</span> — Все права защищены.
+  </footer>
 
   <script>
-    /* ===== Переключатель темы (Новая логика) ===== */
+    /* ===== Переключатель темы ===== */
     (function () {
       const toggleBtn = document.getElementById('themeToggle');
       if (!toggleBtn) return;
 
-      // Проверяем сохраненную тему
       const saved = localStorage.getItem('theme');
       if (saved === 'dark') {
         document.documentElement.classList.add('dark');
       }
 
-      // Клик по кнопке
       toggleBtn.addEventListener('click', () => {
         document.documentElement.classList.toggle('dark');
-        
-        // Сохраняем выбор
         if (document.documentElement.classList.contains('dark')) {
           localStorage.setItem('theme', 'dark');
         } else {
@@ -307,7 +587,7 @@
       });
     })();
 
-    /* ===== Переход в ЛК ===== */
+    /* ===== Переход в Личный Кабинет ===== */
     function goToProfile(e) {
       if (e) e.preventDefault();
       if (localStorage.getItem('lm_logged') === 'true') {
@@ -316,6 +596,78 @@
         window.location.href = 'login.html';
       }
     }
+
+    /* ===== Модальное окно ===== */
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGj65zWmU3xkvRbrm_bB6G2EAjjjWuhDp0uk-qkafX0oiHmYHTk2wbe3b2nuBlyCN-2A/exec';
+
+    function openModal() {
+      document.getElementById('joinModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('joinModal').classList.remove('active');
+      document.body.style.overflow = '';
+
+      setTimeout(() => {
+        document.getElementById('formStatus').textContent = '';
+        document.getElementById('formStatus').className = 'form-status';
+        document.getElementById('joinForm').style.display = '';
+        document.getElementById('successBlock').classList.remove('show');
+        document.getElementById('joinForm').reset();
+      }, 300);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    document.getElementById('joinForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const statusEl = document.getElementById('formStatus');
+      const btn = document.getElementById('submitBtn');
+
+      const realName = document.getElementById('realName').value.trim();
+      const age = document.getElementById('age').value.trim();
+      const icName = document.getElementById('icName').value.trim();
+      const discord = document.getElementById('discord').value.trim();
+      const plans = document.getElementById('plans').value.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'Отправка...';
+      statusEl.textContent = '';
+      statusEl.className = 'form-status';
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'join',
+            realName: realName,
+            age: age,
+            icName: icName,
+            discord: discord,
+            plans: plans
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'ok') {
+          document.getElementById('joinForm').style.display = 'none';
+          document.getElementById('successBlock').classList.add('show');
+        } else {
+          throw new Error(result.message || 'Ошибка на стороне сервера');
+        }
+
+      } catch (err) {
+        statusEl.textContent = '❌ Ошибка: ' + err.message;
+        statusEl.className = 'form-status err';
+        btn.disabled = false;
+        btn.textContent = 'Отправить заявку';
+      }
+    });
   </script>
 </body>
 </html>
