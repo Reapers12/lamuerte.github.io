@@ -92,7 +92,9 @@
     .header-right {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 1rem;
+      flex: 1;
       flex-wrap: wrap;
     }
 
@@ -102,6 +104,7 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 0.2rem;
+      justify-content: flex-end;
     }
 
     nav a {
@@ -179,7 +182,12 @@
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
 
     /* ===== Переключатель День/Ночь ===== */
-    .spark-switch { display: inline-block; font-size: 20px; }
+    .spark-switch { 
+      display: inline-block; 
+      font-size: 20px; 
+      flex-shrink: 0; /* Запрещаем сжиматься */
+      margin-left: 0.5rem;
+    }
     .spark-switch input { display: none; }
     .spark-switch .track {
       position: relative;
@@ -367,9 +375,8 @@
 
     @media (max-width: 850px) {
       header { flex-direction: column; align-items: flex-start; }
-      .header-right { width: 100%; justify-content: space-between; }
-      nav { gap: 0.2rem; }
-      .profile-btn { padding-left: 0.75rem !important; margin-left: 0.25rem; }
+      .header-right { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      nav { justify-content: flex-start; }
     }
     @media (max-width: 600px) {
       .contracts-grid { grid-template-columns: 1fr; }
