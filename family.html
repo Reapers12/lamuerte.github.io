@@ -34,42 +34,124 @@
     html, body { transition: background 0.4s ease, color 0.4s ease; }
 
     body {
-      font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed;
-      background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative;
+      font-family: 'Overpass', sans-serif;
+      background: var(--bg-image) center/cover no-repeat fixed;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
     }
-    body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: var(--bg-overlay);
+      z-index: -1;
+      pointer-events: none;
+      transition: background 0.4s ease;
+    }
 
     /* ===== Шапка ===== */
     header {
-      background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; flex-wrap: wrap; gap: 1rem;
+      background: var(--panel);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-wrap: wrap;
+      gap: 1rem;
       transition: background 0.4s ease, border-color 0.4s ease;
     }
-    header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
-    header .logo span { color: var(--accent); }
-    
-    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
-    nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem; }
-    
-    nav a {
-      position: relative; color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500;
-      padding: 0.35rem 0.75rem; border-radius: 6px; overflow: hidden; white-space: nowrap; transition: 0.2s;
+
+    header .logo {
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 3px;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
     }
-    nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35); }
-    nav a.active { color: var(--text); background: rgba(192, 57, 43, 0.14); }
+    header .logo:hover { opacity: 0.75; }
+    header .logo span { color: var(--accent); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1rem;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    nav a {
+      position: relative;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: color 0.2s, background 0.2s, box-shadow 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--text);
+      background: rgba(192, 57, 43, 0.08);
+      box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35);
+    }
+
+    nav a.active {
+      color: var(--text);
+      background: rgba(192, 57, 43, 0.14);
+    }
 
     .profile-btn {
-      color: var(--gold) !important; font-weight: 700 !important; margin-left: 0.5rem;
-      border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important;
+      color: var(--gold) !important;
+      font-weight: 700 !important;
+      margin-left: 0.5rem;
+      border-left: 1px solid var(--border);
+      padding-left: 1rem !important;
+      border-radius: 0 !important;
     }
-    .profile-btn:hover { background: transparent !important; box-shadow: none !important; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+    .profile-btn:hover {
+      background: transparent !important;
+      box-shadow: none !important;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
 
     /* Молнии */
-    nav a .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
+    nav a .lightning {
+      position: absolute; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
+      filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9));
+      opacity: 0; pointer-events: none; z-index: 1;
+    }
     nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
     nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
     nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
-    nav a .spark { position: absolute; top: 50%; left: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
+    nav a .spark {
+      position: absolute; top: 50%; left: 0; width: 3px; height: 3px;
+      border-radius: 50%; background: #fff;
+      box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7);
+      opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1;
+    }
     nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
     nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
     nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
@@ -77,8 +159,12 @@
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
 
     /* Кнопка темы */
-    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
-    .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
+    .theme-btn {
+      background: transparent; border: 1px solid var(--border); border-radius: 50%;
+      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--muted); transition: all 0.3s ease; margin-left: 0.5rem; flex-shrink: 0;
+    }
+    .theme-btn:hover { color: var(--gold); border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); transform: rotate(15deg) scale(1.05); }
     .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
     .theme-btn .icon-moon { display: none; }
     html.dark .theme-btn .icon-sun { display: none; }
@@ -262,7 +348,8 @@
         <div class="highlight-box">
           <ul>
             <li>Адекватность</li>
-            <li>Возраст: от 20 лет</li>
+            <!-- ИЗМЕНЕН ВОЗРАСТ НА 16 ЛЕТ -->
+            <li>Возраст: от 16 лет</li>
             <li>Форма никнейма в Discord: Никнейм в игре | Имя в жизни</li>
             <li>Пример: John Majestic | Александр</li>
           </ul>
@@ -339,7 +426,7 @@
   <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script>
-    /* ===== Кнопка темы ===== */
+    // Кнопка темы
     const toggleBtn = document.getElementById('themeToggle');
     if (toggleBtn) {
       toggleBtn.addEventListener('click', () => {
@@ -348,7 +435,7 @@
       });
     }
 
-    /* ===== Переход в ЛК ===== */
+    // Переход в ЛК
     function goToProfile(e) {
       if (e) e.preventDefault();
       window.location.href = 'profile.html';
