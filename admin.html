@@ -418,7 +418,7 @@
       btn.textContent = '...';
 
       if (newStatus === 'approved') {
-        // 1. Получаем текущие данные игрока (баланс и контракты)
+        // 1. Запрашиваем текущие данные
         const { data: userData, error: userError } = await supabase
           .from('profiles')
           .select('id, balance, contracts')
@@ -426,36 +426,43 @@
           .single();
 
         if (userError || !userData) {
-          alert('Ошибка: Игрок с таким ником не найден в базе!');
+          alert('Ошибка: Игрок с таким ником не найден!');
           btn.disabled = false;
           btn.textContent = '✅';
           return;
         }
 
-        const newBalance = (userData.balance || 0) + amount;
-        const newContracts = (userData.contracts || 0) + 1; // <--- ПРИБАВЛЯЕМ +1 КОНТРАКТ
+        // 2. Считаем новые значения
+        const currentBalance = Number(userData.balance) || 0;
+        const currentContracts = Number(userData.contracts) || 0; // Если в базе null, будет 0
 
-        // 2. Обновляем профиль (баланс и счетчик контрактов)
-        await supabase.from('profiles').update({ 
-          balance: newBalance,
-          contracts: newContracts 
-        }).eq('id', userData.id);
+        const newBalance = currentBalance + amount;
+        const newContracts = currentContracts + 1;
 
-        // 3. Записываем транзакцию в историю
-        await supabase.from('transactions').insert([{ 
-          admin_id: currentAdmin.id, 
-          user_id: userData.id, 
-          amount: amount, 
-          type: 'add' 
-        }]);
+        // 3. Обновляем базу
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ 
+            balance: newBalance,
+            contracts: newContracts 
+          })
+          .eq('id', userData.id);
 
-        // 4. Отправляем лог в Discord
+        if (updateError) {
+          alert('Ошибка обновления: ' + updateError.message);
+          btn.disabled = false;
+          btn.textContent = '✅';
+          return;
+        }
+
+        // 4. Пишем транзакцию и отправляем лог
+        await supabase.from('transactions').insert([{ admin_id: currentAdmin.id, user_id: userData.id, amount: amount, type: 'add' }]);
         await sendDiscordLog(WEBHOOK_APPROVED, nickname, amount, '✅ Выплата одобрена', 0x4caf50);
       } else {
         await sendDiscordLog(WEBHOOK_REJECTED, nickname, amount, '❌ Выплата отклонена', 0xe74c3c);
       }
 
-      // 5. Меняем статус самой заявки
+      // 5. Меняем статус заявки
       const { error } = await supabase
         .from('payout_requests')
         .update({ status: newStatus })
@@ -466,7 +473,7 @@
         btn.disabled = false;
         btn.textContent = newStatus === 'approved' ? '✅' : '❌';
       } else {
-        loadUsers(); // Обновляем список, чтобы обновились бейджи
+        loadUsers();
       }
     };
 
