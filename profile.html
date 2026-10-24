@@ -60,8 +60,8 @@
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text); }
     
-    /* Сетка теперь на 3 колонки (так как убрали 1 карточку) */
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    /* Сетка на 2 колонки, так как убрали одну карточку */
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
     
     .stat-item { background: rgba(128, 128, 128, 0.1); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
     .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
@@ -122,10 +122,9 @@
       <div class="stats-card">
         <div class="stats-title">📊 Статистика персонажа</div>
         <div class="stats-grid">
-          <div class="stat-item"><span class="stat-label">Уровень</span><span class="stat-value" id="statLevel">1</span></div>
+          <!-- Блок "Уровень" удален -->
           <div class="stat-item"><span class="stat-label">Баланс ($)</span><span class="stat-value money" id="statMoney">0</span></div>
           <div class="stat-item"><span class="stat-label">Контракты</span><span class="stat-value" id="statContracts">0</span></div>
-          <!-- Блок "Часов в игре" удален -->
         </div>
 
         <div class="stats-title">⚙️ Информация</div>
@@ -171,8 +170,14 @@
       document.getElementById('displayName').textContent = data.nickname;
       document.getElementById('inputName').value = data.nickname;
       document.getElementById('userRoleDisplay').textContent = data.role;
+      
+      // ОТОБРАЖЕНИЕ БАЛАНСА
+      document.getElementById('statMoney').textContent = (data.balance || 0) + ' $';
+      
+      // ОТОБРАЖЕНИЕ КОНТРАКТОВ (если поле есть в базе, иначе 0)
+      document.getElementById('statContracts').textContent = data.contracts || 0;
 
-      if (data.role === 'Глава' || data.role === 'Администратор') {
+      if (data.role === 'Глава' || data.role === 'Администратор' || data.role === 'Заместитель') {
         document.getElementById('adminPanelBtn').style.display = 'block';
       }
 
