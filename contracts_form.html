@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заявка на контракт — La Muerte</title>
+  <script>
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
+      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
+      --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
+    }
+    html.dark {
+      --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
+      --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
+      --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
+      --bg-overlay: rgba(0, 0, 0, 0.85);
+    }
+    html, body { transition: background 0.4s ease, color 0.4s ease; }
+    body { font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed; background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative; display: flex; flex-direction: column; }
+    body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
+
+    header { background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10; transition: 0.4s; }
+    header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
+    header .logo span { color: var(--accent); }
+    nav a { color: var(--muted); text-decoration: none; margin-left: 1.5rem; font-weight: 500; transition: 0.2s; }
+    nav a:hover { color: var(--text); }
+    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 1rem; }
+    .theme-btn:hover { color: var(--gold); border-color: var(--gold); }
+    .theme-btn svg { width: 18px; height: 18px; }
+    .theme-btn .icon-moon { display: none; }
+    html.dark .theme-btn .icon-sun { display: none; }
+    html.dark .theme-btn .icon-moon { display: block; }
+
+    .container { max-width: 600px; margin: 3rem auto; padding: 2rem; flex: 1; width: 100%; }
+    
+    .form-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: background 0.4s ease;
+    }
+    .form-box h2 { text-align: center; margin-bottom: 0.5rem; color: var(--text); }
+    .form-box p.subtitle { text-align: center; color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem; }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
+    .form-group select, .form-group input, .form-group textarea {
+      width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem;
+    }
+    .form-group select:focus, .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .btn {
+      width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none;
+      border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; letter-spacing: 1px;
+    }
+    .btn:hover { background: #a93226; transform: translateY(-2px); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .status-msg { text-align: center; margin-top: 1rem; font-weight: 600; display: none; }
+    .status-msg.success { color: var(--green); display: block; }
+    .status-msg.error { color: var(--accent); display: block; }
+
+    footer { background: var(--panel); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.5rem; font-size: 0.9rem; margin-top: auto; }
+    footer span { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      .form-box { padding: 1.5rem; }
+      .container { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">LA <span>MUERTE</span></a>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="contracts.html">Контракты</a>
+      <button class="theme-btn" id="themeToggle" title="Переключить тему">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="form-box">
+      <h2>Заявка на контракт</h2>
+      <p class="subtitle">Заполни форму, и заявка сразу улетит в Discord семьи</p>
+
+      <form id="contractForm">
+        <div class="form-group">
+          <label>Ваш Никнейм в игре</label>
+          <input type="text" id="nickname" placeholder="Например: Kai Muerte" required>
+        </div>
+
+        <div class="form-group">
+          <label>Категория контракта</label>
+          <select id="category" required>
+            <option value="" disabled selected>Выберите категорию...</option>
+            <option value="Металлургия">Металлургия</option>
+            <option value="Грибы">Грибы</option>
+            <option value="Дерево">Дерево</option>
+            <option value="Ферма">Ферма</option>
+            <option value="Ателье">Ателье</option>
+            <option value="Товар с самолёта">Товар с самолёта</option>
+            <option value="Рыба">Рыба</option>
+            <option value="Доп. заработок">Дополнительный заработок</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Что конкретно нужно сделать?</label>
+          <input type="text" id="details" placeholder="Например: Сдать 10 шт. Олова" required>
+        </div>
+
+        <div class="form-group">
+          <label>Ожидаемая награда (необязательно)</label>
+          <input type="text" id="reward" placeholder="Например: 50.000$">
+        </div>
+
+        <div class="form-group">
+          <label>Комментарий (необязательно)</label>
+          <textarea id="comment" placeholder="Любая дополнительная информация..."></textarea>
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">Отправить в Discord</button>
+        <p class="status-msg" id="statusMsg"></p>
+      </form>
+    </div>
+  </div>
+
+  <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
+
+  <script>
+    // ===== НАСТРОЙКИ DISCORD =====
+    // Вставь сюда ссылку, которую скопировал в Discord
+    const DISCORD_WEBHOOK_URL = 'ВСТАВЬ_СЮДА_ССЫЛКУ_ВЕБХУКА';
+
+    // ===== ТЕМА =====
+    const toggleBtn = document.getElementById('themeToggle');
+    toggleBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // ===== ОТПРАВКА ФОРМЫ =====
+    document.getElementById('contractForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('submitBtn');
+      const statusMsg = document.getElementById('statusMsg');
+      
+      // Получаем данные
+      const nickname = document.getElementById('nickname').value.trim();
+      const category = document.getElementById('category').value;
+      const details = document.getElementById('details').value.trim();
+      const reward = document.getElementById('reward').value.trim() || 'Не указана';
+      const comment = document.getElementById('comment').value.trim() || 'Нет';
+
+      // Блокируем кнопку
+      btn.disabled = true;
+      btn.textContent = 'Отправка в Discord...';
+      statusMsg.className = 'status-msg';
+      statusMsg.style.display = 'none';
+
+      // Формируем сообщение для Discord (Embed)
+      const payload = {
+        username: "La Muerte | Контракты",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png", // Иконка
+        embeds: [
+          {
+            title: "📝 Новая заявка на контракт",
+            color: 0xc0392b, // Красный цвет
+            fields: [
+              { name: "👤 Никнейм", value: nickname, inline: true },
+              { name: "📂 Категория", value: category, inline: true },
+              { name: "📋 Задание", value: details, inline: false },
+              { name: "💰 Награда", value: reward, inline: true },
+              { name: "💬 Комментарий", value: comment, inline: false }
+            ],
+            footer: { text: "Заявка отправлена с сайта La Muerte" },
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
+
+      try {
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          statusMsg.textContent = '✅ Заявка успешно отправлена в Discord!';
+          statusMsg.className = 'status-msg success';
+          this.reset(); // Очищаем форму
+        } else {
+          throw new Error('Ошибка сервера Discord');
+        }
+      } catch (error) {
+        console.error(error);
+        statusMsg.textContent = '❌ Ошибка отправки. Проверьте ссылку вебхука.';
+        statusMsg.className = 'status-msg error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Отправить в Discord';
+      }
+    });
+  </script>
+</body>
+</html>
