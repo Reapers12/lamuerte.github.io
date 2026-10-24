@@ -167,6 +167,43 @@
     footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
     footer span { color: var(--accent); }
 
+    /* ===== МОДАЛЬНОЕ ОКНО С ФОРМОЙ ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(6px); z-index: 100; justify-content: center; align-items: center; padding: 2rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+      border-radius: 12px; padding: 2.5rem; max-width: 500px; width: 100%; position: relative;
+      max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem; background: transparent; border: none;
+      color: var(--muted); font-size: 1.75rem; cursor: pointer; transition: 0.2s;
+    }
+    .modal-close:hover { color: var(--accent); transform: rotate(90deg); }
+    
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      border-radius: 6px; font-family: inherit; font-size: 0.95rem; transition: border 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .modal-submit {
+      width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none;
+      border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; letter-spacing: 1px;
+    }
+    .modal-submit:hover { background: #a93226; transform: translateY(-2px); }
+    .modal-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .status-msg { text-align: center; margin-top: 1rem; font-weight: 600; display: none; }
+    .status-msg.success { color: var(--green); display: block; }
+    .status-msg.error { color: var(--accent); display: block; }
+
     @media (max-width: 850px) {
       header { flex-direction: column; align-items: flex-start; }
       .header-right { width: 100%; justify-content: space-between; }
@@ -177,6 +214,7 @@
       .contract-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
       .contract-payment { align-self: flex-end; }
       .accordion-header { font-size: 1rem; padding: 0.4rem 0.85rem; }
+      .modal-content { padding: 1.5rem; }
     }
   </style>
 </head>
@@ -205,10 +243,10 @@
     <h1>Контракты <em>La Muerte</em></h1>
     <p>Актуальные цены на контракты в семье!</p>
 
-    <!-- ИСПРАВЛЕНА ССЫЛКА НА contracts_form.html -->
-    <a href="contracts_form.html" style="display: inline-block; margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: var(--accent); color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; transition: 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+    <!-- Кнопка открывает модальное окно -->
+    <button onclick="openForm()" style="display: inline-block; margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; text-decoration: none; font-weight: 700; font-family: inherit; font-size: 1rem; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
       📝 Подать заявку на выплаты
-    </a>
+    </button>
   </section>
 
   <!-- МЕТАЛЛУРГИЯ -->
@@ -406,7 +444,74 @@
 
   <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
+  <!-- МОДАЛЬНОЕ ОКНО С ФОРМОЙ -->
+  <div class="modal-overlay" id="formModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeForm()">×</button>
+      <h2 style="text-align: center; margin-bottom: 0.5rem;">Заявка на выплаты</h2>
+      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Заполни форму, и заявка улетит в Discord</p>
+
+      <form id="payoutForm">
+        <div class="form-group">
+          <label>Ваш Никнейм в игре</label>
+          <input type="text" id="nickname" placeholder="Например: Kai Muerte" required>
+        </div>
+
+        <div class="form-group">
+          <label>Категория</label>
+          <select id="category" required>
+            <option value="" disabled selected>Выберите категорию...</option>
+            <option value="Металлургия">Металлургия</option>
+            <option value="Грибы">Грибы</option>
+            <option value="Дерево">Дерево</option>
+            <option value="Ферма">Ферма</option>
+            <option value="Ателье">Ателье</option>
+            <option value="Товар с самолёта">Товар с самолёта</option>
+            <option value="Рыба">Рыба</option>
+            <option value="Доп. заработок">Дополнительный заработок</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Что выполнили?</label>
+          <input type="text" id="details" placeholder="Например: Сдал 10 шт. Олова" required>
+        </div>
+
+        <div class="form-group">
+          <label>Сумма к выплате</label>
+          <input type="text" id="reward" placeholder="Например: 50.000$" required>
+        </div>
+
+        <div class="form-group">
+          <label>Ваш Discord</label>
+          <input type="text" id="discord" placeholder="Например: username" required>
+        </div>
+
+        <div class="form-group">
+          <label>Комментарий (необязательно)</label>
+          <textarea id="comment" placeholder="Любая дополнительная информация..."></textarea>
+        </div>
+
+        <button type="submit" class="modal-submit" id="submitBtn">Отправить в Discord</button>
+        <p class="status-msg" id="statusMsg"></p>
+      </form>
+    </div>
+  </div>
+
   <script>
+    // ===== НАСТРОЙКИ =====
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563566473048363151/VXoV8tvq2aWftQ1gdaM7_x8jUK8ZA7PrNXF4ZwLjJJwp-QyL9HDetom-diFpjELUCtbY';
+
+    // Тема
+    const toggleBtn = document.getElementById('themeToggle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      });
+    }
+
+    // Аккордеон
     function toggleAccordion(header) {
       header.classList.toggle('active');
       const content = header.nextElementSibling;
@@ -430,18 +535,81 @@
       }
     }
 
-    const toggleBtn = document.getElementById('themeToggle');
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-      });
-    }
-
+    // Переход в ЛК
     function goToProfile(e) {
       if (e) e.preventDefault();
       window.location.href = 'profile.html';
     }
+
+    // Модальное окно
+    function openForm() {
+      document.getElementById('formModal').classList.add('active');
+    }
+    function closeForm() {
+      document.getElementById('formModal').classList.remove('active');
+    }
+
+    // Отправка формы в Discord
+    document.getElementById('payoutForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('submitBtn');
+      const statusMsg = document.getElementById('statusMsg');
+      
+      const nickname = document.getElementById('nickname').value.trim();
+      const category = document.getElementById('category').value;
+      const details = document.getElementById('details').value.trim();
+      const reward = document.getElementById('reward').value.trim();
+      const discord = document.getElementById('discord').value.trim();
+      const comment = document.getElementById('comment').value.trim() || 'Нет';
+
+      btn.disabled = true;
+      btn.textContent = 'Отправка...';
+      statusMsg.className = 'status-msg';
+      statusMsg.style.display = 'none';
+
+      const payload = {
+        username: "La Muerte | Выплаты",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
+        embeds: [{
+          title: "💰 Новая заявка на выплату",
+          color: 0xc0392b,
+          fields: [
+            { name: "👤 Никнейм", value: nickname, inline: true },
+            { name: "🎮 Discord", value: discord, inline: true },
+            { name: "📂 Категория", value: category, inline: false },
+            { name: "📋 Выполнено", value: details, inline: false },
+            { name: "💵 Сумма", value: reward, inline: true },
+            { name: "💬 Комментарий", value: comment, inline: false }
+          ],
+          footer: { text: "Заявка с сайта La Muerte" },
+          timestamp: new Date().toISOString()
+        }]
+      };
+
+      try {
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          statusMsg.textContent = '✅ Заявка отправлена!';
+          statusMsg.className = 'status-msg success';
+          this.reset();
+          setTimeout(() => closeForm(), 2000);
+        } else {
+          throw new Error('Ошибка сервера');
+        }
+      } catch (error) {
+        statusMsg.textContent = '❌ Ошибка отправки.';
+        statusMsg.className = 'status-msg error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Отправить в Discord';
+      }
+    });
   </script>
 </body>
 </html>
