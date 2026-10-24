@@ -28,68 +28,72 @@
 
     const SUPABASE_URL = 'https://drumwcypxzwmwmtozrhd.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
-
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Небольшая задержка, чтобы Supabase успел восстановить сессию
-    setTimeout(async () => {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    // Иерархия ролей (для сортировки)
+    const rolePriority = {
+      'Глава': 1,
+      'Администратор': 2, // Оставляем на случай старых записей
+      'Заместитель': 3,
+      'Кровь Семьи': 4,
+      'Стажер': 5,
+      'Боец': 6 // Оставляем на случай старых записей
+    };
+
+    async function init() {
+      await new Promise(r => setTimeout(r, 500));
+      const { data: { session } } = await supabase.auth.getSession();
       
-      if (!session) {
-        window.location.href = 'login.html';
-        return;
-      }
+      if (!session) { window.location.href = 'login.html'; return; }
 
-      const currentUser = session.user;
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
 
-      // Проверяем роль
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', currentUser.id)
-        .single();
-
-      // Если роль не Админ — выкидываем
-      if (error || !data || data.role !== 'Администратор') {
-        document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh;">Доступ запрещён!</h1><p style="text-align:center;">Вы не Администратор.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
+      // Если роль не Глава и не Администратор — выкидываем
+      if (!profile || (profile.role !== 'Глава' && profile.role !== 'Администратор')) {
+        document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh; color:#c0392b;">Доступ запрещён!</h1><p style="text-align:center;">Вы не Глава семьи.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
         return;
       }
 
       loadUsers();
-    }, 500); // Задержка 500мс
+    }
 
     async function loadUsers() {
       const list = document.getElementById('usersList');
       list.innerHTML = '';
       
-      const { data: users, error } = await supabase
-        .from('profiles')
-        .select('*');
+      const { data: users, error } = await supabase.from('profiles').select('*');
 
       if (error) {
         list.innerHTML = '<p style="color: red;">Ошибка загрузки: ' + error.message + '</p>';
         return;
       }
-      
-      if (users.length === 0) {
-        list.innerHTML = '<p style="text-align:center;">Пользователей пока нет.</p>';
-        return;
-      }
 
+      // Сортируем пользователей по роли (согласно rolePriority)
+      users.sort((a, b) => {
+        const priorityA = rolePriority[a.role] || 99;
+        const priorityB = rolePriority[b.role] || 99;
+        return priorityA - priorityB;
+      });
+      
       users.forEach(user => {
         const card = document.createElement('div');
         card.className = 'user-card';
+        
+        // Формируем список опций, помечая текущую роль как selected
         card.innerHTML = `
           <div class="user-info">
             <span class="user-name">${user.nickname}</span>
-            <span class="user-role">(Текущая роль: ${user.role})</span>
+            <span class="user-role">(${user.role})</span>
           </div>
           <div>
             <select onchange="changeRole('${user.id}', this.value)">
-              <option value="Боец" ${user.role === 'Боец' ? 'selected' : ''}>Боец</option>
+              <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
               <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
-              <option value="Начальник" ${user.role === 'Начальник' ? 'selected' : ''}>Начальник</option>
-              <option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>Администратор</option>
+              <option value="Кровь Семьи" ${user.role === 'Кровь Семьи' ? 'selected' : ''}>Кровь Семьи</option>
+              <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
+          
+              <option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''} style="display:none;">Администратор (скрыто)</option>
+              <option value="Боец" ${user.role === 'Боец' ? 'selected' : ''} style="display:none;">Боец (скрыто)</option>
             </select>
           </div>
         `;
@@ -98,18 +102,15 @@
     }
 
     window.changeRole = async function(userId, newRole) {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ role: newRole })
-        .eq('id', userId);
-
+      const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
       if (error) {
         alert('Ошибка: ' + error.message);
       } else {
-        alert('Роль обновлена!');
         location.reload(); 
       }
     };
+
+    init();
   </script>
 </body>
 </html>
