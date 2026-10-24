@@ -33,9 +33,9 @@
     nav a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 0.35rem 0.75rem; border-radius: 6px; transition: 0.2s; }
     nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); }
     .logout-btn { color: var(--accent) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
-    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
+    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.75rem; flex-shrink: 0; }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
-    .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
+    .theme-btn svg { width: 16px; height: 16px; transition: transform 0.4s ease; }
     .theme-btn .icon-moon { display: none; }
     html.dark .theme-btn .icon-sun { display: none; }
     html.dark .theme-btn .icon-moon { display: block; }
@@ -60,7 +60,7 @@
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     
     /* Вкладки внутри карточки */
-    .tabs-header { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .tabs-header { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; flex-wrap: wrap; }
     .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 700; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
@@ -81,6 +81,14 @@
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
     .form-group input { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem; }
     .form-group input:focus { outline: none; border-color: var(--accent); }
+    
+    /* Кнопка сохранения пароля */
+    .btn-save { width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; margin-top: 1rem; }
+    .btn-save:hover { background: #a93226; transform: translateY(-2px); }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .status-msg { text-align: center; margin-top: 1rem; font-weight: 600; font-size: 0.9rem; display: none; }
+    .status-msg.success { color: var(--green); display: block; }
+    .status-msg.error { color: var(--accent); display: block; }
 
     /* Таблица истории */
     .history-table { width: 100%; border-collapse: collapse; }
@@ -95,6 +103,9 @@
 
     .empty-state { text-align: center; padding: 2rem; color: var(--muted); }
     
+    footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; margin-top: 4rem; }
+    footer span { color: var(--accent); }
+
     @media (max-width: 850px) {
       .profile-grid { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr; }
@@ -117,6 +128,7 @@
         <a href="tables.html">Таблицы</a>
         <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
       </nav>
+
       <button class="theme-btn" id="themeToggle" title="Переключить тему">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -150,9 +162,10 @@
         <div class="tabs-header">
           <button class="tab-btn active" onclick="switchTab(event, 'tab-stats')">📊 Статистика</button>
           <button class="tab-btn" onclick="switchTab(event, 'tab-history')">🧾 История выплат</button>
+          <button class="tab-btn" onclick="switchTab(event, 'tab-settings')">⚙️ Настройки</button>
         </div>
 
-        <!-- Вкладка: Статистика (ваш старый код) -->
+        <!-- Вкладка: Статистика -->
         <div id="tab-stats" class="tab-content active">
           <div class="stats-title">📊 Статистика персонажа</div>
           <div class="stats-grid">
@@ -171,7 +184,7 @@
           </div>
         </div>
 
-        <!-- Вкладка: История выплат (новая) -->
+        <!-- Вкладка: История выплат -->
         <div id="tab-history" class="tab-content">
           <div class="stats-title">🧾 История ваших заявок</div>
           
@@ -199,9 +212,30 @@
           </div>
         </div>
 
+        <!-- Вкладка: Настройки -->
+        <div id="tab-settings" class="tab-content">
+          <div class="stats-title">⚙️ Смена пароля</div>
+          
+          <form id="changePasswordForm">
+            <div class="form-group">
+              <label>Новый пароль</label>
+              <input type="password" id="newPassword" placeholder="Минимум 6 символов" required minlength="6">
+            </div>
+            <div class="form-group">
+              <label>Повторите новый пароль</label>
+              <input type="password" id="confirmPassword" placeholder="Введите пароль еще раз" required minlength="6">
+            </div>
+            
+            <button type="submit" class="btn-save" id="savePassBtn">Обновить пароль</button>
+            <p class="status-msg" id="passStatusMsg"></p>
+          </form>
+        </div>
+
       </div>
     </div>
   </section>
+
+  <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -210,11 +244,16 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const toggleBtn = document.getElementById('themeToggle');
-    toggleBtn.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-    });
+    /* ===== Переключатель темы ===== */
+    (function () {
+      const toggleBtn = document.getElementById('themeToggle');
+      if (!toggleBtn) return;
+      if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+      toggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      });
+    })();
 
     let currentUser = null;
     let currentDiscordId = null;
@@ -227,7 +266,6 @@
       evt.currentTarget.classList.add('active');
       document.getElementById(tabId).classList.add('active');
 
-      // Если открыли вкладку истории и она еще не загружена - грузим
       if (tabId === 'tab-history' && currentDiscordId) {
         loadHistory(currentDiscordId);
       }
@@ -269,7 +307,6 @@
         avatarLetter.textContent = data.nickname.charAt(0).toUpperCase();
       }
 
-      // Берем Discord ID из профиля или из localStorage (если его нет в базе)
       currentDiscordId = data.discord_id || localStorage.getItem('discordId');
     }
 
@@ -286,7 +323,6 @@
       empty.style.display = 'none';
 
       try {
-        // Ищем заявки по Discord ID
         const { data, error } = await supabase
           .from('payout_requests')
           .select('*')
@@ -331,6 +367,57 @@
         loader.textContent = '❌ Ошибка загрузки.';
       }
     }
+
+    // Обработка формы смены пароля
+    document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const newPass = document.getElementById('newPassword').value;
+      const confirmPass = document.getElementById('confirmPassword').value;
+      const btn = document.getElementById('savePassBtn');
+      const msg = document.getElementById('passStatusMsg');
+
+      if (newPass !== confirmPass) {
+        msg.textContent = '❌ Пароли не совпадают!';
+        msg.className = 'status-msg error';
+        return;
+      }
+
+      if (newPass.length < 6) {
+        msg.textContent = '❌ Пароль должен быть не менее 6 символов!';
+        msg.className = 'status-msg error';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Сохранение...';
+      msg.className = 'status-msg';
+      msg.style.display = 'none';
+
+      try {
+        const { error } = await supabase.auth.updateUser({ password: newPass });
+
+        if (error) throw error;
+
+        msg.textContent = '✅ Пароль успешно изменен!';
+        msg.className = 'status-msg success';
+        
+        document.getElementById('changePasswordForm').reset();
+
+        setTimeout(() => {
+          msg.className = 'status-msg';
+          msg.style.display = 'none';
+        }, 4000);
+
+      } catch (err) {
+        console.error(err);
+        msg.textContent = '❌ Ошибка: ' + (err.message || 'Не удалось сменить пароль');
+        msg.className = 'status-msg error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Обновить пароль';
+      }
+    });
 
     window.uploadAvatar = async function(event) {
       const file = event.target.files[0];
@@ -379,7 +466,7 @@
     };
 
     window.resetProfile = function() {
-      if(confirm('Вы уверены?')) window.logout();
+      if(confirm('Вы уверены, что хотите выйти из профиля?')) window.logout();
     };
   </script>
 </body>
