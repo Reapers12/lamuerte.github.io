@@ -123,6 +123,7 @@
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
     .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; font-size: 0.95rem; transition: border 0.2s; }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+    .form-group input[readonly] { opacity: 0.7; cursor: not-allowed; }
     .form-group textarea { resize: vertical; min-height: 80px; }
     .modal-submit { width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; letter-spacing: 1px; }
     .modal-submit:hover { background: #a93226; transform: translateY(-2px); }
@@ -368,29 +369,60 @@
           <input type="text" id="nickname" placeholder="Например: Kai Muerte" required>
         </div>
 
+        <!-- СПИСОК РЕСУРСОВ -->
         <div class="form-group">
-          <label>Категория</label>
-          <select id="category" required>
-            <option value="" disabled selected>Выберите категорию...</option>
-            <option value="Металлургия">Металлургия</option>
-            <option value="Грибы">Грибы</option>
-            <option value="Дерево">Дерево</option>
-            <option value="Ферма">Ферма</option>
-            <option value="Ателье">Ателье</option>
-            <option value="Товар с самолёта">Товар с самолёта</option>
-            <option value="Рыба">Рыба</option>
-            <option value="Доп. заработок">Дополнительный заработок</option>
+          <label>Что сдали?</label>
+          <select id="resourceSelect" required onchange="updateReward()">
+            <option value="" disabled selected>Выберите ресурс...</option>
+            <optgroup label="Металлургия">
+              <option value="Олово" data-price="33000">Олово (33.000$)</option>
+              <option value="Медь" data-price="25000">Медь (25.000$)</option>
+              <option value="Серебро" data-price="25000">Серебро (25.000$)</option>
+              <option value="Железо" data-price="25000">Железо (25.000$)</option>
+            </optgroup>
+            <optgroup label="Грибы">
+              <option value="Шампиньоны" data-price="95000">Шампиньоны (95.000$)</option>
+              <option value="Мухоморы" data-price="140000">Мухоморы (140.000$)</option>
+              <option value="Вёшенки" data-price="110000">Вёшенки (110.000$)</option>
+              <option value="Подболотники" data-price="170000">Подболотники (170.000$)</option>
+              <option value="Гипсизигусы" data-price="130000">Гипсизигусы (130.000$)</option>
+              <option value="Подберёзовики" data-price="200000">Подберёзовики (200.000$)</option>
+            </optgroup>
+            <optgroup label="Дерево">
+              <option value="Сосна" data-price="140000">Сосна (140.000$)</option>
+              <option value="Берёза" data-price="210000">Берёза (210.000$)</option>
+              <option value="Дуб" data-price="173000">Дуб (173.000$)</option>
+            </optgroup>
+            <optgroup label="Ферма">
+              <option value="Апельсины" data-price="88500">Апельсины (88.500$)</option>
+              <option value="Пшеница" data-price="102000">Пшеница (102.000$)</option>
+              <option value="Картофель" data-price="120000">Картофель (120.000$)</option>
+              <option value="Капуста" data-price="140000">Капуста (140.000$)</option>
+              <option value="Кукуруза" data-price="165000">Кукуруза (165.000$)</option>
+              <option value="Тыква" data-price="190000">Тыква (190.000$)</option>
+            </optgroup>
+            <optgroup label="Рыба (ранги)">
+              <option value="1 ранг" data-price="78300">1 ранг (78.300$)</option>
+              <option value="2 ранг" data-price="102600">2 ранг (102.600$)</option>
+              <option value="3 ранг" data-price="121500">3 ранг (121.500$)</option>
+              <option value="4 ранг" data-price="144000">4 ранг (144.000$)</option>
+              <option value="5 ранг" data-price="163800">5 ранг (163.800$)</option>
+              <option value="6 ранг" data-price="189000">6 ранг (189.000$)</option>
+              <option value="7 ранг" data-price="216000">7 ранг (216.000$)</option>
+              <option value="8 ранг" data-price="243000">8 ранг (243.000$)</option>
+            </optgroup>
+            <optgroup label="Прочее">
+              <option value="Ателье (Активация)" data-price="12000">Ателье (Активация) - 12.000$</option>
+              <option value="Ателье (Форма)" data-price="1700">Ателье (1 форма) - 1.700$</option>
+              <option value="Самолёт (Активация)" data-price="16000">Товар с самолёта (Активация) - 16.000$</option>
+              <option value="Самолёт (Выплата)" data-price="30000">Товар с самолёта (Выплата) - 30.000$</option>
+            </optgroup>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Сколько штук сдали? (только цифры)</label>
-          <input type="number" id="details" placeholder="Например: 10" required>
-        </div>
-
-        <div class="form-group">
-          <label>Сумма к выплате (только цифры)</label>
-          <input type="number" id="reward" placeholder="Например: 50000" required>
+          <label>Сумма к выплате (автоматически)</label>
+          <input type="number" id="reward" placeholder="Выберите ресурс выше" readonly>
         </div>
 
         <div class="form-group">
@@ -421,7 +453,6 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // НОВАЯ ССЫЛКА НА ВЕБХУК
     const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563583284930154668/9_Xj1LDUAup3DgDBky6Xui0gvshHaQQHD9sdHT0Ue0OCOmo1YaATZGCVF09iF-KP31aF';
 
     const toggleBtn = document.getElementById('themeToggle');
@@ -467,6 +498,14 @@
       document.getElementById('formModal').classList.remove('active');
     }
 
+    // АВТОПОДСТАНОВКА СУММЫ
+    window.updateReward = function() {
+      const select = document.getElementById('resourceSelect');
+      const selectedOption = select.options[select.selectedIndex];
+      const price = selectedOption.getAttribute('data-price');
+      document.getElementById('reward').value = price || '';
+    };
+
     document.getElementById('payoutForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
@@ -474,8 +513,7 @@
       const statusMsg = document.getElementById('statusMsg');
       
       const nickname = document.getElementById('nickname').value.trim();
-      const category = document.getElementById('category').value;
-      const details = document.getElementById('details').value.trim();
+      const resource = document.getElementById('resourceSelect').value;
       const reward = parseInt(document.getElementById('reward').value);
       const screenshot = document.getElementById('screenshot').value.trim();
       const discordId = document.getElementById('discordId').value.trim();
@@ -495,8 +533,7 @@
           fields: [
             { name: "👤 Никнейм", value: nickname, inline: true },
             { name: "🎮 Discord ID", value: discordId, inline: true },
-            { name: "📂 Категория", value: category, inline: false },
-            { name: "📋 Выполнено", value: details, inline: false },
+            { name: "📂 Ресурс", value: resource, inline: false },
             { name: "💵 Сумма", value: reward + " $", inline: true },
             { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: true },
             { name: "💬 Комментарий", value: comment, inline: false }
@@ -518,8 +555,8 @@
           .from('payout_requests')
           .insert([{
             nickname: nickname,
-            category: category,
-            details: details,
+            category: resource, // Используем название ресурса
+            details: resource,
             amount: reward,
             screenshot: screenshot,
             discord: discordId,
