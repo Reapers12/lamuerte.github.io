@@ -83,7 +83,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 1rem;
+      gap: 0.5rem; /* Уменьшил gap, чтобы все влезало плотнее */
       flex: 1;
       flex-wrap: wrap;
     }
@@ -93,7 +93,6 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 0.2rem;
-      justify-content: flex-end;
     }
 
     nav a {
@@ -108,11 +107,13 @@
       white-space: nowrap;
       transition: color 0.2s, background 0.2s, box-shadow 0.3s;
     }
+
     nav a:hover {
       color: var(--text);
       background: rgba(192, 57, 43, 0.08);
       box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35);
     }
+
     nav a.active {
       color: var(--text);
       background: rgba(192, 57, 43, 0.14);
@@ -154,20 +155,20 @@
     nav a:hover .spark.s2 { animation-delay: 0.12s; }
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
 
-    /* ===== Круглая кнопка переключения тем ===== */
+    /* ===== Круглая кнопка переключения тем (ВЫРОВНЕНА) ===== */
     .theme-btn {
       background: transparent;
       border: 1px solid var(--border);
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      width: 32px;  /* Уменьшил с 36px до 32px для аккуратности */
+      height: 32px; 
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       color: var(--muted);
       transition: all 0.3s ease;
-      margin-left: 1.5rem; /* Отступ справа от ЛК */
+      margin-left: 0.75rem; /* Сделал нормальный отступ */
       flex-shrink: 0;
     }
     
@@ -179,8 +180,8 @@
     }
 
     .theme-btn svg {
-      width: 18px;
-      height: 18px;
+      width: 16px; /* Чуть уменьшил иконку */
+      height: 16px;
       transition: transform 0.4s ease;
     }
 
@@ -277,11 +278,9 @@
         <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         
-        <!-- ЛК с молниями -->
         <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
       </nav>
 
-      <!-- Круглая кнопка темы -->
       <button class="theme-btn" id="themeToggle" title="Переключить тему">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"></circle>
