@@ -17,7 +17,7 @@
     }
     body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
 
-    /* ШАПКА (как на главной) */
+    /* ШАПКА */
     header {
       background: rgba(5,5,5,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
       padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
@@ -31,7 +31,6 @@
       padding: 0.35rem 0.75rem; border-radius: 6px; transition: 0.2s; 
     }
     nav a:hover { color: #fff; background: rgba(192, 57, 43, 0.08); }
-    nav a.active { color: #fff; background: rgba(192, 57, 43, 0.14); }
     
     /* Кнопка Выйти */
     .logout-btn {
@@ -108,7 +107,7 @@
   <header>
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
     
-    <!-- Навигация как на главной странице -->
+    <!-- Навигация без вкладки "Личный кабинет" -->
     <nav>
       <a href="index.html">Главная</a>
       <a href="family.html">О семье</a>
@@ -116,9 +115,6 @@
       <a href="contracts.html">Контракты</a>
       <a href="tables.html">Таблицы</a>
       
-      <!-- Активная вкладка Личный кабинет -->
-      <a href="profile.html" class="active">Личный кабинет</a>
-
       <!-- Кнопка выхода -->
       <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
     </nav>
