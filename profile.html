@@ -56,19 +56,26 @@
     .btn-outline { display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%; margin-bottom: 0.5rem; }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
     .btn-admin { border-color: var(--accent) !important; color: var(--accent) !important; font-weight: 700 !important; }
+    
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text); }
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+    
+    /* Сетка теперь на 3 колонки (так как убрали 1 карточку) */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    
     .stat-item { background: rgba(128, 128, 128, 0.1); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
     .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
     .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
     .stat-value.money { color: var(--green); }
+    
     .form-group { margin-bottom: 1.25rem; }
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
     .form-group input { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem; }
     .form-group input:focus { outline: none; border-color: var(--accent); }
-    @media (max-width: 768px) {
+    
+    @media (max-width: 850px) {
       .profile-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr; }
       header { flex-direction: column; align-items: flex-start; }
       .header-right { width: 100%; justify-content: space-between; }
     }
@@ -118,8 +125,9 @@
           <div class="stat-item"><span class="stat-label">Уровень</span><span class="stat-value" id="statLevel">1</span></div>
           <div class="stat-item"><span class="stat-label">Баланс ($)</span><span class="stat-value money" id="statMoney">0</span></div>
           <div class="stat-item"><span class="stat-label">Контракты</span><span class="stat-value" id="statContracts">0</span></div>
-          <div class="stat-item"><span class="stat-label">Часов в игре</span><span class="stat-value" id="statHours">0</span></div>
+          <!-- Блок "Часов в игре" удален -->
         </div>
+
         <div class="stats-title">⚙️ Информация</div>
         <div class="form-group">
           <label>Ваш Никнейм</label>
@@ -184,43 +192,26 @@
 
     setTimeout(initProfile, 500);
 
-    // ЗАГРУЗКА ФАЙЛА В SUPABASE STORAGE
     window.uploadAvatar = async function(event) {
       const file = event.target.files[0];
       if (!file) return;
-      
-      if (file.size > 5 * 1024 * 1024) { 
-        alert('Файл больше 5 МБ!'); 
-        return; 
-      }
+      if (file.size > 5 * 1024 * 1024) { alert('Файл больше 5 МБ!'); return; }
 
       const fileExt = file.name.split('.').pop();
       const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      // Загружаем файл в хранилище
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file, { upsert: true });
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
 
-      if (uploadError) {
-        alert('Ошибка загрузки: ' + uploadError.message);
-        return;
-      }
+      if (uploadError) { alert('Ошибка загрузки: ' + uploadError.message); return; }
 
-      // Получаем публичную ссылку
       const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
       const publicUrl = data.publicUrl;
 
-      // Сохраняем ссылку в базу
-      const { error: dbError } = await supabase
-        .from('profiles')
-        .update({ avatar: publicUrl })
-        .eq('id', currentUser.id);
+      const { error: dbError } = await supabase.from('profiles').update({ avatar: publicUrl }).eq('id', currentUser.id);
 
-      if (dbError) {
-        alert('Ошибка базы: ' + dbError.message);
-      } else {
+      if (dbError) { alert('Ошибка базы: ' + dbError.message); } 
+      else {
         document.getElementById('avatarImg').src = publicUrl;
         document.getElementById('avatarImg').style.display = 'block';
         document.getElementById('avatarLetter').style.display = 'none';
@@ -228,16 +219,14 @@
       }
     };
 
-    // СОХРАНЕНИЕ ПО ССЫЛКЕ
     window.saveAvatarUrl = async function() {
       const url = document.getElementById('avatarUrlInput').value.trim();
       if (!url) return;
 
       const { error } = await supabase.from('profiles').update({ avatar: url }).eq('id', currentUser.id);
       
-      if (error) { 
-        alert('Ошибка: ' + error.message); 
-      } else {
+      if (error) { alert('Ошибка: ' + error.message); } 
+      else {
         document.getElementById('avatarImg').src = url;
         document.getElementById('avatarImg').style.display = 'block';
         document.getElementById('avatarLetter').style.display = 'none';
