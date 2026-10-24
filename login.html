@@ -102,7 +102,6 @@
 
     const SUPABASE_URL = 'https://drumwcypxzwmwmtozrhd.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
-
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     function switchTab(tab) {
@@ -130,7 +129,6 @@
 
     function hideMsg() { document.getElementById('authMsg').style.display = 'none'; }
 
-    // РЕГИСТРАЦИЯ (передаем никнейм в metadata для триггера)
     window.doRegister = async function() {
       const nickname = document.getElementById('regNickname').value.trim();
       const email = document.getElementById('regEmail').value.trim();
@@ -140,15 +138,18 @@
       if (pass.length < 6) return showMsg('Пароль должен быть от 6 символов!', true);
 
       try {
-        const { data, error } = await supabase.auth.signUp({
+        const { data: authData, error: authError } = await supabase.auth.signUp({
           email: email,
           password: pass,
-          options: {
-            data: { nickname: nickname } // Передаем никнейм в metadata
-          }
         });
+        if (authError) throw authError;
 
-        if (error) throw error;
+        // При регистрации выдаем роль "Стажер"
+        const { error: dbError } = await supabase
+          .from('profiles')
+          .insert([{ id: authData.user.id, nickname: nickname, role: 'Стажер' }]);
+
+        if (dbError) throw dbError;
 
         showMsg('Успешная регистрация! Переход...');
         setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
@@ -158,7 +159,6 @@
       }
     };
 
-    // ВХОД
     window.doLogin = async function() {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPass').value;
@@ -166,13 +166,8 @@
       if (!email || !pass) return showMsg('Заполните все поля!', true);
 
       try {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: pass,
-        });
-
+        const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
         if (error) throw error;
-
         showMsg('Успешный вход! Переход...');
         setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
       } catch (error) {
