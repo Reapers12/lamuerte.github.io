@@ -88,12 +88,20 @@
     header .logo:hover { opacity: 0.75; }
     header .logo span { color: var(--accent); }
 
+    /* Контейнер правой части (Меню + Переключатель) */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
     /* ===== Навигация ===== */
     nav {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.2rem;
     }
 
     nav a {
@@ -118,6 +126,21 @@
     nav a.active {
       color: var(--text);
       background: rgba(192, 57, 43, 0.14);
+    }
+
+    /* Кнопка ЛК */
+    .profile-btn {
+      color: var(--gold) !important;
+      font-weight: 700 !important;
+      margin-left: 0.5rem;
+      border-left: 1px solid var(--border);
+      padding-left: 1rem !important;
+      border-radius: 0 !important;
+    }
+    .profile-btn:hover {
+      background: transparent !important;
+      box-shadow: none !important;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
     }
 
     /* Молнии в навигации */
@@ -342,9 +365,13 @@
     footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: background 0.4s ease, border-color 0.4s ease; }
     footer span { color: var(--accent); }
 
-    @media (max-width: 600px) {
+    @media (max-width: 850px) {
       header { flex-direction: column; align-items: flex-start; }
-      nav { gap: 0.25rem; }
+      .header-right { width: 100%; justify-content: space-between; }
+      nav { gap: 0.2rem; }
+      .profile-btn { padding-left: 0.75rem !important; margin-left: 0.25rem; }
+    }
+    @media (max-width: 600px) {
       .contracts-grid { grid-template-columns: 1fr; }
       .contract-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
       .contract-payment { align-self: flex-end; }
@@ -355,34 +382,35 @@
 <body>
   <header>
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
-    <nav>
-      <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-      <a href="family.html">О семье <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-      <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-      <a href="contracts.html" class="active">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-      <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-      
-      <!-- КНОПКА ЛИЧНОГО КАБИНЕТА -->
-      <a href="#" onclick="goToProfile(event)" style="color: var(--gold); font-weight: 700; margin-left: 0.5rem; border-left: 1px solid #333; padding-left: 1rem;">
-        👤 Личный кабинет
-      </a>
-    </nav>
+    
+    <div class="header-right">
+      <nav>
+        <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="family.html">О семье <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="contracts.html" class="active">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
+        <a href="#" onclick="goToProfile(event)" class="profile-btn">
+          👤 Личный кабинет
+        </a>
+      </nav>
 
-    <!-- Переключатель День/Ночь -->
-    <label class="spark-switch" title="Переключить тему">
-      <input type="checkbox" id="themeSwitch">
-      <span class="track">
-        <span class="knob">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-          </svg>
+      <label class="spark-switch" title="Переключить тему">
+        <input type="checkbox" id="themeSwitch">
+        <span class="track">
+          <span class="knob">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </span>
+          <span class="stars">
+            <span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span>
+          </span>
         </span>
-        <span class="stars">
-          <span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span>
-        </span>
-      </span>
-    </label>
+      </label>
+    </div>
   </header>
 
   <section class="page-hero">
