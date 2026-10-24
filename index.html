@@ -471,12 +471,11 @@
         <a href="family.html">О семье</a>
         <a href="transport.html">О транспорте</a>
         <a href="contracts.html">Контракты</a>
-        <a onclick="openModal()">Вступить в семью</a>
+        <!-- УБРАЛИ "Вступить в семью" -->
         <a href="tables.html">Таблицы</a>
         
         <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
 
-        <!-- Новая кнопка переключателя темы -->
         <button class="theme-btn" id="themeToggle" title="Переключить тему">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"></circle>
@@ -527,27 +526,22 @@
           <label for="realName">Реальное имя</label>
           <input type="text" id="realName" name="realName" placeholder="Например: Александр" required>
         </div>
-
         <div class="form-group">
           <label for="age">Возраст</label>
           <input type="number" id="age" name="age" min="14" max="99" placeholder="Например: 18" required>
         </div>
-
         <div class="form-group">
           <label for="icName">IC имя</label>
           <input type="text" id="icName" name="icName" placeholder="Имя персонажа в игре" required>
         </div>
-
         <div class="form-group">
           <label for="discord">Ваш Discord для связи</label>
-          <input type="text" id="discord" name="discord" placeholder="Например: username или username#1234" required>
+          <input type="text" id="discord" name="discord" placeholder="Например: username" required>
         </div>
-
         <div class="form-group">
           <label for="plans">Чем планируешь заниматься в семье?</label>
-          <textarea id="plans" name="plans" placeholder="Например: помогать с набором, участвовать в мероприятиях, развивать автопарк..." required></textarea>
+          <textarea id="plans" name="plans" placeholder="Например: помогать с набором, участвовать в мероприятиях..." required></textarea>
         </div>
-
         <button type="submit" class="btn-submit" id="submitBtn">Отправить заявку</button>
         <p class="form-note">Заявка уходит прямо в Discord семьи.</p>
         <p class="form-status" id="formStatus"></p>
@@ -571,12 +565,10 @@
     (function () {
       const toggleBtn = document.getElementById('themeToggle');
       if (!toggleBtn) return;
-
       const saved = localStorage.getItem('theme');
       if (saved === 'dark') {
         document.documentElement.classList.add('dark');
       }
-
       toggleBtn.addEventListener('click', () => {
         document.documentElement.classList.toggle('dark');
         if (document.documentElement.classList.contains('dark')) {
@@ -587,7 +579,7 @@
       });
     })();
 
-    /* ===== Переход в Личный Кабинет ===== */
+    /* ===== Переход в ЛК ===== */
     function goToProfile(e) {
       if (e) e.preventDefault();
       if (localStorage.getItem('lm_logged') === 'true') {
@@ -608,7 +600,6 @@
     function closeModal() {
       document.getElementById('joinModal').classList.remove('active');
       document.body.style.overflow = '';
-
       setTimeout(() => {
         document.getElementById('formStatus').textContent = '';
         document.getElementById('formStatus').className = 'form-status';
@@ -624,10 +615,8 @@
 
     document.getElementById('joinForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-
       const statusEl = document.getElementById('formStatus');
       const btn = document.getElementById('submitBtn');
-
       const realName = document.getElementById('realName').value.trim();
       const age = document.getElementById('age').value.trim();
       const icName = document.getElementById('icName').value.trim();
@@ -651,16 +640,13 @@
             plans: plans
           })
         });
-
         const result = await response.json();
-
         if (result.status === 'ok') {
           document.getElementById('joinForm').style.display = 'none';
           document.getElementById('successBlock').classList.add('show');
         } else {
           throw new Error(result.message || 'Ошибка на стороне сервера');
         }
-
       } catch (err) {
         statusEl.textContent = '❌ Ошибка: ' + err.message;
         statusEl.className = 'form-status err';
