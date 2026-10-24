@@ -70,13 +70,11 @@
     .btn-reset { background: var(--accent); color: #fff; }
     .btn-reset:hover { background: #a93226; }
 
-    /* Бейдж с количеством непрочитанных заявок */
     .btn-payouts { position: relative; background: var(--gold); color: #000; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: 0.2s; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; }
     .btn-payouts:hover { filter: brightness(1.1); }
     .badge { background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 0.1rem 0.4rem; border-radius: 10px; animation: pulse 2s infinite; }
     @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(192, 57, 43, 0); } 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); } }
 
-    /* Встроенный блок заявок */
     .payouts-block { margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 1rem; display: none; }
     .payouts-block.active { display: block; }
     .payouts-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); display: flex; justify-content: space-between; align-items: center; }
@@ -153,10 +151,9 @@
     })();
 
     let allUsers = [];
-    let allPayouts = []; // Храним ВСЕ заявки
+    let allPayouts = []; 
 
     async function loadUsers() {
-      // 1. Загружаем пользователей
       const { data: users, error: userError } = await supabase.from('profiles').select('*').order('nickname');
       if (userError) {
         document.getElementById('userList').innerHTML = '<p style="color: red;">Ошибка загрузки данных</p>';
@@ -164,7 +161,6 @@
       }
       allUsers = users;
 
-      // 2. Загружаем ВСЕ заявки, чтобы потом их фильтровать
       const { data: payouts, error: payoutError } = await supabase
         .from('payout_requests')
         .select('*')
@@ -195,7 +191,6 @@
           displayName = displayName.split('@')[0];
         }
 
-        // Ищем заявки, где поле "nickname" совпадает с ником игрока (или его Discord ID)
         const userPayouts = allPayouts.filter(p => 
           p.nickname === user.nickname || 
           p.nickname === displayName || 
@@ -203,7 +198,6 @@
           p.discord === user.id
         );
 
-        // Считаем только те, что в ожидании
         const pendingCount = userPayouts.filter(p => p.status === 'pending').length;
         
         let badgeHtml = '';
@@ -265,7 +259,6 @@
       document.querySelectorAll('.payouts-block').forEach(el => el.classList.remove('active'));
       block.classList.add('active');
 
-      // Фильтруем уже загруженные заявки
       const userPayouts = allPayouts.filter(p => 
         p.nickname === name || 
         p.nickname === name.split('@')[0]
@@ -299,8 +292,8 @@
         let actions = '';
         if (req.status === 'pending') {
           actions = `
-            <button class="btn-approve" onclick="updateRequestStatus('${req.id}')">✅</button>
-            <button class="btn-reject" onclick="updateRequestStatus('${req.id}')">❌</button>
+            <button class="btn-approve" onclick="updateRequestStatus('${req.id}', 'approved')">✅</button>
+            <button class="btn-reject" onclick="updateRequestStatus('${req.id}', 'rejected')">❌</button>
           `;
         } else {
           actions = '—';
@@ -323,23 +316,21 @@
       document.getElementById(`payouts-block-${userId}`).classList.remove('active');
     };
 
-    // Обновление статуса заявки
-    window.updateRequestStatus = async function(requestId) {
+    window.updateRequestStatus = async function(requestId, newStatus) {
       const btn = event.target;
       btn.disabled = true;
       btn.textContent = '...';
 
       const { error } = await supabase
         .from('payout_requests')
-        .update({ status: 'approved' }) // По умолчанию одобряем
+        .update({ status: newStatus }) 
         .eq('id', requestId);
 
       if (error) {
         alert('Ошибка: ' + error.message);
         btn.disabled = false;
-        btn.textContent = '✅';
+        btn.textContent = newStatus === 'approved' ? '✅' : '❌';
       } else {
-        // Перезагружаем данные
         loadUsers(); 
       }
     };
