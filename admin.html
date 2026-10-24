@@ -6,7 +6,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --bg: #0a0a0a; --panel: #111; --border: #222; --text: #eaeaea; --accent: #c0392b; --gold: #d4af37; --green: #4caf50; }
+    :root { --bg: #0a0a0a; --panel: #111; --border: #222; --text: #eaeaea; --accent: #c0392b; --gold: #d4af37; --green: #4caf50; --blue: #3498db; }
     body { font-family: 'Overpass', sans-serif; background: var(--bg); color: var(--text); padding: 2rem; }
     h1 { color: var(--accent); text-align: center; margin-bottom: 2rem; }
     
@@ -32,7 +32,6 @@
     .btn-reset { background: var(--accent); color: #fff; }
     .btn-reset:hover { background: #a93226; }
     
-    /* Модальное окно истории */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 100; justify-content: center; align-items: center; }
     .modal-overlay.active { display: flex; }
     .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
@@ -55,7 +54,6 @@
   <div id="usersList">Загрузка...</div>
   <a href="profile.html" class="back-link">← Вернуться в личный кабинет</a>
 
-  <!-- Модальное окно для истории -->
   <div class="modal-overlay" id="historyModal">
     <div class="modal">
       <button class="modal-close" onclick="closeHistory()">×</button>
@@ -74,10 +72,11 @@
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const rolePriority = {
-      'Глава': 1, 'Администратор': 2, 'Заместитель': 3, 'Кровь Семьи': 4, 'Стажер': 5, 'Боец': 6
+      'Администратор': 1, 'Глава': 2, 'Заместитель': 3, 'Кровь Семьи': 4, 'Стажер': 5, 'Боец': 6
     };
 
     let currentAdmin = null;
+    let isCurrentUserSuperAdmin = false;
 
     async function init() {
       await new Promise(r => setTimeout(r, 500));
@@ -86,11 +85,18 @@
       if (!session) { window.location.href = 'login.html'; return; }
       currentAdmin = session.user;
 
+      // Получаем роль текущего пользователя
       const { data: profile } = await supabase.from('profiles').select('role').eq('id', currentAdmin.id).single();
 
+      // Если это Глава или Администратор — даем доступ к панели
       if (!profile || (profile.role !== 'Глава' && profile.role !== 'Администратор')) {
         document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh; color:#c0392b;">Доступ запрещён!</h1><p style="text-align:center;">Вы не имеете прав на это действие.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
         return;
+      }
+
+      // Если он сам Админ — он "Супер-Админ" (видит скрытую роль)
+      if (profile.role === 'Администратор') {
+        isCurrentUserSuperAdmin = true;
       }
 
       loadUsers();
@@ -113,6 +119,19 @@
         const card = document.createElement('div');
         card.className = 'user-card';
         
+        // Формируем опции селекта
+        let roleOptions = `
+          <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
+          <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
+          <option value="Кровь Семьи" ${user.role === 'Кровь Семьи' ? 'selected' : ''}>Кровь Семьи</option>
+          <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
+        `;
+
+        // Если текущий пользователь — сам Администратор, добавляем скрытую опцию
+        if (isCurrentUserSuperAdmin) {
+          roleOptions += `<option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>⭐ Администратор</option>`;
+        }
+
         card.innerHTML = `
           <div class="user-main">
             <div class="user-info">
@@ -126,10 +145,7 @@
             </div>
             <div>
               <select onchange="changeRole('${user.id}', this.value)">
-                <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
-                <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
-                <option value="Кровь Семьи" ${user.role === 'Кровь Семьи' ? 'selected' : ''}>Кровь Семьи</option>
-                <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
+                ${roleOptions}
               </select>
             </div>
           </div>
@@ -151,7 +167,6 @@
       else location.reload(); 
     };
 
-    // НАЧИСЛЕНИЕ ДЕНЕГ
     window.addMoney = async function(userId, nickname) {
       const input = document.getElementById(`money-${userId}`);
       const amount = parseInt(input.value);
@@ -164,26 +179,19 @@
       const { data: userData } = await supabase.from('profiles').select('balance').eq('id', userId).single();
       const currentBalance = userData.balance || 0;
 
-      // 1. Обновляем баланс
       const { error } = await supabase.from('profiles').update({ balance: currentBalance + amount }).eq('id', userId);
 
       if (error) {
         alert('Ошибка: ' + error.message);
       } else {
-        // 2. Записываем в историю
         await supabase.from('transactions').insert([{
-          admin_id: currentAdmin.id,
-          user_id: userId,
-          amount: amount,
-          type: 'add'
+          admin_id: currentAdmin.id, user_id: userId, amount: amount, type: 'add'
         }]);
-
         alert(`Успешно начислено ${amount} $ для ${nickname}!`);
         loadUsers();
       }
     };
 
-    // ОБНУЛЕНИЕ ДЕНЕГ
     window.resetMoney = async function(userId, nickname) {
       if (!confirm(`Вы уверены, что хотите обнулить баланс ${nickname}?`)) return;
 
@@ -192,34 +200,26 @@
       if (error) {
         alert('Ошибка: ' + error.message);
       } else {
-        // Записываем в историю
         await supabase.from('transactions').insert([{
-          admin_id: currentAdmin.id,
-          user_id: userId,
-          amount: 0,
-          type: 'reset'
+          admin_id: currentAdmin.id, user_id: userId, amount: 0, type: 'reset'
         }]);
-
         alert(`Баланс ${nickname} обнулен!`);
         loadUsers();
       }
     };
 
-    // ИСТОРИЯ ТРАНЗАКЦИЙ
     window.openHistory = async function(userId, nickname) {
       document.getElementById('historyTitle').textContent = `История: ${nickname}`;
       const list = document.getElementById('historyList');
       list.innerHTML = '<li>Загрузка...</li>';
-      
       document.getElementById('historyModal').classList.add('active');
 
-      // Получаем записи из таблицы transactions для этого пользователя
       const { data, error } = await supabase
         .from('transactions')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
-        .limit(15); // Показываем последние 15 операций
+        .limit(15);
 
       if (error) {
         list.innerHTML = `<li style="color:red;">Ошибка: ${error.message}</li>`;
@@ -234,11 +234,7 @@
       list.innerHTML = '';
       data.forEach(t => {
         const date = new Date(t.created_at).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-        
-        let text = '';
-        if (t.type === 'add') text = `+${t.amount} $`;
-        else if (t.type === 'reset') text = `Обнуление`;
-
+        let text = t.type === 'add' ? `+${t.amount} $` : `Обнуление`;
         list.innerHTML += `
           <li>
             <span class="h-date">${date}</span>
