@@ -8,20 +8,39 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* ===== Светлая тема (по умолчанию) ===== */
     :root {
+      --bg: #f4f4f7;
+      --panel: rgba(255, 255, 255, 0.92);
+      --border: #e0e0e6;
+      --text: #1a1a1a;
+      --muted: #666;
+      --accent: #c0392b;
+      --gold: #b8860b;
+      --green: #2e7d32;
+      --bg-image: none;
+      --bg-overlay: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ===== Тёмная тема ===== */
+    html.dark {
       --bg: #0a0a0a;
       --panel: rgba(17, 17, 17, 0.95);
       --border: #222;
       --text: #eaeaea;
       --muted: #999;
-      --accent: #c0392b;
       --gold: #d4af37;
+      --green: #4caf50;
+      --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
+      --bg-overlay: rgba(0, 0, 0, 0.85);
     }
+
+    html, body { transition: background 0.4s ease, color 0.4s ease; }
 
     body {
       font-family: 'Overpass', sans-serif;
-      background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
-      background-color: #050505;
+      background: var(--bg-image) center/cover no-repeat fixed;
+      background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
@@ -32,13 +51,15 @@
       content: "";
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: var(--bg-overlay);
       z-index: -1;
       pointer-events: none;
+      transition: background 0.4s ease;
     }
 
+    /* ===== Шапка ===== */
     header {
-      background: rgba(5, 5, 5, 0.95);
+      background: var(--panel);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
       padding: 1rem 2rem;
@@ -50,35 +71,150 @@
       z-index: 10;
       flex-wrap: wrap;
       gap: 1rem;
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
 
     header .logo {
-      font-family: 'Overpass', sans-serif;
       font-weight: 800;
       font-size: 1.25rem;
       letter-spacing: 3px;
-      color: #fff;
+      color: var(--text);
       text-decoration: none;
       cursor: pointer;
       transition: opacity 0.2s;
-      display: inline-block;
     }
     header .logo:hover { opacity: 0.75; }
     header .logo span { color: var(--accent); }
 
+    .header-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1rem;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
     nav a {
+      position: relative;
       color: var(--muted);
-      margin-left: 1.5rem;
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 500;
-      transition: color 0.2s;
-      cursor: pointer;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      overflow: hidden;
       white-space: nowrap;
+      transition: color 0.2s, background 0.2s, box-shadow 0.3s;
     }
-    nav a:hover { color: #fff; }
-    nav a.active { color: #fff; }
 
+    nav a:hover {
+      color: var(--text);
+      background: rgba(192, 57, 43, 0.08);
+      box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35);
+    }
+
+    nav a.active {
+      color: var(--text);
+      background: rgba(192, 57, 43, 0.14);
+    }
+
+    .profile-btn {
+      color: var(--gold) !important;
+      font-weight: 700 !important;
+      margin-left: 0.5rem;
+      border-left: 1px solid var(--border);
+      padding-left: 1rem !important;
+      border-radius: 0 !important;
+    }
+    .profile-btn:hover {
+      background: transparent !important;
+      box-shadow: none !important;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    /* Молнии в навигации */
+    nav a .lightning {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
+      filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9));
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
+    nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
+    nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
+
+    nav a .spark {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
+    nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
+    nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
+    nav a:hover .spark.s2 { animation-delay: 0.12s; }
+    nav a:hover .spark.s3 { animation-delay: 0.24s; }
+
+    /* ===== Круглая кнопка переключения тем ===== */
+    .theme-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.3s ease;
+      margin-left: 0.5rem;
+      flex-shrink: 0;
+    }
+    
+    .theme-btn:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      transform: rotate(15deg) scale(1.05);
+    }
+
+    .theme-btn svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.4s ease;
+    }
+
+    .theme-btn .icon-moon { display: none; }
+    html.dark .theme-btn .icon-sun { display: none; }
+    html.dark .theme-btn .icon-moon { display: block; }
+    html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
+
+    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
+    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
+    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
+
+    /* ===== Контент ===== */
     .page-hero {
       padding: 5rem 2rem 2rem;
       text-align: center;
@@ -96,31 +232,28 @@
       font-weight: 800;
       font-size: clamp(2rem, 5vw, 3rem);
       letter-spacing: 1px;
-      color: #fff;
+      color: var(--text);
       margin-bottom: 1rem;
       position: relative;
-      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
     }
     .page-hero h1 em {
       color: var(--accent);
       font-style: normal;
     }
     .page-hero p {
-      color: #ccc;
-      font-size: 1.05rem;
+      color: var(--muted);
       max-width: 640px;
       margin: 0 auto;
+      font-size: 1.05rem;
       position: relative;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
     }
-
+    
     section.block {
-      padding: 2rem 2rem;
+      padding: 2rem;
       max-width: 960px;
       margin: 0 auto;
     }
-
-    /* ========== КАРТОЧКИ — В 2 СТРОКИ ========== */
+    
     .table-cards {
       display: flex;
       flex-direction: column;
@@ -128,7 +261,7 @@
       max-width: 720px;
       margin: 0 auto;
     }
-
+    
     .table-card {
       background: var(--panel);
       backdrop-filter: blur(6px);
@@ -141,45 +274,43 @@
       gap: 0.85rem;
       text-decoration: none;
       color: var(--text);
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s, background 0.4s;
     }
-
+    
     .table-card:hover {
       transform: translateX(8px);
       border-color: var(--accent);
       box-shadow: 0 8px 24px rgba(192, 57, 43, 0.25);
     }
-
+    
     .table-card .card-icon {
       font-size: 1.75rem;
       flex-shrink: 0;
     }
-
+    
     .table-card .card-content {
       flex: 1;
     }
-
+    
     .table-card .card-title {
-      font-family: 'Overpass', sans-serif;
       font-weight: 700;
       font-size: 1rem;
-      color: #fff;
-      letter-spacing: 0.5px;
+      color: var(--text);
       margin-bottom: 0.15rem;
     }
-
+    
     .table-card .card-desc {
       font-size: 0.8rem;
       color: var(--muted);
     }
-
+    
     .table-card .card-arrow {
       font-size: 1.1rem;
       color: var(--accent);
       transition: transform 0.2s;
       flex-shrink: 0;
     }
-
+    
     .table-card:hover .card-arrow {
       transform: translateX(4px);
     }
@@ -207,38 +338,62 @@
     }
 
     footer {
-      background: rgba(5, 5, 5, 0.95);
+      background: var(--panel);
       backdrop-filter: blur(6px);
       border-top: 1px solid var(--border);
-      color: #666;
+      color: var(--muted);
       text-align: center;
       padding: 1.5rem;
       font-size: 0.9rem;
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
     footer span { color: var(--accent); }
 
-    @media (max-width: 600px) {
+    @media (max-width: 850px) {
       header { flex-direction: column; align-items: flex-start; }
-      nav a { margin-left: 0; margin-right: 1rem; }
+      .header-right { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      nav { justify-content: flex-start; }
     }
   </style>
 </head>
 <body>
   <header>
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
-    <nav>
-      <a href="index.html">Главная</a>
-      <a href="family.html">О семье</a>
-      <a href="transport.html">О транспорте</a>
-      <a href="contracts.html">Контракты</a>
-      <a href="index.html">Вступить в семью</a>
-      <a href="tables.html" class="active">Таблицы</a>
-    </nav>
+    
+    <div class="header-right">
+      <nav>
+        <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="family.html">О семье <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <!-- УБРАЛИ "Вступить в семью" -->
+        <a href="tables.html" class="active">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
+        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
+
+        <button class="theme-btn" id="themeToggle" title="Переключить тему">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </nav>
+    </div>
   </header>
 
   <section class="page-hero">
     <h1>Таблицы <em>La Muerte</em></h1>
-    <p>Все таблицы прокачка, статистика и гайды.</p>
+    <p>Все таблицы: прокачка, статистика и гайды.</p>
   </section>
 
   <section class="block">
@@ -272,5 +427,35 @@
   <footer>
     © 2024–2026 <span>La Muerte</span> — Все права защищены.
   </footer>
+
+  <script>
+    /* ===== Переключатель темы ===== */
+    (function () {
+      const toggleBtn = document.getElementById('themeToggle');
+      if (!toggleBtn) return;
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+      toggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        if (document.documentElement.classList.contains('dark')) {
+          localStorage.setItem('theme', 'dark');
+        } else {
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    })();
+
+    /* ===== Переход в ЛК ===== */
+    function goToProfile(e) {
+      if (e) e.preventDefault();
+      if (localStorage.getItem('lm_logged') === 'true') {
+        window.location.href = 'profile.html';
+      } else {
+        window.location.href = 'login.html';
+      }
+    }
+  </script>
 </body>
 </html>
