@@ -76,7 +76,7 @@
     
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     
-    /* Вкладки */
+    /* Вкладки (Горизонтальные) */
     .tabs-header { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; flex-wrap: wrap; }
     .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 700; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
     .tab-btn:hover { color: var(--text); }
@@ -85,6 +85,49 @@
     .tab-content { display: none; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* АККОРДЕОН ВНУТРИ НАСТРОЕК */
+    .settings-accordion {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.05);
+    }
+    .settings-header {
+      padding: 1rem 1.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s;
+      background: var(--panel);
+    }
+    .settings-header:hover {
+      background: rgba(192, 57, 43, 0.05);
+      color: var(--accent);
+    }
+    .settings-header .arrow {
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: transform 0.3s ease;
+    }
+    .settings-header.active .arrow {
+      transform: rotate(180deg);
+      color: var(--accent);
+    }
+    .settings-body {
+      overflow: hidden;
+      height: 0;
+      transition: height 0.3s ease;
+      padding: 0 1.5rem;
+      background: var(--bg);
+    }
+    .settings-body.open {
+      padding: 1.5rem;
+    }
 
     .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text); }
     
@@ -225,23 +268,32 @@
           </div>
         </div>
 
-        <!-- Вкладка: Настройки -->
+        <!-- Вкладка: Настройки (Теперь в виде аккордеона) -->
         <div id="tab-settings" class="tab-content">
-          <div class="stats-title">⚙️ Смена пароля</div>
           
-          <form id="changePasswordForm">
-            <div class="form-group">
-              <label>Новый пароль</label>
-              <input type="password" id="newPassword" placeholder="Минимум 6 символов" required minlength="6">
+          <!-- Аккордеон: Смена пароля -->
+          <div class="settings-accordion">
+            <div class="settings-header" onclick="toggleSettingsAccordion(this)">
+              <span>🔒 Смена пароля</span>
+              <span class="arrow">▼</span>
             </div>
-            <div class="form-group">
-              <label>Повторите новый пароль</label>
-              <input type="password" id="confirmPassword" placeholder="Введите пароль еще раз" required minlength="6">
+            <div class="settings-body">
+              <form id="changePasswordForm">
+                <div class="form-group" style="margin-top: 1rem;">
+                  <label>Новый пароль</label>
+                  <input type="password" id="newPassword" placeholder="Минимум 6 символов" required minlength="6">
+                </div>
+                <div class="form-group">
+                  <label>Повторите новый пароль</label>
+                  <input type="password" id="confirmPassword" placeholder="Введите пароль еще раз" required minlength="6">
+                </div>
+                
+                <button type="submit" class="btn-save" id="savePassBtn">Обновить пароль</button>
+                <p class="status-msg" id="passStatusMsg"></p>
+              </form>
             </div>
-            
-            <button type="submit" class="btn-save" id="savePassBtn">Обновить пароль</button>
-            <p class="status-msg" id="passStatusMsg"></p>
-          </form>
+          </div>
+
         </div>
 
       </div>
@@ -281,6 +333,39 @@
 
       if (tabId === 'tab-history' && currentDiscordId) {
         loadHistory(currentDiscordId);
+      }
+    }
+
+    // Функция для открытия/закрытия аккордеона в настройках
+    window.toggleSettingsAccordion = function(header) {
+      header.classList.toggle('active');
+      const body = header.nextElementSibling;
+      
+      if (body.classList.contains('open')) {
+        body.style.height = body.scrollHeight + 'px';
+        void body.offsetHeight;
+        body.style.height = '0px';
+        body.classList.remove('open');
+        body.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName === 'height') { 
+            body.style.height = ''; 
+            body.style.padding = '0 1.5rem';
+            body.removeEventListener('transitionend', handler); 
+          }
+        });
+      } else {
+        body.classList.add('open');
+        body.style.padding = '1.5rem';
+        const targetHeight = body.scrollHeight;
+        body.style.height = '0px';
+        void body.offsetHeight;
+        body.style.height = targetHeight + 'px';
+        body.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName === 'height') { 
+            body.style.height = 'auto'; 
+            body.removeEventListener('transitionend', handler); 
+          }
+        });
       }
     }
 
