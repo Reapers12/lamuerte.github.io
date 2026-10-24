@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Контракты — La Muerte</title>
   
-  <!-- Скрипт против вспышки -->
   <script>
     if (localStorage.getItem('theme') === 'dark') {
       document.documentElement.classList.add('dark');
@@ -16,14 +15,12 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ===== Светлая тема (по умолчанию) ===== */
     :root {
       --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
       --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32; --blue: #3498db;
       --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
 
-    /* ===== Тёмная тема ===== */
     html.dark {
       --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
       --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
@@ -38,7 +35,6 @@
     }
     body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
 
-    /* ===== Шапка ===== */
     header {
       background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
       padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
@@ -69,11 +65,16 @@
     nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
     nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
     nav a .spark { position: absolute; top: 50%; left: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
+    
     nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
     nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
     nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
     nav a:hover .spark.s2 { animation-delay: 0.12s; }
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
+
+    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
+    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
+    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
     /* Кнопка темы */
     .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
@@ -83,10 +84,6 @@
     html.dark .theme-btn .icon-sun { display: none; }
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
-
-    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
-    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
-    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
     /* ===== Контент ===== */
     .page-hero { padding: 4rem 2rem 1rem; text-align: center; position: relative; }
@@ -190,7 +187,8 @@
     <div class="header-right">
       <nav>
         <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="family.html">О семье <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <!-- ПЕРЕИМЕНОВАНО В ПРАВИЛА С МОЛНИЯМИ -->
+        <a href="family.html">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="contracts.html" class="active">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
@@ -405,7 +403,6 @@
   <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script>
-    /* ===== Аккордеон ===== */
     function toggleAccordion(header) {
       header.classList.toggle('active');
       const content = header.nextElementSibling;
@@ -429,7 +426,6 @@
       }
     }
 
-    /* ===== Кнопка темы ===== */
     const toggleBtn = document.getElementById('themeToggle');
     if (toggleBtn) {
       toggleBtn.addEventListener('click', () => {
@@ -438,7 +434,6 @@
       });
     }
 
-    /* ===== Переход в ЛК ===== */
     function goToProfile(e) {
       if (e) e.preventDefault();
       window.location.href = 'profile.html';
