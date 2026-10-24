@@ -150,6 +150,10 @@
     .custom-option .price { color: var(--gold); font-weight: 700; font-size: 0.8rem; }
     .custom-option.no-result { color: var(--muted); cursor: default; justify-content: center; padding: 1rem; }
 
+    /* НОВОЕ ПОЛЕ ДЛЯ КОЛИЧЕСТВА */
+    .qty-group { display: none; margin-bottom: 0.9rem; }
+    .qty-group.visible { display: block; }
+
     @media (max-width: 850px) { header { flex-direction: column; align-items: flex-start; } .header-right { width: 100%; justify-content: space-between; } nav { justify-content: flex-start; } }
     @media (max-width: 600px) { .contracts-grid { grid-template-columns: 1fr; } .contract-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; } .contract-payment { align-self: flex-end; } .accordion-header { font-size: 1rem; padding: 0.4rem 0.85rem; } .modal-content { padding: 1.25rem; } }
   </style>
@@ -406,6 +410,12 @@
           </div>
         </div>
 
+        <!-- НОВОЕ ПОЛЕ ДЛЯ КОЛИЧЕСТВА -->
+        <div class="form-group qty-group" id="qtyGroup">
+          <label>Количество (шт.)</label>
+          <input type="number" id="quantity" min="1" value="1" oninput="calculateTotal()">
+        </div>
+
         <div class="form-group">
           <label>Сумма к выплате (автоматически)</label>
           <input type="number" id="reward" placeholder="Выберите ресурс выше" readonly>
@@ -488,6 +498,7 @@
     // КАСТОМНЫЙ СЕЛЕКТ С ПОИСКОМ (ТОЛЬКО РЕСУРСЫ)
     // ==========================================
 
+    // Добавили флаг unit: true для ресурсов, которые считаются поштучно
     const RESOURCES = {
       'Металлургия': [
         { name: 'Олово', price: 33000 }, { name: 'Медь', price: 25000 },
@@ -512,8 +523,14 @@
         { name: '3 ранг', price: 121500 }, { name: '4 ранг', price: 144000 },
         { name: '5 ранг', price: 163800 }, { name: '6 ранг', price: 189000 },
         { name: '7 ранг', price: 216000 }, { name: '8 ранг', price: 243000 }
+      ],
+      'Ателье': [
+        { name: 'Активация', price: 12000 }, 
+        { name: '1 форма', price: 1700, unit: true } // Флаг unit: true
       ]
     };
+
+    let currentBasePrice = 0; // Храним базовую цену для расчета
 
     function initCustomSelect() {
       const list = document.getElementById('customOptionsList');
@@ -535,7 +552,23 @@
             e.stopPropagation();
             document.getElementById('resourceSelect').value = item.name;
             document.getElementById('resourceCategory').value = category;
-            document.getElementById('reward').value = item.price;
+            
+            // Сохраняем базовую цену
+            currentBasePrice = item.price;
+            
+            // Управляем видимостью поля "Количество"
+            const qtyGroup = document.getElementById('qtyGroup');
+            const qtyInput = document.getElementById('quantity');
+            
+            if (item.unit) {
+              qtyGroup.classList.add('visible');
+              qtyInput.value = 1; // Сброс на 1
+            } else {
+              qtyGroup.classList.remove('visible');
+              qtyInput.value = 1; // Сброс на 1
+            }
+            
+            calculateTotal(); // Пересчитываем сумму
             
             const label = document.getElementById('customSelectLabel');
             label.textContent = `${item.name} (${item.price.toLocaleString('ru-RU')}$)`;
@@ -548,6 +581,16 @@
           list.appendChild(div);
         });
       }
+    }
+
+    // Функция пересчета суммы
+    window.calculateTotal = function() {
+      const qtyInput = document.getElementById('quantity');
+      let qty = parseInt(qtyInput.value) || 1;
+      if (qty < 1) qty = 1;
+      
+      const total = currentBasePrice * qty;
+      document.getElementById('reward').value = total;
     }
 
     window.toggleCustomSelect = function(e) {
@@ -637,6 +680,11 @@
       const resource = document.getElementById('resourceSelect').value;
       const category = document.getElementById('resourceCategory').value;
       const reward = parseInt(document.getElementById('reward').value);
+      
+      // Получаем количество, если поле видимо
+      const isQtyVisible = document.getElementById('qtyGroup').classList.contains('visible');
+      const qty = isQtyVisible ? parseInt(document.getElementById('quantity').value) : 1;
+
       const screenshot = document.getElementById('screenshot').value.trim();
       const discordId = document.getElementById('discordId').value.trim();
       const comment = document.getElementById('comment').value.trim() || 'Нет';
@@ -645,6 +693,9 @@
       btn.textContent = 'Отправка...';
       statusMsg.className = 'status-msg';
       statusMsg.style.display = 'none';
+
+      // Если есть количество, добавляем его в название ресурса для Discord
+      const displayResource = isQtyVisible ? `${resource} (${qty} шт.)` : resource;
 
       const payload = {
         username: "La Muerte | Выплаты",
@@ -656,7 +707,7 @@
             { name: "👤 Никнейм", value: nickname, inline: true },
             { name: "🎮 Discord ID", value: discordId, inline: true },
             { name: "📂 Категория", value: category, inline: true },
-            { name: "📦 Ресурс", value: resource, inline: true },
+            { name: "📦 Ресурс", value: displayResource, inline: true },
             { name: "💵 Сумма", value: reward + " $", inline: true },
             { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: false },
             { name: "💬 Комментарий", value: comment, inline: false }
@@ -679,7 +730,7 @@
           .insert([{
             nickname: nickname,
             category: category, 
-            details: resource,  
+            details: displayResource,  
             amount: reward,
             screenshot: screenshot,
             discord: discordId,
@@ -692,12 +743,16 @@
         statusMsg.textContent = '✅ Заявка отправлена! Ожидайте подтверждения от Админа.';
         statusMsg.className = 'status-msg success';
         
+        // Сброс формы
         this.reset();
         document.getElementById('customSelectLabel').textContent = 'Выберите ресурс...';
         document.getElementById('customSelectLabel').style.color = 'var(--muted)';
         document.getElementById('resourceSelect').value = '';
         document.getElementById('resourceCategory').value = '';
         document.getElementById('reward').value = '';
+        document.getElementById('qtyGroup').classList.remove('visible');
+        document.getElementById('quantity').value = 1;
+        currentBasePrice = 0;
 
         setTimeout(() => closeForm(), 3000);
       } catch (error) {
