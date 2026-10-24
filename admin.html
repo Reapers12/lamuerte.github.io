@@ -6,16 +6,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --bg: #0a0a0a; --panel: #111; --border: #222; --text: #eaeaea; --accent: #c0392b; --gold: #d4af37; }
+    :root { --bg: #0a0a0a; --panel: #111; --border: #222; --text: #eaeaea; --accent: #c0392b; --gold: #d4af37; --green: #4caf50; }
     body { font-family: 'Overpass', sans-serif; background: var(--bg); color: var(--text); padding: 2rem; }
     h1 { color: var(--accent); text-align: center; margin-bottom: 2rem; }
-    .user-card { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .user-card { 
+      background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); 
+      border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; 
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .user-card:hover { transform: translateY(-2px); border-color: var(--accent); }
     .user-info { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-    .user-name { font-weight: 700; font-size: 1.1rem; }
-    .user-role { color: var(--gold); font-weight: 600; }
-    select { padding: 0.5rem; background: #050505; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; outline: none; }
-    .back-link { display: block; text-align: center; margin-top: 2rem; color: #666; text-decoration: none; transition: color 0.2s; }
+    .user-name { font-weight: 700; font-size: 1.1rem; color: #fff; }
+    .user-role { color: var(--gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+    
+    select { 
+      padding: 0.6rem; background: #050505; border: 1px solid #333; color: #fff; 
+      border-radius: 6px; cursor: pointer; outline: none; font-family: inherit; font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+    select:hover { border-color: var(--accent); }
+    
+    .back-link { display: block; text-align: center; margin-top: 2rem; color: #666; text-decoration: none; font-weight: 600; transition: color 0.2s; }
     .back-link:hover { color: var(--accent); }
+    
+    .empty-msg { text-align: center; color: var(--muted); padding: 2rem; }
   </style>
 </head>
 <body>
@@ -29,7 +43,11 @@
 
     // Проверка на Администратора
     if (!allUsers[currentUser] || allUsers[currentUser].role !== 'Администратор') {
-      document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh;">Доступ запрещён!</h1><p style="text-align:center;">Вы не Администратор.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
+      document.body.innerHTML = `
+        <h1 style="text-align:center; margin-top:20vh;">Доступ запрещён!</h1>
+        <p style="text-align:center;">Вы не Администратор.</p>
+        <a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>
+      `;
     } else {
       renderUsers();
     }
@@ -38,15 +56,25 @@
       const list = document.getElementById('usersList');
       list.innerHTML = '';
 
-      Object.keys(allUsers).forEach(user => {
+      const users = Object.keys(allUsers);
+
+      if (users.length === 0) {
+        list.innerHTML = '<p class="empty-msg">Пользователей пока нет.</p>';
+        return;
+      }
+
+      users.forEach(user => {
         const data = allUsers[user];
         
+        // Создаем карточку
         const card = document.createElement('div');
         card.className = 'user-card';
+        
+        // Формируем селект со ВСЕМИ ролями
         card.innerHTML = `
           <div class="user-info">
             <span class="user-name">${user}</span>
-            <span class="user-role">(Текущая роль: ${data.role})</span>
+            <span class="user-role">Текущая роль: ${data.role}</span>
           </div>
           <div>
             <select onchange="changeRole('${user}', this.value)">
@@ -64,7 +92,18 @@
     function changeRole(user, newRole) {
       allUsers[user].role = newRole;
       localStorage.setItem('lm_users', JSON.stringify(allUsers));
-      location.reload(); // Перезагружаем, чтобы обновить список
+      
+      // Находим карточку этого пользователя и обновляем текст роли
+      const cards = document.querySelectorAll('.user-card');
+      cards.forEach(card => {
+        const name = card.querySelector('.user-name').textContent;
+        if (name === user) {
+          card.querySelector('.user-role').textContent = `Текущая роль: ${newRole}`;
+        }
+      });
+      
+      // Показываем небольшое уведомление (опционально)
+      // alert(`Роль для ${user} изменена на ${newRole}`);
     }
   </script>
 </body>
