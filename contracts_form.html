@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Заявка на контракт — La Muerte</title>
+  <title>Заявка на выплаты — La Muerte</title>
   <script>
     if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
   </script>
@@ -96,7 +96,7 @@
 
   <div class="container">
     <div class="form-box">
-      <h2>Заявка на контракт</h2>
+      <h2>Заявка на выплаты</h2>
       <p class="subtitle">Заполни форму, и заявка сразу улетит в Discord семьи</p>
 
       <form id="contractForm">
@@ -121,13 +121,18 @@
         </div>
 
         <div class="form-group">
-          <label>Что конкретно нужно сделать?</label>
-          <input type="text" id="details" placeholder="Например: Сдать 10 шт. Олова" required>
+          <label>Что конкретно сдали / выполнили?</label>
+          <input type="text" id="details" placeholder="Например: Сдал 10 шт. Олова" required>
         </div>
 
         <div class="form-group">
-          <label>Ожидаемая награда (необязательно)</label>
-          <input type="text" id="reward" placeholder="Например: 50.000$">
+          <label>Сумма к выплате (награда)</label>
+          <input type="text" id="reward" placeholder="Например: 50.000$" required>
+        </div>
+
+        <div class="form-group">
+          <label>Ваш Discord (для связи)</label>
+          <input type="text" id="discord" placeholder="Например: username" required>
         </div>
 
         <div class="form-group">
@@ -144,50 +149,49 @@
   <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script>
-    // ===== НАСТРОЙКИ DISCORD =====
-    // Вставь сюда ссылку, которую скопировал в Discord
-    const DISCORD_WEBHOOK_URL = 'ВСТАВЬ_СЮДА_ССЫЛКУ_ВЕБХУКА';
+    // Твой Discord Webhook URL
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563566473048363151/VXoV8tvq2aWftQ1gdaM7_x8jUK8ZA7PrNXF4ZwLjJJwp-QyL9HDetom-diFpjELUCtbY';
 
-    // ===== ТЕМА =====
+    // Переключатель темы
     const toggleBtn = document.getElementById('themeToggle');
     toggleBtn.addEventListener('click', () => {
       document.documentElement.classList.toggle('dark');
       localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
     });
 
-    // ===== ОТПРАВКА ФОРМЫ =====
+    // Отправка формы
     document.getElementById('contractForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const btn = document.getElementById('submitBtn');
       const statusMsg = document.getElementById('statusMsg');
       
-      // Получаем данные
       const nickname = document.getElementById('nickname').value.trim();
       const category = document.getElementById('category').value;
       const details = document.getElementById('details').value.trim();
-      const reward = document.getElementById('reward').value.trim() || 'Не указана';
+      const reward = document.getElementById('reward').value.trim();
+      const discord = document.getElementById('discord').value.trim();
       const comment = document.getElementById('comment').value.trim() || 'Нет';
 
-      // Блокируем кнопку
       btn.disabled = true;
       btn.textContent = 'Отправка в Discord...';
       statusMsg.className = 'status-msg';
       statusMsg.style.display = 'none';
 
-      // Формируем сообщение для Discord (Embed)
+      // Формируем красивое сообщение для Discord
       const payload = {
-        username: "La Muerte | Контракты",
-        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png", // Иконка
+        username: "La Muerte | Выплаты",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
         embeds: [
           {
-            title: "📝 Новая заявка на контракт",
-            color: 0xc0392b, // Красный цвет
+            title: "💰 Новая заявка на выплату",
+            color: 0xc0392b, // Красный цвет полосы
             fields: [
-              { name: "👤 Никнейм", value: nickname, inline: true },
-              { name: "📂 Категория", value: category, inline: true },
-              { name: "📋 Задание", value: details, inline: false },
-              { name: "💰 Награда", value: reward, inline: true },
+              { name: "👤 Никнейм в игре", value: nickname, inline: true },
+              { name: "🎮 Discord", value: discord, inline: true },
+              { name: "📂 Категория", value: category, inline: false },
+              { name: "📋 Выполнено", value: details, inline: false },
+              { name: "💵 Сумма выплаты", value: reward, inline: true },
               { name: "💬 Комментарий", value: comment, inline: false }
             ],
             footer: { text: "Заявка отправлена с сайта La Muerte" },
@@ -204,7 +208,7 @@
         });
 
         if (response.ok) {
-          statusMsg.textContent = '✅ Заявка успешно отправлена в Discord!';
+          statusMsg.textContent = '✅ Заявка успешно отправлена в Discord! Ожидайте выплату.';
           statusMsg.className = 'status-msg success';
           this.reset(); // Очищаем форму
         } else {
@@ -212,7 +216,7 @@
         }
       } catch (error) {
         console.error(error);
-        statusMsg.textContent = '❌ Ошибка отправки. Проверьте ссылку вебхука.';
+        statusMsg.textContent = '❌ Ошибка отправки. Проверьте соединение.';
         statusMsg.className = 'status-msg error';
       } finally {
         btn.disabled = false;
