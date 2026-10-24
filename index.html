@@ -140,6 +140,41 @@
       text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
     }
 
+    /* Молнии в навигации */
+    nav a .lightning {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
+      filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9));
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
+    nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
+    nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
+
+    nav a .spark {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
+    nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
+    nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
+    nav a:hover .spark.s2 { animation-delay: 0.12s; }
+    nav a:hover .spark.s3 { animation-delay: 0.24s; }
+
     /* ===== Круглая кнопка переключения тем ===== */
     .theme-btn {
       background: transparent;
@@ -174,6 +209,10 @@
     html.dark .theme-btn .icon-sun { display: none; }
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
+
+    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
+    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
+    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
     /* ===== Герой (Главный экран) ===== */
     .hero {
@@ -471,7 +510,6 @@
         <a href="family.html">О семье</a>
         <a href="transport.html">О транспорте</a>
         <a href="contracts.html">Контракты</a>
-        <!-- УБРАЛИ "Вступить в семью" -->
         <a href="tables.html">Таблицы</a>
         
         <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
@@ -499,7 +537,9 @@
   <section class="hero" id="home">
     <h1>Добро пожаловать <br>в семью <em>La Muerte</em></h1>
     <p>Мы не просто команда. Мы — семья. Здесь каждый найдёт своё место!</p>
-    <a onclick="openModal()" class="btn">Вступить</a>
+    
+    <!-- ИЗМЕНЕН ТЕКСТ КНОПКИ -->
+    <a onclick="openModal()" class="btn">Вступить в семью</a>
   </section>
 
   <section class="block" id="family">
