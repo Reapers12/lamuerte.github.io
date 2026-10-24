@@ -76,7 +76,6 @@
     
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     
-    /* Вкладки */
     .tabs-header { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; flex-wrap: wrap; }
     .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 700; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
     .tab-btn:hover { color: var(--text); }
@@ -86,7 +85,6 @@
     .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Аккордеон */
     .settings-accordion { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.05); }
     .settings-header { padding: 1rem 1.5rem; font-weight: 700; font-size: 1.1rem; color: var(--text); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; background: var(--panel); }
     .settings-header:hover { background: rgba(192, 57, 43, 0.05); color: var(--accent); }
@@ -130,7 +128,6 @@
     footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; margin-top: 4rem; }
     footer span { color: var(--accent); }
 
-    /* Скелетон для загрузки */
     .skeleton {
       background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
       background-size: 200% 100%;
@@ -163,9 +160,6 @@
         <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        
-        <!-- ССЫЛКИ "РУЛЕТКА" И "ЛИЧНЫЙ КАБИНЕТ" УДАЛЕНЫ -->
-        
         <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
       </nav>
 
@@ -298,6 +292,7 @@
     })();
 
     let currentUser = null;
+    let currentNickname = null; // Сохраняем ник для поиска заявок
     let currentDiscordId = null;
 
     window.switchTab = function(evt, tabId) {
@@ -307,8 +302,8 @@
       evt.currentTarget.classList.add('active');
       document.getElementById(tabId).classList.add('active');
 
-      if (tabId === 'tab-history' && currentDiscordId) {
-        loadHistory(currentDiscordId);
+      if (tabId === 'tab-history') {
+        loadHistory();
       }
     }
 
@@ -360,6 +355,7 @@
       }
 
       document.getElementById('displayName').textContent = data.nickname;
+      currentNickname = data.nickname; // Запоминаем ник
       document.getElementById('inputName').value = data.nickname;
       document.getElementById('userRoleDisplay').textContent = data.role;
       
@@ -389,7 +385,7 @@
 
     initProfile();
 
-    async function loadHistory(discordId) {
+    async function loadHistory() {
       const loader = document.getElementById('historyLoader');
       const content = document.getElementById('historyContent');
       const empty = document.getElementById('historyEmpty');
@@ -400,11 +396,20 @@
       empty.style.display = 'none';
 
       try {
-        const { data, error } = await supabase
-          .from('payout_requests')
-          .select('*')
-          .eq('discord', discordId)
-          .order('created_at', { ascending: false });
+        // Ищем заявки по нику ИЛИ по Discord ID
+        let query = supabase.from('payout_requests').select('*');
+        
+        let conditions = [];
+        if (currentNickname) conditions.push(`nickname.ilike."${currentNickname.trim()}"`);
+        if (currentDiscordId) conditions.push(`discord.eq."${currentDiscordId}"`);
+
+        if (conditions.length > 0) {
+          query = query.or(conditions.join(','));
+        } else {
+          throw new Error('Нет данных для поиска');
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false });
 
         if (error) throw error;
 
@@ -420,8 +425,11 @@
 
         data.forEach(req => {
           const tr = document.createElement('tr');
-          const date = new Date(req.created_at).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
           
+          const date = new Date(req.created_at).toLocaleDateString('ru-RU', {
+            day: '2-digit', month: '2-digit', year: 'numeric'
+          });
+
           let statusClass = 'status-pending';
           let statusText = 'В ожидании';
           if (req.status === 'approved') { statusClass = 'status-approved'; statusText = 'Одобрено'; }
@@ -435,6 +443,7 @@
           `;
           tbody.appendChild(tr);
         });
+
       } catch (err) {
         console.error('Ошибка загрузки истории:', err);
         loader.textContent = '❌ Ошибка загрузки.';
