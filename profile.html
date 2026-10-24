@@ -43,7 +43,7 @@
     .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
     
     .profile-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; color: #fff; word-break: break-all; }
-    .profile-status { font-size: 0.85rem; color: var(--green); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
+    .profile-status { font-size: 0.85rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
     
     .btn-outline {
       display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text);
@@ -103,8 +103,12 @@
       <div class="profile-card">
         <div class="avatar-wrapper" id="avatarBox">?</div>
         <div class="profile-name" id="displayName">Загрузка...</div>
-        <div class="profile-status">Участник семьи</div>
-        <a href="#" class="btn-outline" onclick="resetProfile()">Сбросить профиль</a>
+        <div class="profile-status" id="userRoleDisplay">Загрузка...</div>
+        
+        <!-- Кнопка админа (появится если роль Администратор) -->
+        <a href="admin.html" id="adminPanelBtn" class="btn-outline" style="display: none; margin-top: 0.5rem; border-color: var(--accent); color: var(--accent);">⚙️ Панель управления</a>
+        
+        <a href="#" class="btn-outline" onclick="resetProfile()" style="margin-top: 1rem;">Сбросить профиль</a>
       </div>
 
       <div class="stats-card">
@@ -119,7 +123,7 @@
         <div class="stats-title">⚙️ Настройки профиля</div>
         <div class="form-group">
           <label>Ваш Логин</label>
-          <input type="text" id="inputName" placeholder="Введите логин" readonly style="opacity: 0.7;">
+          <input type="text" id="inputName" readonly style="opacity: 0.7;">
         </div>
         <div class="form-group">
           <label>Ссылка на аватар (URL)</label>
@@ -132,16 +136,24 @@
   </section>
 
   <script>
-    // Защита страницы
     if (localStorage.getItem('lm_logged') !== 'true') {
       window.location.href = 'login.html';
     }
 
-    // Загрузка
     const user = localStorage.getItem('lm_user') || 'Неизвестный';
+    const allUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
+    const userData = allUsers[user];
+
     document.getElementById('displayName').textContent = user;
     document.getElementById('avatarBox').textContent = user.charAt(0).toUpperCase();
     document.getElementById('inputName').value = user;
+    
+    if (userData) {
+      document.getElementById('userRoleDisplay').textContent = userData.role;
+      if (userData.role === 'Администратор') {
+        document.getElementById('adminPanelBtn').style.display = 'block';
+      }
+    }
     
     const savedAvatar = localStorage.getItem('lm_avatar');
     if (savedAvatar) {
