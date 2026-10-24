@@ -71,6 +71,12 @@
     .btn-reset { background: var(--accent); color: #fff; }
     .btn-reset:hover { background: #a93226; }
 
+    /* Бейдж с количеством непрочитанных заявок */
+    .btn-payouts { position: relative; background: var(--gold); color: #000; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+    .btn-payouts:hover { filter: brightness(1.1); }
+    .badge { background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 0.1rem 0.4rem; border-radius: 10px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(192, 57, 43, 0); } 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); } }
+
     /* Встроенный блок заявок */
     .payouts-block { margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 1rem; display: none; }
     .payouts-block.active { display: block; }
@@ -148,16 +154,33 @@
     })();
 
     let allUsers = [];
+    let pendingCounts = {}; // Храним количество непрочитанных заявок по Discord ID
 
     async function loadUsers() {
-      const { data, error } = await supabase.from('profiles').select('*').order('nickname');
-      
-      if (error) {
+      // 1. Загружаем пользователей
+      const { data: users, error: userError } = await supabase.from('profiles').select('*').order('nickname');
+      if (userError) {
         document.getElementById('userList').innerHTML = '<p style="color: red;">Ошибка загрузки данных</p>';
         return;
       }
+      allUsers = users;
 
-      allUsers = data;
+      // 2. Загружаем все заявки со статусом 'pending' (в ожидании)
+      const { data: payouts, error: payoutError } = await supabase
+        .from('payout_requests')
+        .select('discord, id')
+        .eq('status', 'pending');
+
+      if (!payoutError && payouts) {
+        // Считаем, сколько заявок у каждого Discord ID
+        pendingCounts = {};
+        payouts.forEach(req => {
+          if (req.discord) {
+            pendingCounts[req.discord] = (pendingCounts[req.discord] || 0) + 1;
+          }
+        });
+      }
+
       renderUsers();
     }
 
@@ -179,6 +202,16 @@
           displayName = displayName.split('@')[0];
         }
 
+        // Проверяем, есть ли у этого игрока непрочитанные заявки
+        const discordId = user.discord_id || user.id;
+        const count = pendingCounts[discordId] || 0;
+        
+        // Формируем кнопку с бейджем (если count > 0)
+        let badgeHtml = '';
+        if (count > 0) {
+          badgeHtml = `<span class="badge">${count}</span>`;
+        }
+
         card.innerHTML = `
           <div class="user-top">
             <div class="user-info-col">
@@ -189,7 +222,9 @@
               <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
                 <span class="user-role">(${user.role})</span>
                 <span class="user-balance">${(user.balance || 0).toLocaleString('ru-RU')} $</span>
-                <button class="btn-action" style="background: var(--gold); color: #000;" onclick="loadPayouts('${user.discord_id || user.id}', '${displayName}')">📋 Запросы на выплаты</button>
+                <button class="btn-payouts" onclick="loadPayouts('${discordId}', '${displayName}')">
+                  📋 Запросы на выплаты ${badgeHtml}
+                </button>
               </div>
             </div>
             <div>
@@ -209,36 +244,39 @@
             <button class="btn-action btn-reset" onclick="changeBalance('${user.id}', false)">Обнулить (0)</button>
           </div>
 
-          <!-- БЛОК ДЛЯ ЗАЯВОК (Скрытый по умолчанию) -->
+          <!-- БЛОК ДЛЯ ЗАЯВОК -->
           <div class="payouts-block" id="payouts-block-${user.id}">
             <div class="payouts-title">
               <span>📋 Заявки на выплату от ${displayName}</span>
               <button class="btn-close-payouts" onclick="closePayouts('${user.id}')">✖ Закрыть</button>
             </div>
-            <div id="payouts-content-${user.id}">
-              <!-- Сюда динамически вставляются таблицы -->
-            </div>
+            <div id="payouts-content-${user.id}"></div>
           </div>
         `;
         list.appendChild(card);
       });
     }
 
-    // Загрузка заявок для конкретного игрока
-    window.loadPayouts = async function(discordId, name) {
-      const block = document.getElementById(`payouts-block-${discordId}`);
-      const content = document.getElementById(`payouts-content-${discordId}`);
+    window.loadPayouts = async function(discordId, name, userId) {
+      // Находим ID блока по нику (так как передаем строку)
+      const block = document.querySelector(`.payouts-block[id$="${name.replace(/\s/g, '')}"]`); 
+      // Проще найти по кнопке, но для надежности используем поиск по контенту
       
-      // Если блок уже открыт, просто переключаем его
-      if (block.classList.contains('active')) {
-        block.classList.remove('active');
+      // Ищем сам блок через кнопку, на которую нажали
+      const btn = event.currentTarget;
+      const card = btn.closest('.user-card');
+      const payoutsBlock = card.querySelector('.payouts-block');
+      const content = payoutsBlock.querySelector('[id^="payouts-content-"]');
+      
+      if (payoutsBlock.classList.contains('active')) {
+        payoutsBlock.classList.remove('active');
         return;
       }
 
-      // Закрываем все остальные открытые блоки
+      // Закрываем остальные
       document.querySelectorAll('.payouts-block').forEach(el => el.classList.remove('active'));
 
-      block.classList.add('active');
+      payoutsBlock.classList.add('active');
       content.innerHTML = '<p style="color: var(--muted);">Загрузка...</p>';
 
       const { data, error } = await supabase
@@ -257,7 +295,6 @@
         return;
       }
 
-      // Формируем таблицу
       let html = `<table class="payouts-table">
         <thead>
           <tr>
@@ -301,11 +338,11 @@
       content.innerHTML = html;
     };
 
-    window.closePayouts = function(id) {
-      document.getElementById(`payouts-block-${id}`).classList.remove('active');
+    window.closePayouts = function(userId) {
+      const block = document.getElementById(`payouts-block-${userId}`);
+      if (block) block.classList.remove('active');
     };
 
-    // Обновление статуса заявки (Одобрение/Отклонение)
     window.updateRequestStatus = async function(requestId, newStatus, discordId, name) {
       const btn = event.target;
       btn.disabled = true;
@@ -323,11 +360,11 @@
       } else {
         // Перезагружаем блок с заявками
         window.loadPayouts(discordId, name);
-        // Можно добавить логику начисления баланса, если статус 'approved'
+        // Обновляем счетчики бейджей
+        loadUsers(); 
       }
     };
 
-    // Сохранение нового никнейма
     window.saveNickname = async function(userId) {
       const newName = document.getElementById(`nick-${userId}`).value.trim();
       if (!newName) { alert('Никнейм не может быть пустым'); return; }
@@ -342,7 +379,6 @@
       }
     };
 
-    // Смена роли
     window.changeRole = async function(userId, newRole) {
       const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
       if (error) {
@@ -353,7 +389,6 @@
       }
     };
 
-    // Изменение баланса
     window.changeBalance = async function(userId, isAdd) {
       const input = document.getElementById(`balance-${userId}`);
       let amount = parseInt(input.value) || 0;
