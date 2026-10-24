@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Админ-панель — La Muerte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Overpass', sans-serif; background: #0a0a0a; color: #eaeaea; padding: 2rem; }
+    h1 { color: #c0392b; text-align: center; margin-bottom: 2rem; }
+    .user-card { background: #111; border: 1px solid #222; border-left: 3px solid #c0392b; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .user-info { display: flex; gap: 1rem; align-items: center; }
+    .user-name { font-weight: 700; font-size: 1.1rem; }
+    .user-role { color: #d4af37; font-weight: 600; }
+    select { padding: 0.5rem; background: #050505; border: 1px solid #333; color: #fff; border-radius: 4px; }
+    .btn { padding: 0.5rem 1rem; background: #c0392b; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    .back-link { display: block; text-align: center; margin-top: 2rem; color: #666; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h1>Управление участниками</h1>
+  <div id="usersList"></div>
+  <a href="profile.html" class="back-link">← В личный кабинет</a>
+
+  <script>
+    const currentUser = localStorage.getItem('lm_user');
+    const allUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
+
+    // ПРОВЕРКА: Если ты не Админ, тебя выкинет отсюда
+    if (!allUsers[currentUser] || allUsers[currentUser].role !== 'Администратор') {
+      document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh;">Доступ запрещён!</h1><p style="text-align:center;">Вы не Администратор.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
+    } else {
+      // Отрисовка списка
+      renderUsers();
+    }
+
+    function renderUsers() {
+      const list = document.getElementById('usersList');
+      list.innerHTML = '';
+
+      Object.keys(allUsers).forEach(user => {
+        const data = allUsers[user];
+        
+        const card = document.createElement('div');
+        card.className = 'user-card';
+        card.innerHTML = `
+          <div class="user-info">
+            <span class="user-name">${user}</span>
+            <span class="user-role">(Текущая роль: ${data.role})</span>
+          </div>
+          <div>
+            <select onchange="changeRole('${user}', this.value)">
+              <option value="Боец" ${data.role === 'Боец' ? 'selected' : ''}>Боец</option>
+              <option value="Заместитель" ${data.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
+              <option value="Начальник" ${data.role === 'Начальник' ? 'selected' : ''}>Начальник</option>
+              <option value="Администратор" ${data.role === 'Администратор' ? 'selected' : ''}>Администратор</option>
+            </select>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function changeRole(user, newRole) {
+      allUsers[user].role = newRole;
+      localStorage.setItem('lm_users', JSON.stringify(allUsers));
+      // Обновляем страницу, чтобы увидеть изменения
+      location.reload();
+    }
+  </script>
+</body>
+</html>
