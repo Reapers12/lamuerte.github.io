@@ -4,63 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Контракты — La Muerte</title>
-  
   <script>
-    if (localStorage.getItem('theme') === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
   </script>
-
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
       --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32; --blue: #3498db;
       --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
-
     html.dark {
       --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
       --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
       --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
       --bg-overlay: rgba(0, 0, 0, 0.85);
     }
-
     html, body { transition: background 0.4s ease, color 0.4s ease; }
-    body {
-      font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed;
-      background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative;
-    }
+    body { font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed; background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative; }
     body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
 
-    /* ===== Шапка ===== */
-    header {
-      background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
-      transition: background 0.4s ease, border-color 0.4s ease;
-    }
+    header { background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10; transition: 0.4s; }
     header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
     header .logo span { color: var(--accent); }
-    
     .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
     nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem; }
-    
-    nav a {
-      position: relative; color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500;
-      padding: 0.35rem 0.75rem; border-radius: 6px; overflow: hidden; white-space: nowrap; transition: 0.2s;
-    }
+    nav a { position: relative; color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; padding: 0.35rem 0.75rem; border-radius: 6px; overflow: hidden; white-space: nowrap; transition: 0.2s; }
     nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35); }
     nav a.active { color: var(--text); background: rgba(192, 57, 43, 0.14); }
-
-    .profile-btn {
-      color: var(--gold) !important; font-weight: 700 !important; margin-left: 0.5rem;
-      border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important;
-    }
+    .profile-btn { color: var(--gold) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
     .profile-btn:hover { background: transparent !important; box-shadow: none !important; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
-
-    /* Молнии */
     nav a .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
     nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
     nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
@@ -71,8 +45,6 @@
     nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
     nav a:hover .spark.s2 { animation-delay: 0.12s; }
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
-
-    /* Кнопка темы */
     .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
     .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
@@ -80,12 +52,10 @@
     html.dark .theme-btn .icon-sun { display: none; }
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
-
     @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
     @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
     @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
-    /* ===== Контент ===== */
     .page-hero { padding: 4rem 2rem 1rem; text-align: center; position: relative; }
     .page-hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.3), transparent 60%); pointer-events: none; }
     .page-hero h1 { font-size: clamp(1.75rem, 4.5vw, 2.5rem); font-weight: 800; color: var(--text); margin-bottom: 0.75rem; position: relative; }
@@ -94,134 +64,79 @@
 
     section.block { padding: 0.4rem 2rem; max-width: 960px; margin: 0 auto; }
     .accordion { max-width: 700px; margin: 0 auto; }
-
-    .accordion-header {
-      font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.5px;
-      display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
-      padding: 0.45rem 1rem; background: var(--panel); backdrop-filter: blur(6px);
-      border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px;
-      cursor: pointer; user-select: none; position: relative; overflow: hidden; transition: 0.2s;
-    }
+    .accordion-header { font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.5px; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 1rem; background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; cursor: pointer; user-select: none; position: relative; overflow: hidden; transition: 0.2s; }
     .accordion-header:hover { border-color: var(--accent); transform: translateX(4px); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.4), 0 0 20px rgba(192, 57, 43, 0.35); }
     .accordion-header .header-left { display: flex; align-items: center; gap: 0.5rem; position: relative; z-index: 2; }
     .accordion-header .icon { font-size: 1.15rem; line-height: 1; }
     .accordion-header .arrow { font-size: 0.75rem; line-height: 1; color: var(--accent); transition: transform 0.3s ease; margin-top: -1px; position: relative; z-index: 2; }
     .accordion-header.active .arrow { transform: rotate(180deg); }
-
     .accordion-header .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
     .accordion-header .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
     .accordion-header .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
     .accordion-header .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
     .accordion-header .spark { position: absolute; top: 50%; left: 0; width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 2px rgba(255, 230, 100, 0.9), 0 0 14px 4px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
-
     .accordion-header:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
     .accordion-header:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
     .accordion-header:hover .spark { animation: sparkFly 0.9s ease-out; }
     .accordion-header:hover .spark.s2 { animation-delay: 0.12s; }
     .accordion-header:hover .spark.s3 { animation-delay: 0.24s; }
-
     .accordion-content { overflow: hidden; height: 0; transition: height 0.3s ease, margin-top 0.2s ease; }
     .accordion-content.open { margin-top: 0.4rem; }
-
     .contracts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
     .contracts-list { display: flex; flex-direction: column; gap: 0.5rem; }
-
-    .contract-item {
-      background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent);
-      border-radius: 8px; padding: 0.5rem 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; transition: 0.2s;
-    }
+    .contract-item { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 0.5rem 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; transition: 0.2s; }
     .contract-item:hover { transform: translateX(6px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(192, 57, 43, 0.2); }
     .contract-item.centered { grid-column: 1 / -1; justify-content: center; gap: 1rem; }
     .contract-item.centered .contract-info { flex: 0 0 auto; justify-content: center; }
     .contract-item.centered .contract-payment { flex: 0 0 auto; }
-
     .contract-info { display: flex; align-items: center; gap: 0.6rem; flex: 1; }
     .contract-icon { font-size: 1.35rem; line-height: 1; flex-shrink: 0; }
     .contract-name { font-weight: 600; color: var(--text); font-size: 0.9rem; letter-spacing: 0.3px; }
     .contract-payment { font-weight: 800; color: var(--gold); font-size: 0.9rem; letter-spacing: 0.3px; white-space: nowrap; text-shadow: 0 0 12px rgba(212, 175, 55, 0.3); }
-
     .job-card { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 0.5rem; transition: 0.2s; }
     .job-card:last-child { margin-bottom: 0; }
     .job-card:hover { border-color: var(--accent); transform: translateX(4px); }
-
     .job-title { font-weight: 700; color: var(--text); font-size: 1rem; letter-spacing: 0.3px; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
     .job-title .icon { font-size: 1.25rem; }
-
     .job-row { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0; font-size: 0.9rem; }
     .job-row .label { color: var(--muted); font-weight: 500; }
     .job-row .value { color: var(--text); font-weight: 700; }
     .job-row .value.gold { color: var(--gold); text-shadow: 0 0 12px rgba(212, 175, 55, 0.3); }
     .job-row .value.premium { color: var(--green); text-shadow: 0 0 12px rgba(76, 175, 80, 0.3); }
     .job-row .value.cd { color: var(--accent); }
-
     .job-dishes { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border); }
     .job-dishes .dishes-label { display: block; color: var(--muted); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; }
     .job-dishes ul { list-style: none; padding: 0; }
     .job-dishes li { padding: 0.15rem 0; color: var(--text); font-size: 0.9rem; }
     .job-dishes li::before { content: "▸ "; color: var(--accent); font-weight: 700; margin-right: 0.25rem; }
-
     .back-block { text-align: center; padding: 1.5rem 2rem 3rem; }
     .btn-back { display: inline-block; padding: 0.7rem 1.5rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; transition: 0.2s; }
     .btn-back:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-
     footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
     footer span { color: var(--accent); }
-
-    /* ===== МОДАЛЬНОЕ ОКНО С ФОРМОЙ ===== */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(6px); z-index: 100; justify-content: center; align-items: center; padding: 2rem;
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(6px); z-index: 100; justify-content: center; align-items: center; padding: 2rem; }
     .modal-overlay.active { display: flex; }
-    .modal-content {
-      background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent);
-      border-radius: 12px; padding: 2.5rem; max-width: 500px; width: 100%; position: relative;
-      max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    }
-    .modal-close {
-      position: absolute; top: 1rem; right: 1rem; background: transparent; border: none;
-      color: var(--muted); font-size: 1.75rem; cursor: pointer; transition: 0.2s;
-    }
+    .modal-content { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 12px; padding: 2.5rem; max-width: 500px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; color: var(--muted); font-size: 1.75rem; cursor: pointer; transition: 0.2s; }
     .modal-close:hover { color: var(--accent); transform: rotate(90deg); }
-    
     .form-group { margin-bottom: 1.25rem; }
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text);
-      border-radius: 6px; font-family: inherit; font-size: 0.95rem; transition: border 0.2s;
-    }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; font-size: 0.95rem; transition: border 0.2s; }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
     .form-group textarea { resize: vertical; min-height: 80px; }
-
-    .modal-submit {
-      width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none;
-      border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; letter-spacing: 1px;
-    }
+    .modal-submit { width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; letter-spacing: 1px; }
     .modal-submit:hover { background: #a93226; transform: translateY(-2px); }
     .modal-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
     .status-msg { text-align: center; margin-top: 1rem; font-weight: 600; display: none; }
     .status-msg.success { color: var(--green); display: block; }
     .status-msg.error { color: var(--accent); display: block; }
-
-    @media (max-width: 850px) {
-      header { flex-direction: column; align-items: flex-start; }
-      .header-right { width: 100%; justify-content: space-between; }
-      nav { justify-content: flex-start; }
-    }
-    @media (max-width: 600px) {
-      .contracts-grid { grid-template-columns: 1fr; }
-      .contract-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
-      .contract-payment { align-self: flex-end; }
-      .accordion-header { font-size: 1rem; padding: 0.4rem 0.85rem; }
-      .modal-content { padding: 1.5rem; }
-    }
+    @media (max-width: 850px) { header { flex-direction: column; align-items: flex-start; } .header-right { width: 100%; justify-content: space-between; } nav { justify-content: flex-start; } }
+    @media (max-width: 600px) { .contracts-grid { grid-template-columns: 1fr; } .contract-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; } .contract-payment { align-self: flex-end; } .accordion-header { font-size: 1rem; padding: 0.4rem 0.85rem; } .modal-content { padding: 1.5rem; } }
   </style>
 </head>
 <body>
   <header>
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
-    
     <div class="header-right">
       <nav>
         <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
@@ -229,7 +144,6 @@
         <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="contracts.html" class="active">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        
         <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
         <button class="theme-btn" id="themeToggle" title="Переключить тему">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
@@ -238,11 +152,9 @@
       </nav>
     </div>
   </header>
-
-  <section class="page-hero">
+    <section class="page-hero">
     <h1>Контракты <em>La Muerte</em></h1>
     <p>Актуальные цены на контракты в семье!</p>
-
     <button onclick="openForm()" style="display: inline-block; margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; text-decoration: none; font-weight: 700; font-family: inherit; font-size: 1rem; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
       📝 Подать заявку на выплаты
     </button>
@@ -486,9 +398,10 @@
           <input type="url" id="screenshot" placeholder="https://imgur.com/..." required>
         </div>
 
+        <!-- ВАЖНОЕ ПОЛЕ: DISCORD ID -->
         <div class="form-group">
-          <label>Ваш Discord</label>
-          <input type="text" id="discord" placeholder="Например: username" required>
+          <label>Ваш Discord ID (цифры, не ник)</label>
+          <input type="text" id="discordId" placeholder="Например: 123456789012345678" required>
         </div>
 
         <div class="form-group">
@@ -511,7 +424,6 @@
 
     const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563566473048363151/VXoV8tvq2aWftQ1gdaM7_x8jUK8ZA7PrNXF4ZwLjJJwp-QyL9HDetom-diFpjELUCtbY';
 
-    // Тема
     const toggleBtn = document.getElementById('themeToggle');
     if (toggleBtn) {
       toggleBtn.addEventListener('click', () => {
@@ -520,7 +432,6 @@
       });
     }
 
-    // Аккордеон
     window.toggleAccordion = function(header) {
       header.classList.toggle('active');
       const content = header.nextElementSibling;
@@ -556,7 +467,6 @@
       document.getElementById('formModal').classList.remove('active');
     }
 
-    // Отправка формы
     document.getElementById('payoutForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
@@ -568,7 +478,7 @@
       const details = document.getElementById('details').value.trim();
       const reward = parseInt(document.getElementById('reward').value);
       const screenshot = document.getElementById('screenshot').value.trim();
-      const discord = document.getElementById('discord').value.trim();
+      const discordId = document.getElementById('discordId').value.trim();
       const comment = document.getElementById('comment').value.trim() || 'Нет';
 
       btn.disabled = true;
@@ -576,7 +486,6 @@
       statusMsg.className = 'status-msg';
       statusMsg.style.display = 'none';
 
-      // 1. Отправляем в Discord
       const payload = {
         username: "La Muerte | Выплаты",
         avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
@@ -585,7 +494,7 @@
           color: 0xc0392b,
           fields: [
             { name: "👤 Никнейм", value: nickname, inline: true },
-            { name: "🎮 Discord", value: discord, inline: true },
+            { name: "🎮 Discord ID", value: discordId, inline: true },
             { name: "📂 Категория", value: category, inline: false },
             { name: "📋 Выполнено", value: details, inline: false },
             { name: "💵 Сумма", value: reward + " $", inline: true },
@@ -605,7 +514,6 @@
           body: JSON.stringify(payload)
         });
 
-        // 2. Сохраняем в Supabase
         const { error } = await supabase
           .from('payout_requests')
           .insert([{
@@ -614,7 +522,7 @@
             details: details,
             amount: reward,
             screenshot: screenshot,
-            discord: discord,
+            discord: discordId,
             comment: comment,
             status: 'pending'
           }]);
