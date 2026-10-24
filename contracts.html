@@ -370,7 +370,7 @@
     <div class="modal-content">
       <button class="modal-close" onclick="closeForm()">×</button>
       <h2 style="text-align: center; margin-bottom: 0.5rem;">Заявка на выплаты</h2>
-      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Заполни форму, и заявка улетит в Discord и Админу</p>
+      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Заполни форму, и заявка улетит Админу</p>
 
       <form id="payoutForm">
         <div class="form-group">
@@ -424,7 +424,7 @@
           <textarea id="comment" placeholder="Любая дополнительная информация..."></textarea>
         </div>
 
-        <button type="submit" class="modal-submit" id="submitBtn">Отправить в Discord</button>
+        <button type="submit" class="modal-submit" id="submitBtn">Отправить заявку</button>
         <p class="status-msg" id="statusMsg"></p>
       </form>
     </div>
@@ -437,7 +437,7 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ВАШ ВЕБХУК (БЕЗ NO-CORS)
+    // ВАШ НОВЫЙ ВЕБХУК
     const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563663528131428535/bKmM1iMBGXyK-0s-ilngZ7f-ZwDa5j4AhivQS56TlLHLgj3dxJZEZ0wx5YAJMcCbh4Zi';
 
     const toggleBtn = document.getElementById('themeToggle');
@@ -621,7 +621,7 @@
       };
 
       try {
-        // ПАРАЛЛЕЛЬНАЯ ОТПРАВКА БЕЗ NO-CORS
+        // БЕЗ mode: 'no-cors'
         const [discordRes, supabaseRes] = await Promise.all([
           fetch(DISCORD_WEBHOOK_URL, {
             method: 'POST',
@@ -658,7 +658,7 @@
         statusMsg.className = 'status-msg error';
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Отправить в Discord';
+        btn.textContent = 'Отправить заявку';
       }
     });
   </script>
