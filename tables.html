@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Таблицы — La Muerte</title>
+  <script>
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -90,7 +93,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 1rem;
+      gap: 0.5rem;
       flex: 1;
       flex-wrap: wrap;
     }
@@ -142,33 +145,20 @@
 
     /* Молнии в навигации */
     nav a .lightning {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 2px;
+      position: absolute; top: 0; bottom: 0; width: 2px;
       background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
       filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9));
-      opacity: 0;
-      pointer-events: none;
-      z-index: 1;
+      opacity: 0; pointer-events: none; z-index: 1;
     }
     nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
     nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
     nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
-
     nav a .spark {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 3px; height: 3px;
-      border-radius: 50%;
-      background: #fff;
+      position: absolute; top: 50%; left: 0; width: 3px; height: 3px;
+      border-radius: 50%; background: #fff;
       box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-50%);
-      z-index: 1;
+      opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1;
     }
-
     nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
     nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
     nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
@@ -180,15 +170,15 @@
       background: transparent;
       border: 1px solid var(--border);
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px; 
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       color: var(--muted);
       transition: all 0.3s ease;
-      margin-left: 0.5rem;
+      margin-left: 0.75rem;
       flex-shrink: 0;
     }
     
@@ -200,8 +190,8 @@
     }
 
     .theme-btn svg {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       transition: transform 0.4s ease;
     }
 
@@ -363,30 +353,34 @@
     <div class="header-right">
       <nav>
         <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="family.html">О семье <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
+        <!-- Изменено "О семье" на "Правила" -->
+        <a href="family.html">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        
         <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html" class="active">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         
-        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
-
-        <button class="theme-btn" id="themeToggle" title="Переключить тему">
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
+        <!-- Добавлены молнии для ЛК -->
+        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
       </nav>
+
+      <button class="theme-btn" id="themeToggle" title="Переключить тему">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
     </div>
   </header>
 
