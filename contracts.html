@@ -115,7 +115,7 @@
     footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
     footer span { color: var(--accent); }
     
-    /* МОДАЛЬНОЕ ОКНО (РАЗМЕРЫ ВОЗВРАЩЕНЫ) */
+    /* МОДАЛЬНОЕ ОКНО */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(6px); z-index: 100; justify-content: center; align-items: center; padding: 2rem; }
     .modal-overlay.active { display: flex; }
     .modal-content { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 12px; padding: 2.5rem; max-width: 500px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
@@ -135,9 +135,12 @@
     .status-msg.success { color: var(--green); display: block; }
     .status-msg.error { color: var(--accent); display: block; }
 
-    /* НОВОЕ ПОЛЕ ДЛЯ КОЛИЧЕСТВА */
+    /* Стили для поля количества и скрытия второго селекта */
     .qty-group { display: none; margin-bottom: 1.25rem; }
     .qty-group.visible { display: block; }
+    
+    .resource-group { display: none; }
+    .resource-group.visible { display: block; }
 
     @media (max-width: 850px) { header { flex-direction: column; align-items: flex-start; } .header-right { width: 100%; justify-content: space-between; } nav { justify-content: flex-start; } }
     @media (max-width: 600px) { .contracts-grid { grid-template-columns: 1fr; } .contract-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; } .contract-payment { align-self: flex-end; } .accordion-header { font-size: 1rem; padding: 0.4rem 0.85rem; } .modal-content { padding: 1.5rem; } }
@@ -377,60 +380,29 @@
           <input type="text" id="nickname" placeholder="Например: Kai Muerte" required>
         </div>
 
-        <!-- НАТИВНЫЙ СЕЛЕКТ С ГРУППАМИ -->
+        <!-- КАСКАДНЫЕ СЕЛЕКТЫ -->
         <div class="form-group">
-          <label>Что сдали?</label>
-          <select id="resourceSelect" required onchange="updateReward()">
-            <option value="" disabled selected>Выберите ресурс...</option>
-            <optgroup label="Металлургия">
-              <option value="Олово" data-price="33000">Олово (33.000$)</option>
-              <option value="Медь" data-price="25000">Медь (25.000$)</option>
-              <option value="Серебро" data-price="25000">Серебро (25.000$)</option>
-              <option value="Железо" data-price="25000">Железо (25.000$)</option>
-            </optgroup>
-            <optgroup label="Грибы">
-              <option value="Шампиньоны" data-price="95000">Шампиньоны (95.000$)</option>
-              <option value="Мухоморы" data-price="140000">Мухоморы (140.000$)</option>
-              <option value="Вёшенки" data-price="110000">Вёшенки (110.000$)</option>
-              <option value="Подболотники" data-price="170000">Подболотники (170.000$)</option>
-              <option value="Гипсизигусы" data-price="130000">Гипсизигусы (130.000$)</option>
-              <option value="Подберёзовики" data-price="200000">Подберёзовики (200.000$)</option>
-            </optgroup>
-            <optgroup label="Дерево">
-              <option value="Сосна" data-price="140000">Сосна (140.000$)</option>
-              <option value="Берёза" data-price="210000">Берёза (210.000$)</option>
-              <option value="Дуб" data-price="173000">Дуб (173.000$)</option>
-            </optgroup>
-            <optgroup label="Ферма">
-              <option value="Апельсины" data-price="88500">Апельсины (88.500$)</option>
-              <option value="Пшеница" data-price="102000">Пшеница (102.000$)</option>
-              <option value="Картофель" data-price="120000">Картофель (120.000$)</option>
-              <option value="Капуста" data-price="140000">Капуста (140.000$)</option>
-              <option value="Кукуруза" data-price="165000">Кукуруза (165.000$)</option>
-              <option value="Тыква" data-price="190000">Тыква (190.000$)</option>
-            </optgroup>
-            <optgroup label="Рыба (ранги)">
-              <option value="1 ранг" data-price="78300">1 ранг (78.300$)</option>
-              <option value="2 ранг" data-price="102600">2 ранг (102.600$)</option>
-              <option value="3 ранг" data-price="121500">3 ранг (121.500$)</option>
-              <option value="4 ранг" data-price="144000">4 ранг (144.000$)</option>
-              <option value="5 ранг" data-price="163800">5 ранг (163.800$)</option>
-              <option value="6 ранг" data-price="189000">6 ранг (189.000$)</option>
-              <option value="7 ранг" data-price="216000">7 ранг (216.000$)</option>
-              <option value="8 ранг" data-price="243000">8 ранг (243.000$)</option>
-            </optgroup>
-            <optgroup label="Ателье">
-              <option value="Ателье (Активация)" data-price="12000">Ателье (Активация) - 12.000$</option>
-              <option value="Ателье (1 форма)" data-price="1700" data-unit="true">Ателье (1 форма) - 1.700$</option>
-            </optgroup>
-            <optgroup label="Товар с самолёта">
-              <option value="Самолёт (Активация)" data-price="16000">Товар с самолёта (Активация) - 16.000$</option>
-              <option value="Самолёт (Выплата)" data-price="30000">Товар с самолёта (Выплата) - 30.000$</option>
-            </optgroup>
+          <label>Категория</label>
+          <select id="categorySelect" required onchange="updateCategories()">
+            <option value="" disabled selected>Выберите категорию...</option>
+            <option value="Металлургия">Металлургия</option>
+            <option value="Грибы">Грибы</option>
+            <option value="Дерево">Дерево</option>
+            <option value="Ферма">Ферма</option>
+            <option value="Рыба">Рыба</option>
+            <option value="Ателье">Ателье</option>
+            <option value="Товар с самолёта">Товар с самолёта</option>
           </select>
         </div>
 
-        <!-- НОВОЕ ПОЛЕ ДЛЯ КОЛИЧЕСТВА -->
+        <div class="form-group resource-group" id="resourceGroup">
+          <label>Что именно сдали?</label>
+          <select id="resourceSelect" required onchange="updateReward()">
+            <option value="" disabled selected>Сначала выберите категорию...</option>
+          </select>
+        </div>
+
+        <!-- ПОЛЕ ДЛЯ КОЛИЧЕСТВА -->
         <div class="form-group qty-group" id="qtyGroup">
           <label>Количество (шт.)</label>
           <input type="number" id="quantity" min="1" value="1" oninput="calculateTotal()">
@@ -514,12 +486,81 @@
       document.getElementById('formModal').classList.remove('active');
     }
 
+    // --- ЛОГИКА КАСКАДНЫХ СПИСКОВ ---
+
+    const RESOURCES = {
+      'Металлургия': [
+        { name: 'Олово', price: 33000 }, { name: 'Медь', price: 25000 },
+        { name: 'Серебро', price: 25000 }, { name: 'Железо', price: 25000 }
+      ],
+      'Грибы': [
+        { name: 'Шампиньоны', price: 95000 }, { name: 'Мухоморы', price: 140000 },
+        { name: 'Вёшенки', price: 110000 }, { name: 'Подболотники', price: 170000 },
+        { name: 'Гипсизигусы', price: 130000 }, { name: 'Подберёзовики', price: 200000 }
+      ],
+      'Дерево': [
+        { name: 'Сосна', price: 140000 }, { name: 'Берёза', price: 210000 },
+        { name: 'Дуб', price: 173000 }
+      ],
+      'Ферма': [
+        { name: 'Апельсины', price: 88500 }, { name: 'Пшеница', price: 102000 },
+        { name: 'Картофель', price: 120000 }, { name: 'Капуста', price: 140000 },
+        { name: 'Кукуруза', price: 165000 }, { name: 'Тыква', price: 190000 }
+      ],
+      'Рыба': [
+        { name: '1 ранг', price: 78300 }, { name: '2 ранг', price: 102600 },
+        { name: '3 ранг', price: 121500 }, { name: '4 ранг', price: 144000 },
+        { name: '5 ранг', price: 163800 }, { name: '6 ранг', price: 189000 },
+        { name: '7 ранг', price: 216000 }, { name: '8 ранг', price: 243000 }
+      ],
+      'Ателье': [
+        { name: 'Активация', price: 12000 }, 
+        { name: '1 форма', price: 1700, unit: true } 
+      ],
+      'Товар с самолёта': [
+        { name: 'Активация', price: 16000 }, 
+        { name: 'Выплата', price: 30000 }
+      ]
+    };
+
     let currentBasePrice = 0;
 
-    // Обновляем логику при выборе
+    // При выборе категории заполняем второй селект
+    window.updateCategories = function() {
+      const category = document.getElementById('categorySelect').value;
+      const resSelect = document.getElementById('resourceSelect');
+      const resGroup = document.getElementById('resourceGroup');
+      
+      // Очищаем старые опции
+      resSelect.innerHTML = '<option value="" disabled selected>Выберите ресурс...</option>';
+      
+      if (!category) {
+        resGroup.classList.remove('visible');
+        return;
+      }
+      
+      resGroup.classList.add('visible');
+      
+      const items = RESOURCES[category] || [];
+      items.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.name;
+        opt.textContent = `${item.name} (${item.price.toLocaleString('ru-RU')}$)`;
+        opt.dataset.price = item.price;
+        if (item.unit) opt.dataset.unit = "true";
+        resSelect.appendChild(opt);
+      });
+      
+      // Сбрасываем поля ниже
+      document.getElementById('qtyGroup').classList.remove('visible');
+      document.getElementById('reward').value = '';
+      currentBasePrice = 0;
+    };
+
+    // При выборе ресурса подставляем цену
     window.updateReward = function() {
-      const select = document.getElementById('resourceSelect');
-      const selectedOption = select.options[select.selectedIndex];
+      const resSelect = document.getElementById('resourceSelect');
+      const selectedOption = resSelect.options[resSelect.selectedIndex];
       
       currentBasePrice = parseInt(selectedOption.getAttribute('data-price')) || 0;
       const isUnit = selectedOption.getAttribute('data-unit') === 'true';
@@ -529,7 +570,7 @@
 
       if (isUnit) {
         qtyGroup.classList.add('visible');
-        qtyInput.value = 1; // сброс на 1
+        qtyInput.value = 1;
       } else {
         qtyGroup.classList.remove('visible');
         qtyInput.value = 1;
@@ -555,6 +596,7 @@
       const statusMsg = document.getElementById('statusMsg');
       
       const nickname = document.getElementById('nickname').value.trim();
+      const category = document.getElementById('categorySelect').value;
       const resource = document.getElementById('resourceSelect').value;
       const reward = parseInt(document.getElementById('reward').value);
       
@@ -570,7 +612,6 @@
       statusMsg.className = 'status-msg';
       statusMsg.style.display = 'none';
 
-      // Если есть количество, добавляем в название
       const displayResource = isQtyVisible ? `${resource} (${qty} шт.)` : resource;
 
       const payload = {
@@ -582,9 +623,10 @@
           fields: [
             { name: "👤 Никнейм", value: nickname, inline: true },
             { name: "🎮 Discord ID", value: discordId, inline: true },
-            { name: "📂 Ресурс", value: displayResource, inline: false },
+            { name: "📂 Категория", value: category, inline: true },
+            { name: "📦 Ресурс", value: displayResource, inline: true },
             { name: "💵 Сумма", value: reward + " $", inline: true },
-            { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: true },
+            { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: false },
             { name: "💬 Комментарий", value: comment, inline: false }
           ],
           image: { url: screenshot },
@@ -604,8 +646,8 @@
           .from('payout_requests')
           .insert([{
             nickname: nickname,
-            category: resource,
-            details: displayResource,
+            category: category, 
+            details: displayResource,  
             amount: reward,
             screenshot: screenshot,
             discord: discordId,
@@ -619,8 +661,8 @@
         statusMsg.className = 'status-msg success';
         
         this.reset();
+        document.getElementById('resourceGroup').classList.remove('visible');
         document.getElementById('qtyGroup').classList.remove('visible');
-        document.getElementById('quantity').value = 1;
         document.getElementById('reward').value = '';
         currentBasePrice = 0;
 
