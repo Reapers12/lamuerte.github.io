@@ -16,9 +16,13 @@
     .user-name { font-weight: 700; font-size: 1.1rem; }
     .user-role { color: var(--gold); font-weight: 600; font-size: 0.9rem; }
     
+    .balance-box { display: flex; align-items: center; gap: 0.5rem; background: rgba(76, 175, 80, 0.1); padding: 0.3rem 0.8rem; border-radius: 6px; border: 1px solid rgba(76, 175, 80, 0.3); }
+    .balance-text { color: var(--green); font-weight: 700; font-size: 1rem; }
+    .btn-history { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+    .btn-history:hover { color: var(--accent); border-color: var(--accent); }
+    
     select { padding: 0.5rem; background: #050505; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; outline: none; }
     
-    /* Панель управления деньгами */
     .money-controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; background: rgba(0,0,0,0.3); padding: 0.5rem 1rem; border-radius: 6px; }
     .money-label { color: #999; font-size: 0.9rem; margin-right: 0.5rem; }
     .money-input { padding: 0.4rem; background: #050505; border: 1px solid #333; color: #fff; border-radius: 4px; width: 100px; font-family: inherit; }
@@ -28,6 +32,20 @@
     .btn-reset { background: var(--accent); color: #fff; }
     .btn-reset:hover { background: #a93226; }
     
+    /* Модальное окно истории */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 100; justify-content: center; align-items: center; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+    .modal-close:hover { color: var(--accent); }
+    .modal h2 { color: #fff; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .history-list { list-style: none; }
+    .history-list li { padding: 0.5rem 0; border-bottom: 1px dashed #333; display: flex; justify-content: space-between; font-size: 0.9rem; }
+    .history-list li:last-child { border-bottom: none; }
+    .history-list .h-date { color: var(--muted); font-size: 0.8rem; }
+    .history-list .h-amount.add { color: var(--green); font-weight: 700; }
+    .history-list .h-amount.reset { color: var(--accent); font-weight: 700; }
+    
     .back-link { display: block; text-align: center; margin-top: 2rem; color: #666; text-decoration: none; transition: color 0.2s; }
     .back-link:hover { color: var(--accent); }
   </style>
@@ -36,6 +54,17 @@
   <h1>Управление участниками</h1>
   <div id="usersList">Загрузка...</div>
   <a href="profile.html" class="back-link">← Вернуться в личный кабинет</a>
+
+  <!-- Модальное окно для истории -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeHistory()">×</button>
+      <h2 id="historyTitle">История</h2>
+      <ul class="history-list" id="historyList">
+        <li>Загрузка...</li>
+      </ul>
+    </div>
+  </div>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -48,15 +77,17 @@
       'Глава': 1, 'Администратор': 2, 'Заместитель': 3, 'Кровь Семьи': 4, 'Стажер': 5, 'Боец': 6
     };
 
+    let currentAdmin = null;
+
     async function init() {
       await new Promise(r => setTimeout(r, 500));
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) { window.location.href = 'login.html'; return; }
+      currentAdmin = session.user;
 
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', currentAdmin.id).single();
 
-      // Проверка прав: только Глава или Администратор
       if (!profile || (profile.role !== 'Глава' && profile.role !== 'Администратор')) {
         document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh; color:#c0392b;">Доступ запрещён!</h1><p style="text-align:center;">Вы не имеете прав на это действие.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
         return;
@@ -76,20 +107,22 @@
         return;
       }
 
-      // Сортировка по роли
       users.sort((a, b) => (rolePriority[a.role] || 99) - (rolePriority[b.role] || 99));
       
       users.forEach(user => {
         const card = document.createElement('div');
         card.className = 'user-card';
         
-        // Формируем карточку с полем для денег
         card.innerHTML = `
           <div class="user-main">
             <div class="user-info">
               <span class="user-name">${user.nickname}</span>
               <span class="user-role">(${user.role})</span>
-              <span style="color: var(--green); font-weight: 700; margin-left: 1rem;">Баланс: ${user.balance || 0} $</span>
+              
+              <div class="balance-box">
+                <span class="balance-text">${user.balance || 0} $</span>
+                <button class="btn-history" onclick="openHistory('${user.id}', '${user.nickname}')">История</button>
+              </div>
             </div>
             <div>
               <select onchange="changeRole('${user.id}', this.value)">
@@ -104,8 +137,8 @@
           <div class="money-controls">
             <span class="money-label">Управление балансом:</span>
             <input type="number" id="money-${user.id}" class="money-input" placeholder="Сумма">
-            <button class="btn-money btn-add" onclick="addMoney('${user.id}')">Начислить (+)</button>
-            <button class="btn-money btn-reset" onclick="resetMoney('${user.id}')">Обнулить (0)</button>
+            <button class="btn-money btn-add" onclick="addMoney('${user.id}', '${user.nickname}')">Начислить (+)</button>
+            <button class="btn-money btn-reset" onclick="resetMoney('${user.id}', '${user.nickname}')">Обнулить (0)</button>
           </div>
         `;
         list.appendChild(card);
@@ -119,7 +152,7 @@
     };
 
     // НАЧИСЛЕНИЕ ДЕНЕГ
-    window.addMoney = async function(userId) {
+    window.addMoney = async function(userId, nickname) {
       const input = document.getElementById(`money-${userId}`);
       const amount = parseInt(input.value);
 
@@ -128,33 +161,95 @@
         return;
       }
 
-      // Получаем текущий баланс
       const { data: userData } = await supabase.from('profiles').select('balance').eq('id', userId).single();
       const currentBalance = userData.balance || 0;
 
-      // Обновляем
+      // 1. Обновляем баланс
       const { error } = await supabase.from('profiles').update({ balance: currentBalance + amount }).eq('id', userId);
 
       if (error) {
         alert('Ошибка: ' + error.message);
       } else {
-        alert(`Успешно начислено ${amount} $!`);
-        loadUsers(); // Обновляем список на странице
+        // 2. Записываем в историю
+        await supabase.from('transactions').insert([{
+          admin_id: currentAdmin.id,
+          user_id: userId,
+          amount: amount,
+          type: 'add'
+        }]);
+
+        alert(`Успешно начислено ${amount} $ для ${nickname}!`);
+        loadUsers();
       }
     };
 
     // ОБНУЛЕНИЕ ДЕНЕГ
-    window.resetMoney = async function(userId) {
-      if (!confirm('Вы уверены, что хотите обнулить баланс этого участника?')) return;
+    window.resetMoney = async function(userId, nickname) {
+      if (!confirm(`Вы уверены, что хотите обнулить баланс ${nickname}?`)) return;
 
       const { error } = await supabase.from('profiles').update({ balance: 0 }).eq('id', userId);
 
       if (error) {
         alert('Ошибка: ' + error.message);
       } else {
-        alert('Баланс обнулен!');
-        loadUsers(); // Обновляем список на странице
+        // Записываем в историю
+        await supabase.from('transactions').insert([{
+          admin_id: currentAdmin.id,
+          user_id: userId,
+          amount: 0,
+          type: 'reset'
+        }]);
+
+        alert(`Баланс ${nickname} обнулен!`);
+        loadUsers();
       }
+    };
+
+    // ИСТОРИЯ ТРАНЗАКЦИЙ
+    window.openHistory = async function(userId, nickname) {
+      document.getElementById('historyTitle').textContent = `История: ${nickname}`;
+      const list = document.getElementById('historyList');
+      list.innerHTML = '<li>Загрузка...</li>';
+      
+      document.getElementById('historyModal').classList.add('active');
+
+      // Получаем записи из таблицы transactions для этого пользователя
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(15); // Показываем последние 15 операций
+
+      if (error) {
+        list.innerHTML = `<li style="color:red;">Ошибка: ${error.message}</li>`;
+        return;
+      }
+
+      if (data.length === 0) {
+        list.innerHTML = '<li style="color:#666;">Пока нет операций</li>';
+        return;
+      }
+
+      list.innerHTML = '';
+      data.forEach(t => {
+        const date = new Date(t.created_at).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        
+        let text = '';
+        if (t.type === 'add') text = `+${t.amount} $`;
+        else if (t.type === 'reset') text = `Обнуление`;
+
+        list.innerHTML += `
+          <li>
+            <span class="h-date">${date}</span>
+            <span class="h-amount ${t.type}">${text}</span>
+          </li>
+        `;
+      });
+    };
+
+    window.closeHistory = function() {
+      document.getElementById('historyModal').classList.remove('active');
     };
 
     init();
