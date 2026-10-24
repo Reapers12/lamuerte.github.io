@@ -53,6 +53,10 @@
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
     .btn-admin { border-color: var(--accent) !important; color: var(--accent) !important; font-weight: 700 !important; }
     .btn-admin:hover { background: rgba(192, 57, 43, 0.1) !important; }
+    
+    /* Стили для кнопки восстановления */
+    .btn-restore { border-color: #f39c12 !important; color: #f39c12 !important; font-weight: 700 !important; }
+    .btn-restore:hover { background: rgba(243, 156, 18, 0.1) !important; }
 
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
     .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: #fff; }
@@ -107,10 +111,13 @@
         <div class="profile-name" id="displayName">Загрузка...</div>
         <div class="profile-status" id="userRoleDisplay">Загрузка...</div>
         
-        <!-- Кнопка Админа (скрыта по умолчанию) -->
+        <!-- Кнопки управления -->
         <a href="admin.html" id="adminPanelBtn" class="btn-outline btn-admin" style="display: none;">⚙️ Панель управления</a>
         
-        <a href="#" class="btn-outline" onclick="resetProfile()" style="border-color: #333;">Сбросить профиль</a>
+        <!-- Кнопка восстановления прав (показывается всем) -->
+        <button id="restoreAdminBtn" class="btn-outline btn-restore" onclick="restoreAdmin()">🔧 Восстановить права Админа</button>
+        
+        <a href="#" class="btn-outline" onclick="resetProfile()" style="border-color: #333; margin-top: 0.5rem;">Сбросить профиль</a>
       </div>
 
       <div class="stats-card">
@@ -154,9 +161,13 @@
     if (userData) {
       document.getElementById('userRoleDisplay').textContent = userData.role;
       
-      // Если Админ — показываем кнопку
+      // Если Админ — показываем кнопку панели управления и скрываем кнопку восстановления
       if (userData.role === 'Администратор') {
         document.getElementById('adminPanelBtn').style.display = 'block';
+        document.getElementById('restoreAdminBtn').style.display = 'none';
+      } else {
+        // Если не Админ — показываем кнопку восстановления
+        document.getElementById('restoreAdminBtn').style.display = 'block';
       }
     } else {
       document.getElementById('userRoleDisplay').textContent = 'Ошибка данных';
@@ -201,6 +212,16 @@
       if(confirm('Вы уверены? Все данные профиля будут удалены.')) {
         localStorage.clear();
         window.location.href = 'login.html';
+      }
+    }
+
+    // ФУНКЦИЯ ВОССТАНОВЛЕНИЯ ПРАВ АДМИНИСТРАТОРА
+    function restoreAdmin() {
+      if (userData) {
+        userData.role = 'Администратор';
+        localStorage.setItem('lm_users', JSON.stringify(allUsers));
+        alert('✅ Права Администратора успешно восстановлены! Страница сейчас перезагрузится.');
+        location.reload();
       }
     }
   </script>
