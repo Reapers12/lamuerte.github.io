@@ -8,7 +8,23 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* ===== Светлая тема (по умолчанию) ===== */
     :root {
+      --bg: #f4f4f7;
+      --panel: rgba(255, 255, 255, 0.92);
+      --border: #e0e0e6;
+      --text: #1a1a1a;
+      --muted: #666;
+      --accent: #c0392b;
+      --gold: #b8860b;
+      --green: #2e7d32;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --bg-image: none;
+      --bg-overlay: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ===== Тёмная тема ===== */
+    html.dark {
       --bg: #0a0a0a;
       --panel: rgba(17, 17, 17, 0.95);
       --border: #222;
@@ -17,12 +33,17 @@
       --accent: #c0392b;
       --gold: #d4af37;
       --green: #4caf50;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+      --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
+      --bg-overlay: rgba(0, 0, 0, 0.85);
     }
+
+    html, body { transition: background 0.4s ease, color 0.4s ease; }
 
     body {
       font-family: 'Overpass', sans-serif;
-      background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
-      background-color: #050505;
+      background: var(--bg-image) center/cover no-repeat fixed;
+      background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
@@ -33,13 +54,14 @@
       content: "";
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: var(--bg-overlay);
       z-index: -1;
       pointer-events: none;
+      transition: background 0.4s ease;
     }
 
     header {
-      background: rgba(5, 5, 5, 0.95);
+      background: var(--panel);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
       padding: 1rem 2rem;
@@ -51,6 +73,7 @@
       z-index: 10;
       flex-wrap: wrap;
       gap: 1rem;
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
 
     header .logo {
@@ -58,7 +81,7 @@
       font-weight: 800;
       font-size: 1.25rem;
       letter-spacing: 3px;
-      color: #fff;
+      color: var(--text);
       text-decoration: none;
       cursor: pointer;
       transition: opacity 0.2s;
@@ -89,13 +112,13 @@
     }
 
     nav a:hover {
-      color: #fff;
+      color: var(--text);
       background: rgba(192, 57, 43, 0.08);
       box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35);
     }
 
     nav a.active {
-      color: #fff;
+      color: var(--text);
       background: rgba(192, 57, 43, 0.14);
     }
 
@@ -117,14 +140,8 @@
       background: inherit;
       transform: skewX(-15deg);
     }
-    nav a .lightning.left {
-      left: 0;
-      transform: translateY(-100%) scaleY(0.6);
-    }
-    nav a .lightning.right {
-      right: 0;
-      transform: translateY(100%) scaleY(0.6);
-    }
+    nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
+    nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
 
     nav a .spark {
       position: absolute;
@@ -147,6 +164,82 @@
     nav a:hover .spark.s2 { animation-delay: 0.12s; }
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
 
+    /* ===== Переключатель День/Ночь ===== */
+    .spark-switch { display: inline-block; font-size: 20px; }
+    .spark-switch input { display: none; }
+
+    .spark-switch .track {
+      position: relative;
+      width: 5em;
+      height: 2.5em;
+      background: #080e27;
+      border-radius: 1.25em;
+      cursor: pointer;
+      overflow: hidden;
+      border: 0.1em solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 0.2em 0.5em rgba(0, 0, 0, 0.6), 0 0.2em 0.4em rgba(0, 0, 0, 0.2);
+      transition: all 0.4s ease;
+    }
+
+    .spark-switch .track::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #3478f6, #f5ba1f);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .spark-switch .knob {
+      position: absolute;
+      top: 0.15em;
+      left: 0.15em;
+      width: 2em;
+      height: 2em;
+      background: #f7f7f7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0.1em 0.3em rgba(0, 0, 0, 0.3);
+    }
+
+    .spark-switch .knob svg {
+      width: 1.2em;
+      height: 1.2em;
+      color: #272727;
+      transition: color 0.4s ease, transform 0.4s ease;
+    }
+
+    .spark-switch input:checked + .track {
+      border-color: rgba(245, 186, 31, 0.8);
+      box-shadow: inset 0 0.1em 0.3em rgba(0, 0, 0, 0.4), 0 0 0.6em 0.1em rgba(245, 186, 31, 0.4);
+    }
+
+    .spark-switch input:checked + .track .knob { transform: translateX(2.5em); }
+    .spark-switch input:checked + .track::before { opacity: 1; }
+    .spark-switch input:checked + .track .knob svg { color: #f5ba1f; transform: scale(1.1); }
+
+    .spark-switch .stars { position: absolute; inset: 0; z-index: 1; }
+    .spark-switch .star { position: absolute; background: #f7f7f7; border-radius: 50%; transition: width 0.3s, height 0.3s, background 0.3s, border-radius 0.3s; }
+
+    .spark-switch .star:nth-child(1) { top: 0.4em; left: 100%; width: 0.15em; height: 0.15em; animation: drift 3s linear infinite; }
+    .spark-switch .star:nth-child(2) { top: 1.2em; left: 100%; width: 0.2em;  height: 0.2em;  animation: drift 4s linear infinite 1s; }
+    .spark-switch .star:nth-child(3) { top: 2em;   left: 100%; width: 0.1em;  height: 0.1em;  animation: drift 2.5s linear infinite 0.5s; }
+    .spark-switch .star:nth-child(4) { top: 0.8em; left: 100%; width: 0.15em; height: 0.15em; animation: drift 5s linear infinite 2s; }
+
+    .spark-switch input:checked + .track .star { width: 1.5em; height: 0.1em; border-radius: 0.05em; background: rgba(255, 255, 255, 0.9); }
+
+    .spark-switch input:checked + .track .star:nth-child(1) { animation: warp 0.4s linear infinite; }
+    .spark-switch input:checked + .track .star:nth-child(2) { animation: warp 0.6s linear infinite 0.1s; }
+    .spark-switch input:checked + .track .star:nth-child(3) { animation: warp 0.3s linear infinite 0.2s; }
+    .spark-switch input:checked + .track .star:nth-child(4) { animation: warp 0.5s linear infinite 0.15s; }
+
+    @keyframes drift { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateX(-6em); opacity: 0; } }
+    @keyframes warp { 0% { transform: translateX(0) scaleX(1); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateX(-6em) scaleX(2); opacity: 0; } }
+
     .page-hero {
       padding: 4rem 2rem 1rem;
       text-align: center;
@@ -164,42 +257,28 @@
       font-weight: 800;
       font-size: clamp(1.75rem, 4.5vw, 2.5rem);
       letter-spacing: 1px;
-      color: #fff;
+      color: var(--text);
       margin-bottom: 0.75rem;
       position: relative;
-      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
     }
-    .page-hero h1 em {
-      color: var(--accent);
-      font-style: normal;
-    }
+    .page-hero h1 em { color: var(--accent); font-style: normal; }
     .page-hero p {
-      color: #ccc;
+      color: var(--muted);
       font-size: 0.95rem;
       max-width: 640px;
       margin: 0 auto;
       position: relative;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
     }
 
-    section.block {
-      padding: 0.4rem 2rem;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    .accordion {
-      max-width: 700px;
-      margin: 0 auto;
-    }
+    section.block { padding: 0.4rem 2rem; max-width: 960px; margin: 0 auto; }
+    .accordion { max-width: 700px; margin: 0 auto; }
 
     .accordion-header {
       font-family: 'Overpass', sans-serif;
       font-weight: 700;
       font-size: 1.05rem;
-      color: #fff;
+      color: var(--text);
       letter-spacing: 0.5px;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -214,7 +293,7 @@
       user-select: none;
       position: relative;
       overflow: hidden;
-      transition: border-color 0.2s, transform 0.2s, box-shadow 0.3s;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.3s, background 0.4s;
     }
 
     .accordion-header:hover {
@@ -223,38 +302,14 @@
       box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.4), 0 0 20px rgba(192, 57, 43, 0.35);
     }
 
-    .accordion-header .header-left {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      position: relative;
-      z-index: 2;
-    }
+    .accordion-header .header-left { display: flex; align-items: center; gap: 0.5rem; position: relative; z-index: 2; }
+    .accordion-header .icon { font-size: 1.15rem; line-height: 1; }
+    .accordion-header .arrow { font-size: 0.75rem; line-height: 1; color: var(--accent); transition: transform 0.3s ease; margin-top: -1px; position: relative; z-index: 2; }
+    .accordion-header.active .arrow { transform: rotate(180deg); }
 
-    .accordion-header .icon {
-      font-size: 1.15rem;
-      line-height: 1;
-    }
-
-    .accordion-header .arrow {
-      font-size: 0.75rem;
-      line-height: 1;
-      color: var(--accent);
-      transition: transform 0.3s ease;
-      margin-top: -1px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .accordion-header.active .arrow {
-      transform: rotate(180deg);
-    }
-
-    /* ===== Молнии на вкладках ===== */
     .accordion-header .lightning {
       position: absolute;
-      top: 0;
-      bottom: 0;
+      top: 0; bottom: 0;
       width: 2px;
       background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
       filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9));
@@ -262,28 +317,15 @@
       pointer-events: none;
       z-index: 1;
     }
-    .accordion-header .lightning::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: inherit;
-      transform: skewX(-15deg);
-    }
-    .accordion-header .lightning.left {
-      left: 0;
-      transform: translateY(-100%) scaleY(0.6);
-    }
-    .accordion-header .lightning.right {
-      right: 0;
-      transform: translateY(100%) scaleY(0.6);
-    }
+    .accordion-header .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
+    .accordion-header .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
+    .accordion-header .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
 
     .accordion-header .spark {
       position: absolute;
       top: 50%;
       left: 0;
-      width: 4px;
-      height: 4px;
+      width: 4px; height: 4px;
       border-radius: 50%;
       background: #fff;
       box-shadow: 0 0 8px 2px rgba(255, 230, 100, 0.9), 0 0 14px 4px rgba(192, 57, 43, 0.7);
@@ -299,45 +341,19 @@
     .accordion-header:hover .spark.s2 { animation-delay: 0.12s; }
     .accordion-header:hover .spark.s3 { animation-delay: 0.24s; }
 
-    /* ===== keyframes ===== */
-    @keyframes lightningSlideDown {
-      0%   { opacity: 0; transform: translateY(-100%) scaleY(0.6); }
-      30%  { opacity: 1; }
-      100% { opacity: 0; transform: translateY(100%) scaleY(1); }
-    }
-    @keyframes lightningSlideUp {
-      0%   { opacity: 0; transform: translateY(100%) scaleY(0.6); }
-      30%  { opacity: 1; }
-      100% { opacity: 0; transform: translateY(-100%) scaleY(1); }
-    }
-    @keyframes sparkFly {
-      0%   { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); }
-      25%  { opacity: 1; }
-      100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); }
-    }
+    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
+    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
+    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
-    /* ===== Аккордеон: JS-анимация через height ===== */
     .accordion-content {
       overflow: hidden;
       height: 0;
       transition: height 0.3s ease, margin-top 0.2s ease;
     }
+    .accordion-content.open { margin-top: 0.4rem; }
 
-    .accordion-content.open {
-      margin-top: 0.4rem;
-    }
-
-    .contracts-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-    }
-
-    .contracts-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+    .contracts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .contracts-list { display: flex; flex-direction: column; gap: 0.5rem; }
 
     .contract-item {
       background: var(--panel);
@@ -350,60 +366,17 @@
       justify-content: space-between;
       align-items: center;
       gap: 0.6rem;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s, background 0.4s;
     }
+    .contract-item:hover { transform: translateX(6px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(192, 57, 43, 0.2); }
+    .contract-item.centered { grid-column: 1 / -1; justify-content: center; gap: 1rem; }
+    .contract-item.centered .contract-info { flex: 0 0 auto; justify-content: center; }
+    .contract-item.centered .contract-payment { flex: 0 0 auto; }
 
-    .contract-item:hover {
-      transform: translateX(6px);
-      border-color: var(--accent);
-      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.2);
-    }
-
-    .contract-item.centered {
-      grid-column: 1 / -1;
-      justify-content: center;
-      gap: 1rem;
-    }
-
-    .contract-item.centered .contract-info {
-      flex: 0 0 auto;
-      justify-content: center;
-    }
-
-    .contract-item.centered .contract-payment {
-      flex: 0 0 auto;
-    }
-
-    .contract-info {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      flex: 1;
-    }
-
-    .contract-icon {
-      font-size: 1.35rem;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-
-    .contract-name {
-      font-family: 'Overpass', sans-serif;
-      font-weight: 600;
-      color: #fff;
-      font-size: 0.9rem;
-      letter-spacing: 0.3px;
-    }
-
-    .contract-payment {
-      font-family: 'Overpass', sans-serif;
-      font-weight: 800;
-      color: var(--gold);
-      font-size: 0.9rem;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-      text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
-    }
+    .contract-info { display: flex; align-items: center; gap: 0.6rem; flex: 1; }
+    .contract-icon { font-size: 1.35rem; line-height: 1; flex-shrink: 0; }
+    .contract-name { font-weight: 600; color: var(--text); font-size: 0.9rem; letter-spacing: 0.3px; }
+    .contract-payment { font-weight: 800; color: var(--gold); font-size: 0.9rem; letter-spacing: 0.3px; white-space: nowrap; text-shadow: 0 0 12px rgba(212, 175, 55, 0.3); }
 
     .job-card {
       background: var(--panel);
@@ -413,20 +386,14 @@
       border-radius: 8px;
       padding: 1rem 1.25rem;
       margin-bottom: 0.5rem;
-      transition: border-color 0.2s, transform 0.2s;
+      transition: border-color 0.2s, transform 0.2s, background 0.4s;
     }
-
     .job-card:last-child { margin-bottom: 0; }
-
-    .job-card:hover {
-      border-color: var(--accent);
-      transform: translateX(4px);
-    }
+    .job-card:hover { border-color: var(--accent); transform: translateX(4px); }
 
     .job-title {
-      font-family: 'Overpass', sans-serif;
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
       font-size: 1rem;
       letter-spacing: 0.3px;
       display: flex;
@@ -436,121 +403,44 @@
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--border);
     }
-
     .job-title .icon { font-size: 1.25rem; }
 
-    .job-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.25rem 0;
-      font-size: 0.9rem;
-    }
-
-    .job-row .label {
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .job-row .value {
-      color: #fff;
-      font-weight: 700;
-      font-family: 'Overpass', sans-serif;
-    }
-
-    .job-row .value.gold {
-      color: var(--gold);
-      text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
-    }
-
-    .job-row .value.premium {
-      color: #4caf50;
-      text-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
-    }
-
+    .job-row { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0; font-size: 0.9rem; }
+    .job-row .label { color: var(--muted); font-weight: 500; }
+    .job-row .value { color: var(--text); font-weight: 700; }
+    .job-row .value.gold { color: var(--gold); text-shadow: 0 0 12px rgba(212, 175, 55, 0.3); }
+    .job-row .value.premium { color: var(--green); text-shadow: 0 0 12px rgba(76, 175, 80, 0.3); }
     .job-row .value.cd { color: var(--accent); }
 
-    .job-dishes {
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
-      border-top: 1px dashed var(--border);
-    }
-
-    .job-dishes .dishes-label {
-      display: block;
-      color: var(--muted);
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 0.35rem;
-    }
-
+    .job-dishes { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border); }
+    .job-dishes .dishes-label { display: block; color: var(--muted); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; }
     .job-dishes ul { list-style: none; padding: 0; }
+    .job-dishes li { padding: 0.15rem 0; color: var(--text); font-size: 0.9rem; }
+    .job-dishes li::before { content: "▸ "; color: var(--accent); font-weight: 700; margin-right: 0.25rem; }
 
-    .job-dishes li {
-      padding: 0.15rem 0;
-      color: var(--text);
-      font-size: 0.9rem;
-    }
-
-    .job-dishes li::before {
-      content: "▸ ";
-      color: var(--accent);
-      font-weight: 700;
-      margin-right: 0.25rem;
-    }
-
-    .back-block {
-      text-align: center;
-      padding: 1.5rem 2rem 3rem;
-    }
-    .btn-back {
-      display: inline-block;
-      padding: 0.7rem 1.5rem;
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      transition: border-color 0.2s, color 0.2s, transform 0.15s;
-    }
-    .btn-back:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-2px);
-    }
+    .back-block { text-align: center; padding: 1.5rem 2rem 3rem; }
+    .btn-back { display: inline-block; padding: 0.7rem 1.5rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; transition: 0.2s; }
+    .btn-back:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
     footer {
-      background: rgba(5, 5, 5, 0.95);
+      background: var(--panel);
       backdrop-filter: blur(6px);
       border-top: 1px solid var(--border);
-      color: #666;
+      color: var(--muted);
       text-align: center;
       padding: 1.25rem;
       font-size: 0.85rem;
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
     footer span { color: var(--accent); }
 
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; }
       nav { gap: 0.25rem; }
-
       .contracts-grid { grid-template-columns: 1fr; }
-
-      .contract-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.4rem;
-      }
-
+      .contract-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
       .contract-payment { align-self: flex-end; }
-
-      .accordion-header {
-        font-size: 1rem;
-        padding: 0.4rem 0.85rem;
-      }
+      .accordion-header { font-size: 1rem; padding: 0.4rem 0.85rem; }
     }
   </style>
 </head>
@@ -560,53 +450,53 @@
     <nav>
       <a href="index.html">
         Главная
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </a>
       <a href="family.html">
         О семье
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </a>
       <a href="transport.html">
         О транспорте
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </a>
       <a href="contracts.html" class="active">
         Контракты
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
-      </a>
-      <a href="index.html">
-        Вступить в семью
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </a>
       <a href="tables.html">
         Таблицы
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
+      </a>
+      <!-- НОВАЯ КНОПКА: ЛИЧНЫЙ КАБИНЕТ -->
+      <a href="#" onclick="goToProfile(event)" style="color: var(--gold); font-weight: 700; margin-left: 0.5rem; border-left: 1px solid #333; padding-left: 1rem;">
+        👤 Личный кабинет
       </a>
     </nav>
+
+    <!-- Переключатель День/Ночь -->
+    <label class="spark-switch" title="Переключить тему">
+      <input type="checkbox" id="themeSwitch">
+      <span class="track">
+        <span class="knob">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+        </span>
+        <span class="stars">
+          <span class="star"></span>
+          <span class="star"></span>
+          <span class="star"></span>
+          <span class="star"></span>
+        </span>
+      </span>
+    </label>
   </header>
 
   <section class="page-hero">
@@ -623,42 +513,15 @@
           <span>Металлургия</span>
         </div>
         <span class="arrow">▼</span>
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
       <div class="accordion-content">
         <div class="contracts-grid">
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🔨</span>
-              <span class="contract-name">Олово</span>
-            </div>
-            <span class="contract-payment">33.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🔨</span>
-              <span class="contract-name">Медь</span>
-            </div>
-            <span class="contract-payment">25.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🔨</span>
-              <span class="contract-name">Серебро</span>
-            </div>
-            <span class="contract-payment">25.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🔨</span>
-              <span class="contract-name">Железо</span>
-            </div>
-            <span class="contract-payment">25.000$</span>
-          </div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🔨</span><span class="contract-name">Олово</span></div><span class="contract-payment">33.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🔨</span><span class="contract-name">Медь</span></div><span class="contract-payment">25.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🔨</span><span class="contract-name">Серебро</span></div><span class="contract-payment">25.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🔨</span><span class="contract-name">Железо</span></div><span class="contract-payment">25.000$</span></div>
         </div>
       </div>
     </div>
@@ -673,56 +536,17 @@
           <span>Грибы</span>
         </div>
         <span class="arrow">▼</span>
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
       <div class="accordion-content">
         <div class="contracts-grid">
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🍄‍🟫</span>
-              <span class="contract-name">Шампиньоны</span>
-            </div>
-            <span class="contract-payment">95.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🍄‍🟫</span>
-              <span class="contract-name">Мухоморы</span>
-            </div>
-            <span class="contract-payment">140.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🍄‍🟫</span>
-              <span class="contract-name">Вёшенки</span>
-            </div>
-            <span class="contract-payment">110.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🍄‍🟫</span>
-              <span class="contract-name">Подболотники</span>
-            </div>
-            <span class="contract-payment">170.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🍄‍🟫</span>
-              <span class="contract-name">Гипсизигусы</span>
-            </div>
-            <span class="contract-payment">130.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🍄‍🟫</span>
-              <span class="contract-name">Подберёзовики</span>
-            </div>
-            <span class="contract-payment">200.000$</span>
-          </div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🍄‍🟫</span><span class="contract-name">Шампиньоны</span></div><span class="contract-payment">95.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🍄‍🟫</span><span class="contract-name">Мухоморы</span></div><span class="contract-payment">140.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🍄‍🟫</span><span class="contract-name">Вёшенки</span></div><span class="contract-payment">110.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🍄‍🟫</span><span class="contract-name">Подболотники</span></div><span class="contract-payment">170.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🍄‍🟫</span><span class="contract-name">Гипсизигусы</span></div><span class="contract-payment">130.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🍄‍🟫</span><span class="contract-name">Подберёзовики</span></div><span class="contract-payment">200.000$</span></div>
         </div>
       </div>
     </div>
@@ -737,35 +561,14 @@
           <span>Дерево</span>
         </div>
         <span class="arrow">▼</span>
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
       <div class="accordion-content">
         <div class="contracts-grid">
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🌲</span>
-              <span class="contract-name">Сосна</span>
-            </div>
-            <span class="contract-payment">140.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🌲</span>
-              <span class="contract-name">Берёза</span>
-            </div>
-            <span class="contract-payment">210.000$</span>
-          </div>
-          <div class="contract-item centered">
-            <div class="contract-info">
-              <span class="contract-icon">🌲</span>
-              <span class="contract-name">Дуб</span>
-            </div>
-            <span class="contract-payment">173.000$</span>
-          </div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🌲</span><span class="contract-name">Сосна</span></div><span class="contract-payment">140.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🌲</span><span class="contract-name">Берёза</span></div><span class="contract-payment">210.000$</span></div>
+          <div class="contract-item centered"><div class="contract-info"><span class="contract-icon">🌲</span><span class="contract-name">Дуб</span></div><span class="contract-payment">173.000$</span></div>
         </div>
       </div>
     </div>
@@ -780,56 +583,17 @@
           <span>Ферма</span>
         </div>
         <span class="arrow">▼</span>
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
       <div class="accordion-content">
         <div class="contracts-grid">
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🍊</span>
-              <span class="contract-name">Апельсины</span>
-            </div>
-            <span class="contract-payment">88.500$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🌾</span>
-              <span class="contract-name">Пшеница</span>
-            </div>
-            <span class="contract-payment">102.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🥔</span>
-              <span class="contract-name">Картофель</span>
-            </div>
-            <span class="contract-payment">120.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🥬</span>
-              <span class="contract-name">Капуста</span>
-            </div>
-            <span class="contract-payment">140.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🌽</span>
-              <span class="contract-name">Кукуруза</span>
-            </div>
-            <span class="contract-payment">165.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🎃</span>
-              <span class="contract-name">Тыква</span>
-            </div>
-            <span class="contract-payment">190.000$</span>
-          </div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🍊</span><span class="contract-name">Апельсины</span></div><span class="contract-payment">88.500$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🌾</span><span class="contract-name">Пшеница</span></div><span class="contract-payment">102.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🥔</span><span class="contract-name">Картофель</span></div><span class="contract-payment">120.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🥬</span><span class="contract-name">Капуста</span></div><span class="contract-payment">140.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🌽</span><span class="contract-name">Кукуруза</span></div><span class="contract-payment">165.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🎃</span><span class="contract-name">Тыква</span></div><span class="contract-payment">190.000$</span></div>
         </div>
       </div>
     </div>
@@ -844,28 +608,13 @@
           <span>Ателье</span>
         </div>
         <span class="arrow">▼</span>
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
       <div class="accordion-content">
         <div class="contracts-list">
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">💰</span>
-              <span class="contract-name">💰 Активация</span>
-            </div>
-            <span class="contract-payment">12.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">👕</span>
-              <span class="contract-name">💵 Выплата за 1 форму</span>
-            </div>
-            <span class="contract-payment">1.700$</span>
-          </div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">💰</span><span class="contract-name">💰 Активация</span></div><span class="contract-payment">12.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">👕</span><span class="contract-name">💵 Выплата за 1 форму</span></div><span class="contract-payment">1.700$</span></div>
         </div>
       </div>
     </div>
@@ -880,28 +629,13 @@
           <span>Товар с самолёта</span>
         </div>
         <span class="arrow">▼</span>
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
       <div class="accordion-content">
         <div class="contracts-list">
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">💰</span>
-              <span class="contract-name">💰 Активация</span>
-            </div>
-            <span class="contract-payment">16.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">📦</span>
-              <span class="contract-name">💵 Выплата</span>
-            </div>
-            <span class="contract-payment">30.000$</span>
-          </div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">💰</span><span class="contract-name">💰 Активация</span></div><span class="contract-payment">16.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">📦</span><span class="contract-name">💵 Выплата</span></div><span class="contract-payment">30.000$</span></div>
         </div>
       </div>
     </div>
@@ -916,70 +650,19 @@
           <span>Рыба</span>
         </div>
         <span class="arrow">▼</span>
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
       <div class="accordion-content">
         <div class="contracts-grid">
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🐟</span>
-              <span class="contract-name">1 ранг</span>
-            </div>
-            <span class="contract-payment">78.300$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🐟</span>
-              <span class="contract-name">5 ранг</span>
-            </div>
-            <span class="contract-payment">163.800$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🐟</span>
-              <span class="contract-name">2 ранг</span>
-            </div>
-            <span class="contract-payment">102.600$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🐟</span>
-              <span class="contract-name">6 ранг</span>
-            </div>
-            <span class="contract-payment">189.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🐟</span>
-              <span class="contract-name">3 ранг</span>
-            </div>
-            <span class="contract-payment">121.500$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🐟</span>
-              <span class="contract-name">7 ранг</span>
-            </div>
-            <span class="contract-payment">216.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🐟</span>
-              <span class="contract-name">4 ранг</span>
-            </div>
-            <span class="contract-payment">144.000$</span>
-          </div>
-          <div class="contract-item">
-            <div class="contract-info">
-              <span class="contract-icon">🐟</span>
-              <span class="contract-name">8 ранг</span>
-            </div>
-            <span class="contract-payment">243.000$</span>
-          </div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🐟</span><span class="contract-name">1 ранг</span></div><span class="contract-payment">78.300$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🐟</span><span class="contract-name">5 ранг</span></div><span class="contract-payment">163.800$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🐟</span><span class="contract-name">2 ранг</span></div><span class="contract-payment">102.600$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🐟</span><span class="contract-name">6 ранг</span></div><span class="contract-payment">189.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🐟</span><span class="contract-name">3 ранг</span></div><span class="contract-payment">121.500$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🐟</span><span class="contract-name">7 ранг</span></div><span class="contract-payment">216.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🐟</span><span class="contract-name">4 ранг</span></div><span class="contract-payment">144.000$</span></div>
+          <div class="contract-item"><div class="contract-info"><span class="contract-icon">🐟</span><span class="contract-name">8 ранг</span></div><span class="contract-payment">243.000$</span></div>
         </div>
       </div>
     </div>
@@ -994,35 +677,16 @@
           <span>Дополнительный заработок</span>
         </div>
         <span class="arrow">▼</span>
-        <span class="lightning left"></span>
-        <span class="lightning right"></span>
-        <span class="spark"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
+        <span class="lightning left"></span><span class="lightning right"></span>
+        <span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
       <div class="accordion-content">
-
         <div class="job-card">
-          <div class="job-title">
-            <span class="icon">🍔</span>
-            <span>Курьер фастфуда</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💰 Активация</span>
-            <span class="value">100$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💵 Награда</span>
-            <span class="value gold">23.900$ – 34.100$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💎 Majestic Premium</span>
-            <span class="value premium">29.875$ – 42.625$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">⏰ Cooldown</span>
-            <span class="value cd">1 час 30 минут</span>
-          </div>
+          <div class="job-title"><span class="icon">🍔</span><span>Курьер фастфуда</span></div>
+          <div class="job-row"><span class="label">💰 Активация</span><span class="value">100$</span></div>
+          <div class="job-row"><span class="label">💵 Награда</span><span class="value gold">23.900$ – 34.100$</span></div>
+          <div class="job-row"><span class="label">💎 Majestic Premium</span><span class="value premium">29.875$ – 42.625$</span></div>
+          <div class="job-row"><span class="label">⏰ Cooldown</span><span class="value cd">1 час 30 минут</span></div>
           <div class="job-dishes">
             <span class="dishes-label">Требуются блюда:</span>
             <ul>
@@ -1034,26 +698,11 @@
         </div>
 
         <div class="job-card">
-          <div class="job-title">
-            <span class="icon">☕</span>
-            <span>Курьер кафе</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💰 Активация</span>
-            <span class="value">200$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💵 Награда</span>
-            <span class="value gold">34.100$ – 45.450$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💎 Majestic Premium</span>
-            <span class="value premium">42.625$ – 56.812$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">⏰ Cooldown</span>
-            <span class="value cd">1 час 30 минут</span>
-          </div>
+          <div class="job-title"><span class="icon">☕</span><span>Курьер кафе</span></div>
+          <div class="job-row"><span class="label">💰 Активация</span><span class="value">200$</span></div>
+          <div class="job-row"><span class="label">💵 Награда</span><span class="value gold">34.100$ – 45.450$</span></div>
+          <div class="job-row"><span class="label">💎 Majestic Premium</span><span class="value premium">42.625$ – 56.812$</span></div>
+          <div class="job-row"><span class="label">⏰ Cooldown</span><span class="value cd">1 час 30 минут</span></div>
           <div class="job-dishes">
             <span class="dishes-label">Требуются блюда:</span>
             <ul>
@@ -1065,26 +714,11 @@
         </div>
 
         <div class="job-card">
-          <div class="job-title">
-            <span class="icon">🍽️</span>
-            <span>Курьер ресторана</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💰 Активация</span>
-            <span class="value">300$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💵 Награда</span>
-            <span class="value gold">45.450$ – 55.000$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💎 Majestic Premium</span>
-            <span class="value premium">56.812$ – 68.750$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">⏰ Cooldown</span>
-            <span class="value cd">1 час 30 минут</span>
-          </div>
+          <div class="job-title"><span class="icon">🍽️</span><span>Курьер ресторана</span></div>
+          <div class="job-row"><span class="label">💰 Активация</span><span class="value">300$</span></div>
+          <div class="job-row"><span class="label">💵 Награда</span><span class="value gold">45.450$ – 55.000$</span></div>
+          <div class="job-row"><span class="label">💎 Majestic Premium</span><span class="value premium">56.812$ – 68.750$</span></div>
+          <div class="job-row"><span class="label">⏰ Cooldown</span><span class="value cd">1 час 30 минут</span></div>
           <div class="job-dishes">
             <span class="dishes-label">Требуются блюда:</span>
             <ul>
@@ -1096,43 +730,18 @@
         </div>
 
         <div class="job-card">
-          <div class="job-title">
-            <span class="icon">🔧</span>
-            <span>Тюнинг V</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💰 Активация</span>
-            <span class="value">500$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💵 Награда</span>
-            <span class="value gold">21.380$ – 24.380$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💎 Majestic Premium</span>
-            <span class="value premium">26.725$ – 30.475$</span>
-          </div>
-          <div class="job-row">
-            <span class="label">⏰ Cooldown</span>
-            <span class="value cd">2 часа</span>
-          </div>
+          <div class="job-title"><span class="icon">🔧</span><span>Тюнинг V</span></div>
+          <div class="job-row"><span class="label">💰 Активация</span><span class="value">500$</span></div>
+          <div class="job-row"><span class="label">💵 Награда</span><span class="value gold">21.380$ – 24.380$</span></div>
+          <div class="job-row"><span class="label">💎 Majestic Premium</span><span class="value premium">26.725$ – 30.475$</span></div>
+          <div class="job-row"><span class="label">⏰ Cooldown</span><span class="value cd">2 часа</span></div>
         </div>
 
         <div class="job-card">
-          <div class="job-title">
-            <span class="icon">🏠</span>
-            <span>Оплата налога за дом</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💰 Стоимость</span>
-            <span class="value">150 MC</span>
-          </div>
-          <div class="job-row">
-            <span class="label">💵 Выплата</span>
-            <span class="value gold">35.000$</span>
-          </div>
+          <div class="job-title"><span class="icon">🏠</span><span>Оплата налога за дом</span></div>
+          <div class="job-row"><span class="label">💰 Стоимость</span><span class="value">150 MC</span></div>
+          <div class="job-row"><span class="label">💵 Выплата</span><span class="value gold">35.000$</span></div>
         </div>
-
       </div>
     </div>
   </section>
@@ -1141,26 +750,20 @@
     <a href="index.html" class="btn-back">← Вернуться на главную</a>
   </div>
 
-  <footer>
-    © 2024–2026 <span>La Muerte</span> — Все права защищены.
-  </footer>
+  <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script>
+    /* ===== Аккордеон ===== */
     function toggleAccordion(header) {
       header.classList.toggle('active');
       const content = header.nextElementSibling;
-
       if (content.classList.contains('open')) {
         content.style.height = content.scrollHeight + 'px';
         void content.offsetHeight;
         content.style.height = '0px';
         content.classList.remove('open');
-
         content.addEventListener('transitionend', function handler(e) {
-          if (e.propertyName === 'height') {
-            content.style.height = '';
-            content.removeEventListener('transitionend', handler);
-          }
+          if (e.propertyName === 'height') { content.style.height = ''; content.removeEventListener('transitionend', handler); }
         });
       } else {
         content.classList.add('open');
@@ -1168,13 +771,39 @@
         content.style.height = '0px';
         void content.offsetHeight;
         content.style.height = targetHeight + 'px';
-
         content.addEventListener('transitionend', function handler(e) {
-          if (e.propertyName === 'height') {
-            content.style.height = 'auto';
-            content.removeEventListener('transitionend', handler);
-          }
+          if (e.propertyName === 'height') { content.style.height = 'auto'; content.removeEventListener('transitionend', handler); }
         });
+      }
+    }
+
+    /* ===== Переключатель темы ===== */
+    (function () {
+      const switchEl = document.getElementById('themeSwitch');
+      if (!switchEl) return;
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') {
+        document.documentElement.classList.add('dark');
+        switchEl.checked = true;
+      }
+      switchEl.addEventListener('change', () => {
+        if (switchEl.checked) {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    })();
+
+    /* ===== Переход в ЛК ===== */
+    function goToProfile(e) {
+      if (e) e.preventDefault();
+      if (localStorage.getItem('lm_logged') === 'true') {
+        window.location.href = 'profile.html';
+      } else {
+        window.location.href = 'login.html';
       }
     }
   </script>
