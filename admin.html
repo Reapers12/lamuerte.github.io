@@ -3,79 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Панель управления — La Muerte</title>
+  <title>Админ-панель — La Muerte</title>
   <script>
     if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
-      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
+    :root { 
+      --bg: #f4f4f7; --panel: #fff; --border: #e0e0e6; --text: #1a1a1a; 
+      --accent: #c0392b; --gold: #b8860b; --green: #2e7d32; --blue: #3498db; --muted: #666;
       --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
-    html.dark {
-      --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
-      --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
+    html.dark { 
+      --bg: #0a0a0a; --panel: #111; --border: #222; --text: #eaeaea; 
+      --gold: #d4af37; --green: #4caf50; --muted: #999;
       --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
       --bg-overlay: rgba(0, 0, 0, 0.85);
     }
     html, body { transition: background 0.4s ease, color 0.4s ease; }
-    body { font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed; background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative; }
+    body { 
+      font-family: 'Overpass', sans-serif; 
+      background: var(--bg-image) center/cover no-repeat fixed;
+      background-color: var(--bg); 
+      color: var(--text); 
+      padding: 2rem; 
+      min-height: 100vh; 
+      position: relative;
+    }
     body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
 
-    header { background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10; transition: 0.4s; }
-    header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
-    header .logo span { color: var(--accent); }
-    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; flex: 1; flex-wrap: wrap; }
-    nav { display: flex; align-items: center; gap: 0.2rem; flex-wrap: wrap; }
-    nav a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 0.35rem 0.75rem; border-radius: 6px; transition: 0.2s; }
-    nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); }
-    .logout-btn { color: var(--accent) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
-    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.75rem; flex-shrink: 0; }
-    .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
-    .theme-btn svg { width: 16px; height: 16px; transition: transform 0.4s ease; }
-    .theme-btn .icon-moon { display: none; }
-    html.dark .theme-btn .icon-sun { display: none; }
-    html.dark .theme-btn .icon-moon { display: block; }
-    html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
-
-    section.block { padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; }
-    .admin-header { margin-bottom: 2rem; text-align: center; }
-    .admin-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .admin-header p { color: var(--muted); }
-
-    .user-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    h1 { color: var(--accent); text-align: center; margin-bottom: 2rem; font-weight: 800; }
     
-    .user-card { background: var(--panel); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; transition: 0.2s; }
+    /* Блок Ожидают выплаты */
+    .requests-section { background: rgba(192, 57, 43, 0.1); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; display: none; }
+    .requests-section.active { display: block; }
+    .requests-title { color: var(--accent); font-size: 1.2rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+    .req-card { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .req-info { flex: 1; min-width: 250px; }
+    .req-info strong { color: var(--text); font-size: 1.1rem; }
+    .req-info .req-amount { color: var(--gold); font-weight: 800; font-size: 1.1rem; }
+    .req-info p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+    .req-info a { color: var(--blue); text-decoration: none; }
+    .req-info a:hover { text-decoration: underline; }
+    
+    .req-actions { display: flex; gap: 0.5rem; }
+    .btn-approve { background: var(--green); color: #fff; border: none; padding: 0.6rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-approve:hover { background: #3d8b40; }
+    .btn-reject { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 0.6rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-reject:hover { background: rgba(192, 57, 43, 0.2); }
+
+    /* Карточка пользователя */
+    .user-card { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 1rem; transition: 0.2s; }
     .user-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-
-    .user-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     
-    .user-info-col { display: flex; align-items: center; gap: 0.75rem; flex: 1; flex-wrap: wrap; }
+    .user-main { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     
-    .name-input { padding: 0.5rem 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-weight: 700; font-size: 1.1rem; font-family: inherit; width: 250px; }
+    /* Выравнивание элементов в строку */
+    .user-info { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; flex: 1; }
+    
+    .name-input { padding: 0.5rem 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-weight: 700; font-size: 1.1rem; font-family: inherit; width: 220px; }
     .btn-save-name { background: var(--green); color: #fff; border: none; padding: 0.5rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; }
     
-    .user-role { font-size: 0.9rem; font-weight: 700; color: var(--gold); text-transform: uppercase; }
-    .user-balance { font-size: 1.1rem; font-weight: 800; color: var(--green); background: rgba(76, 175, 80, 0.1); padding: 0.25rem 0.75rem; border-radius: 6px; border: 1px solid rgba(76, 175, 80, 0.3); width: fit-content; white-space: nowrap; }
+    .user-role { color: var(--gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; }
     
-    .role-select { padding: 0.5rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-family: inherit; font-weight: 600; }
-    .user-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; }
-    .balance-input { width: 120px; padding: 0.5rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-family: inherit; }
-    .btn-action { border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: 0.2s; }
-    .btn-add { background: var(--green); color: #fff; }
-    .btn-add:hover { background: #43a047; }
-    .btn-reset { background: var(--accent); color: #fff; }
-    .btn-reset:hover { background: #a93226; }
-
-    .btn-payouts { position: relative; background: var(--gold); color: #000; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: 0.2s; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; }
+    .balance-box { display: flex; align-items: center; gap: 0.5rem; background: rgba(76, 175, 80, 0.1); padding: 0.3rem 0.8rem; border-radius: 6px; border: 1px solid rgba(76, 175, 80, 0.3); }
+    .balance-text { color: var(--green); font-weight: 700; font-size: 1rem; }
+    
+    .btn-payouts { position: relative; background: var(--gold); color: #000; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: 0.2s; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; }
     .btn-payouts:hover { filter: brightness(1.1); }
     .badge { background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 0.1rem 0.4rem; border-radius: 10px; animation: pulse 2s infinite; }
     @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(192, 57, 43, 0); } 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); } }
 
-    .payouts-block { margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 1rem; display: none; }
+    select { padding: 0.5rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer; outline: none; font-family: inherit; font-weight: 600; }
+    
+    .money-controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; background: rgba(128, 128, 128, 0.1); padding: 0.75rem 1rem; border-radius: 6px; }
+    .money-label { color: var(--muted); font-size: 0.9rem; margin-right: 0.5rem; }
+    .money-input { padding: 0.4rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; width: 100px; font-family: inherit; }
+    .btn-money { padding: 0.4rem 0.8rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 700; font-family: inherit; transition: 0.2s; }
+    .btn-add { background: var(--green); color: #fff; }
+    .btn-add:hover { background: #3d8b40; }
+    .btn-reset { background: var(--accent); color: #fff; }
+    .btn-reset:hover { background: #a93226; }
+    
+    /* Встроенный блок истории заявок игрока */
+    .payouts-block { margin-top: 0.5rem; border-top: 1px dashed var(--border); padding-top: 1rem; display: none; }
     .payouts-block.active { display: block; }
     .payouts-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); display: flex; justify-content: space-between; align-items: center; }
     .btn-close-payouts { background: transparent; border: none; color: var(--accent); font-weight: 700; cursor: pointer; font-size: 0.85rem; }
@@ -90,48 +102,60 @@
     .status-approved { background: rgba(76, 175, 80, 0.15); color: var(--green); }
     .status-rejected { background: rgba(192, 57, 43, 0.15); color: var(--accent); }
 
-    .btn-approve { background: var(--green); color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.75rem; margin-right: 0.3rem; }
-    .btn-approve:hover { background: #43a047; }
-    .btn-reject { background: var(--accent); color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
-    .btn-reject:hover { background: #a93226; }
+    /* Модалка истории баланса */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 100; justify-content: center; align-items: center; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+    .modal-close:hover { color: var(--accent); }
+    .modal h2 { color: var(--text); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .history-list { list-style: none; }
+    .history-list li { padding: 0.5rem 0; border-bottom: 1px dashed var(--border); display: flex; justify-content: space-between; font-size: 0.9rem; }
+    .history-list li:last-child { border-bottom: none; }
+    .history-list .h-date { color: var(--muted); font-size: 0.8rem; }
+    .history-list .h-amount.add { color: var(--green); font-weight: 700; }
+    .history-list .h-amount.reset { color: var(--accent); font-weight: 700; }
+    
+    .back-link { display: block; text-align: center; margin-top: 2rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .back-link:hover { color: var(--accent); }
 
-    footer { background: var(--panel); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; margin-top: 3rem; }
-    footer span { color: var(--accent); }
+    /* Тема */
+    .theme-btn { position: fixed; bottom: 2rem; right: 2rem; background: var(--panel); border: 1px solid var(--border); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
+    .theme-btn svg { width: 20px; height: 20px; transition: transform 0.4s ease; }
+    .theme-btn .icon-moon { display: none; }
+    html.dark .theme-btn .icon-sun { display: none; }
+    html.dark .theme-btn .icon-moon { display: block; }
+    html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
   </style>
 </head>
 <body>
+  <h1>Управление участниками</h1>
 
-  <header>
-    <a href="index.html" class="logo">LA <span>MUERTE</span></a>
-    <div class="header-right">
-      <nav>
-        <a href="index.html">Главная</a>
-        <a href="family.html">Правила</a>
-        <a href="transport.html">О транспорте</a>
-        <a href="contracts.html">Контракты</a>
-        <a href="tables.html">Таблицы</a>
-        <a href="profile.html">Личный кабинет</a>
-        <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
-      </nav>
-      <button class="theme-btn" id="themeToggle" title="Переключить тему">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
+  <div class="requests-section" id="requestsSection">
+    <div class="requests-title">⏳ Ожидают выплаты</div>
+    <div id="requestsList"></div>
+  </div>
+
+  <div id="usersList">Загрузка...</div>
+  <a href="profile.html" class="back-link">← Вернуться в личный кабинет</a>
+
+  <!-- Модалка истории баланса -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeHistory()">×</button>
+      <h2 id="historyTitle">История</h2>
+      <ul class="history-list" id="historyList">
+        <li>Загрузка...</li>
+      </ul>
     </div>
-  </header>
+  </div>
 
-  <section class="block">
-    <div class="admin-header">
-      <h1>Панель управления</h1>
-      <p>Управление пользователями, балансом, ролями и заявками</p>
-    </div>
-
-    <div class="user-list" id="userList">
-      <p style="text-align: center; color: var(--muted);">Загрузка пользователей...</p>
-    </div>
-  </section>
-
-  <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
+  <!-- Кнопка темы -->
+  <button class="theme-btn" id="themeToggle" title="Переключить тему">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -140,6 +164,17 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    const WEBHOOK_APPROVED = 'https://discord.com/api/webhooks/1563575363542458510/_bE3Y5t4U0oZ8Z-89ZNxwwUXh6M0o5dG-S-GQI-dEbqvQQXyJQ8UItS7Oty3nf-sDCMR';
+    const WEBHOOK_REJECTED = 'https://discord.com/api/webhooks/1563575494484430848/-Khgl90Sdwvb3LFSZMUssUXmvSrzvJhcrA_Qyl3V5_F8kM1KVZUCx1rr639ZlmwKDLMv';
+
+    const rolePriority = { 'Администратор': 0, 'Глава': 1, 'Заместитель': 2, 'Кровь Семьи': 3, 'Стажер': 4, 'Боец': 5 };
+
+    let currentAdmin = null;
+    let currentRole = '';
+    let isSuperAdmin = false;
+    let allPayouts = []; // Храним все заявки для быстрого подсчета
+
+    // Тема
     (function () {
       const toggleBtn = document.getElementById('themeToggle');
       if (!toggleBtn) return;
@@ -150,94 +185,193 @@
       });
     })();
 
-    let allUsers = [];
-    let allPayouts = []; 
-
-    async function loadUsers() {
-      const { data: users, error: userError } = await supabase.from('profiles').select('*').order('nickname');
-      if (userError) {
-        document.getElementById('userList').innerHTML = '<p style="color: red;">Ошибка загрузки данных</p>';
-        return;
-      }
-      allUsers = users;
-
-      const { data: payouts, error: payoutError } = await supabase
-        .from('payout_requests')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (!payoutError && payouts) {
-        allPayouts = payouts;
-      }
-
-      renderUsers();
+    async function sendDiscordLog(webhookUrl, nickname, amount, statusText, color) {
+      if (!webhookUrl || webhookUrl.includes('ССЫЛКА')) return;
+      const payload = {
+        username: "La Muerte | Логи", avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
+        embeds: [{ title: statusText, color: color, description: `**Игрок:** ${nickname}\n**Сумма:** ${amount} $`, footer: { text: `Обработал: ${currentAdmin.email}` }, timestamp: new Date().toISOString() }]
+      };
+      try { await fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); } catch (e) {}
     }
 
-    function renderUsers() {
-      const list = document.getElementById('userList');
-      list.innerHTML = '';
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) { window.location.href = 'login.html'; return; }
+      currentAdmin = session.user;
 
-      if (allUsers.length === 0) {
-        list.innerHTML = '<p style="text-align: center; color: var(--muted);">Пользователей пока нет.</p>';
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', currentAdmin.id).single();
+
+      if (profile) {
+        currentRole = profile.role;
+        if (currentRole === 'Администратор') isSuperAdmin = true;
+      }
+
+      if (!profile || !['Глава', 'Администратор', 'Заместитель'].includes(currentRole)) {
+        document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh; color:#c0392b;">Доступ запрещён!</h1><p style="text-align:center;">Вы не имеете прав на это действие.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
         return;
       }
 
-      allUsers.forEach(user => {
+      loadRequests();
+      loadUsers();
+    }
+
+    async function loadRequests() {
+      const section = document.getElementById('requestsSection');
+      const list = document.getElementById('requestsList');
+      
+      const { data, error } = await supabase.from('payout_requests').select('*').eq('status', 'pending').order('created_at', { ascending: true });
+
+      if (error || !data || data.length === 0) {
+        section.classList.remove('active');
+        return;
+      }
+
+      section.classList.add('active');
+      list.innerHTML = '';
+
+      data.forEach(req => {
+        const card = document.createElement('div');
+        card.className = 'req-card';
+        card.innerHTML = `
+          <div class="req-info">
+            <strong>${req.nickname}</strong> запрашивает <span class="req-amount">${req.amount} $</span>
+            <p>${req.category} | ${req.details}</p>
+            <p><a href="${req.screenshot}" target="_blank">📸 Смотреть скриншот</a> | ID: ${req.discord}</p>
+          </div>
+          <div class="req-actions">
+            <button class="btn-approve" onclick="approveRequest('${req.id}', '${req.nickname}', ${req.amount})">✅ Выплатить</button>
+            <button class="btn-reject" onclick="rejectRequest('${req.id}', '${req.nickname}', ${req.amount})">❌ Отклонить</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    window.approveRequest = async function(reqId, nickname, amount) {
+      if (!confirm(`Вы уверены, что хотите выплатить ${amount} $ игроку ${nickname}?`)) return;
+
+      const { data: userData, error: userError } = await supabase.from('profiles').select('id, balance').eq('nickname', nickname).single();
+
+      if (userError || !userData) {
+        alert('Ошибка: Игрок с таким ником не найден в базе!');
+        return;
+      }
+
+      const newBalance = (userData.balance || 0) + amount;
+
+      const { error: updateError } = await supabase.from('profiles').update({ balance: newBalance }).eq('id', userData.id);
+      
+      if (updateError) {
+        alert('Ошибка при начислении: ' + updateError.message);
+        return;
+      }
+
+      await supabase.from('transactions').insert([{
+        admin_id: currentAdmin.id, user_id: userData.id, amount: amount, type: 'add'
+      }]);
+
+      await supabase.from('payout_requests').update({ status: 'approved' }).eq('id', reqId);
+
+      await sendDiscordLog(WEBHOOK_APPROVED, nickname, amount, '✅ Выплата одобрена', 0x4caf50);
+
+      alert(`Успешно выплачено ${amount} $ для ${nickname}!`);
+      loadRequests();
+      loadUsers();
+    };
+
+    window.rejectRequest = async function(reqId, nickname, amount) {
+      if (!confirm('Отклонить эту заявку?')) return;
+      
+      await supabase.from('payout_requests').update({ status: 'rejected' }).eq('id', reqId);
+      
+      await sendDiscordLog(WEBHOOK_REJECTED, nickname, amount, '❌ Выплата отклонена', 0xe74c3c);
+      
+      loadRequests();
+      loadUsers();
+    };
+
+    async function loadUsers() {
+      const list = document.getElementById('usersList');
+      list.innerHTML = '';
+      
+      // Загружаем всех пользователей
+      const { data: users, error } = await supabase.from('profiles').select('*');
+
+      if (error) {
+        list.innerHTML = '<p style="color: red;">Ошибка загрузки: ' + error.message + '</p>';
+        return;
+      }
+
+      // Загружаем все заявки для подсчета бейджей
+      const { data: payouts } = await supabase.from('payout_requests').select('*');
+      if (payouts) allPayouts = payouts;
+
+      // Сортируем по ролям
+      users.sort((a, b) => (rolePriority[a.role] ?? 99) - (rolePriority[b.role] ?? 99));
+      
+      users.forEach(user => {
         const card = document.createElement('div');
         card.className = 'user-card';
         
+        // Берем только ник (без email)
         let displayName = user.nickname;
-        if (displayName && displayName.includes('@')) {
-          displayName = displayName.split('@')[0];
-        }
+        if (displayName && displayName.includes('@')) displayName = displayName.split('@')[0];
 
-        const userPayouts = allPayouts.filter(p => 
-          p.nickname === user.nickname || 
-          p.nickname === displayName || 
-          p.discord === user.discord_id || 
-          p.discord === user.id
-        );
-
+        // Считаем непрочитанные заявки
+        const userPayouts = allPayouts.filter(p => p.nickname === user.nickname || p.nickname === displayName);
         const pendingCount = userPayouts.filter(p => p.status === 'pending').length;
-        
-        let badgeHtml = '';
-        if (pendingCount > 0) {
-          badgeHtml = `<span class="badge">${pendingCount}</span>`;
+        let badgeHtml = pendingCount > 0 ? `<span class="badge">${pendingCount}</span>` : '';
+
+        // Логика выбора роли
+        let roleHtml = '';
+        if (['Глава', 'Администратор'].includes(currentRole)) {
+          let roleOptions = '';
+          if (isSuperAdmin) {
+            roleOptions += `<option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>⭐ Администратор</option>`;
+          }
+          roleOptions += `
+            <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
+            <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
+            <option value="Кровь Семьи" ${user.role === 'Кровь Семьи' ? 'selected' : ''}>Кровь Семьи</option>
+            <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
+            <option value="Боец" ${user.role === 'Боец' ? 'selected' : ''}>Боец</option>
+          `;
+          roleHtml = `<select onchange="changeRole('${user.id}', this.value)">${roleOptions}</select>`;
+        } else {
+          roleHtml = `<span style="color: var(--muted); font-size: 0.9rem;">Роль: ${user.role}</span>`;
         }
 
         card.innerHTML = `
-          <div class="user-top">
-            <div class="user-info-col">
+          <div class="user-main">
+            <div class="user-info">
               <input type="text" class="name-input" id="nick-${user.id}" value="${displayName}">
               <button class="btn-save-name" onclick="saveNickname('${user.id}')">💾 Сохранить</button>
               
               <span class="user-role">(${user.role})</span>
-              <span class="user-balance">${(user.balance || 0).toLocaleString('ru-RU')} $</span>
               
+              <div class="balance-box">
+                <span class="balance-text">${user.balance || 0} $</span>
+                <button class="btn-history" onclick="openHistory('${user.id}', '${displayName}')" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-size:0.8rem;">История</button>
+              </div>
+
               <button class="btn-payouts" onclick="togglePayouts('${user.id}', '${displayName}')">
-                📋 Запросы на выплаты ${badgeHtml}
+                📋 Заявки ${badgeHtml}
               </button>
             </div>
-            <div>
-              <select class="role-select" onchange="changeRole('${user.id}', this.value)">
-                <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
-                <option value="Боец" ${user.role === 'Боец' ? 'selected' : ''}>Боец</option>
-                <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
-                <option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>Администратор</option>
-                <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
-              </select>
-            </div>
+            <div>${roleHtml}</div>
           </div>
-          <div class="user-actions">
-            <span style="color: var(--muted); font-size: 0.9rem;">Управление балансом:</span>
-            <input type="number" class="balance-input" id="balance-${user.id}" placeholder="Сумма">
-            <button class="btn-action btn-add" onclick="changeBalance('${user.id}', true)">Начислить (+)</button>
-            <button class="btn-action btn-reset" onclick="changeBalance('${user.id}', false)">Обнулить (0)</button>
+          <div class="money-controls">
+            <span class="money-label">Управление балансом:</span>
+            <input type="number" id="money-${user.id}" class="money-input" placeholder="Сумма">
+            <button class="btn-money btn-add" onclick="addMoney('${user.id}', '${displayName}')">Начислить (+)</button>
+            <button class="btn-money btn-reset" onclick="resetMoney('${user.id}', '${displayName}')">Обнулить (0)</button>
           </div>
 
+          <!-- Встроенный блок заявок -->
           <div class="payouts-block" id="payouts-block-${user.id}">
             <div class="payouts-title">
-              <span>📋 Заявки на выплату от ${displayName}</span>
+              <span>📋 История выплат от ${displayName}</span>
               <button class="btn-close-payouts" onclick="closePayouts('${user.id}')">✖ Закрыть</button>
             </div>
             <div id="payouts-content-${user.id}"></div>
@@ -247,6 +381,53 @@
       });
     }
 
+    window.saveNickname = async function(userId) {
+      const newName = document.getElementById(`nick-${userId}`).value.trim();
+      if (!newName) { alert('Никнейм не может быть пустым'); return; }
+
+      const { error } = await supabase.from('profiles').update({ nickname: newName }).eq('id', userId);
+      if (error) alert('Ошибка: ' + error.message);
+      else loadUsers();
+    };
+
+    window.changeRole = async function(userId, newRole) {
+      if (!['Глава', 'Администратор'].includes(currentRole)) { alert('У вас нет прав на изменение ролей!'); return; }
+      const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
+      if (error) alert('Ошибка: ' + error.message);
+      else location.reload(); 
+    };
+
+    window.addMoney = async function(userId, nickname) {
+      const input = document.getElementById(`money-${userId}`);
+      const amount = parseInt(input.value);
+
+      if (isNaN(amount) || amount <= 0) { alert('Введите корректную сумму!'); return; }
+
+      const { data: userData } = await supabase.from('profiles').select('balance').eq('id', userId).single();
+      const currentBalance = userData.balance || 0;
+
+      const { error } = await supabase.from('profiles').update({ balance: currentBalance + amount }).eq('id', userId);
+
+      if (error) { alert('Ошибка: ' + error.message); } 
+      else {
+        await supabase.from('transactions').insert([{ admin_id: currentAdmin.id, user_id: userId, amount: amount, type: 'add' }]);
+        alert(`Успешно начислено ${amount} $ для ${nickname}!`);
+        loadUsers();
+      }
+    };
+
+    window.resetMoney = async function(userId, nickname) {
+      if (!confirm(`Обнулить баланс ${nickname}?`)) return;
+      const { error } = await supabase.from('profiles').update({ balance: 0 }).eq('id', userId);
+      if (error) { alert('Ошибка: ' + error.message); } 
+      else {
+        await supabase.from('transactions').insert([{ admin_id: currentAdmin.id, user_id: userId, amount: 0, type: 'reset' }]);
+        alert(`Баланс ${nickname} обнулен!`);
+        loadUsers();
+      }
+    };
+
+    // Встроенная история заявок
     window.togglePayouts = function(userId, name) {
       const block = document.getElementById(`payouts-block-${userId}`);
       const content = document.getElementById(`payouts-content-${userId}`);
@@ -259,13 +440,10 @@
       document.querySelectorAll('.payouts-block').forEach(el => el.classList.remove('active'));
       block.classList.add('active');
 
-      const userPayouts = allPayouts.filter(p => 
-        p.nickname === name || 
-        p.nickname === name.split('@')[0]
-      );
+      const userPayouts = allPayouts.filter(p => p.nickname === name || p.nickname === name.split('@')[0]);
 
       if (userPayouts.length === 0) {
-        content.innerHTML = '<p style="color: var(--muted);">У этого игрока нет заявок на выплату.</p>';
+        content.innerHTML = '<p style="color: var(--muted);">Нет заявок.</p>';
         return;
       }
 
@@ -276,35 +454,22 @@
             <th>Ресурс</th>
             <th>Сумма</th>
             <th>Статус</th>
-            <th>Действия</th>
           </tr>
         </thead>
         <tbody>`;
 
       userPayouts.forEach(req => {
         const date = new Date(req.created_at).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit' });
-        
         let statusClass = 'status-pending';
         let statusText = 'В ожидании';
         if (req.status === 'approved') { statusClass = 'status-approved'; statusText = 'Одобрено'; }
         if (req.status === 'rejected') { statusClass = 'status-rejected'; statusText = 'Отклонено'; }
-
-        let actions = '';
-        if (req.status === 'pending') {
-          actions = `
-            <button class="btn-approve" onclick="updateRequestStatus('${req.id}', 'approved')">✅</button>
-            <button class="btn-reject" onclick="updateRequestStatus('${req.id}', 'rejected')">❌</button>
-          `;
-        } else {
-          actions = '—';
-        }
 
         html += `<tr>
           <td>${date}</td>
           <td>${req.details || req.category}</td>
           <td style="color: var(--gold); font-weight: 700;">${req.amount.toLocaleString('ru-RU')} $</td>
           <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-          <td>${actions}</td>
         </tr>`;
       });
 
@@ -316,81 +481,29 @@
       document.getElementById(`payouts-block-${userId}`).classList.remove('active');
     };
 
-    window.updateRequestStatus = async function(requestId, newStatus) {
-      const btn = event.target;
-      btn.disabled = true;
-      btn.textContent = '...';
+    // Модалка истории баланса
+    window.openHistory = async function(userId, nickname) {
+      document.getElementById('historyTitle').textContent = `История: ${nickname}`;
+      const list = document.getElementById('historyList');
+      list.innerHTML = '<li>Загрузка...</li>';
+      document.getElementById('historyModal').classList.add('active');
 
-      const { error } = await supabase
-        .from('payout_requests')
-        .update({ status: newStatus }) 
-        .eq('id', requestId);
+      const { data, error } = await supabase.from('transactions').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(15);
 
-      if (error) {
-        alert('Ошибка: ' + error.message);
-        btn.disabled = false;
-        btn.textContent = newStatus === 'approved' ? '✅' : '❌';
-      } else {
-        loadUsers(); 
-      }
+      if (error) { list.innerHTML = `<li style="color:red;">Ошибка: ${error.message}</li>`; return; }
+      if (data.length === 0) { list.innerHTML = '<li style="color:#666;">Пока нет операций</li>'; return; }
+
+      list.innerHTML = '';
+      data.forEach(t => {
+        const date = new Date(t.created_at).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        let text = t.type === 'add' ? `+${t.amount} $` : `Обнуление`;
+        list.innerHTML += `<li><span class="h-date">${date}</span><span class="h-amount ${t.type}">${text}</span></li>`;
+      });
     };
 
-    window.saveNickname = async function(userId) {
-      const newName = document.getElementById(`nick-${userId}`).value.trim();
-      if (!newName) { alert('Никнейм не может быть пустым'); return; }
+    window.closeHistory = function() { document.getElementById('historyModal').classList.remove('active'); };
 
-      const { error } = await supabase.from('profiles').update({ nickname: newName }).eq('id', userId);
-      if (error) {
-        alert('Ошибка при сохранении: ' + error.message);
-      } else {
-        const user = allUsers.find(u => u.id === userId);
-        if (user) user.nickname = newName;
-        renderUsers();
-      }
-    };
-
-    window.changeRole = async function(userId, newRole) {
-      const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
-      if (error) {
-        alert('Ошибка при смене роли: ' + error.message);
-      } else {
-        const user = allUsers.find(u => u.id === userId);
-        if (user) user.role = newRole;
-      }
-    };
-
-    window.changeBalance = async function(userId, isAdd) {
-      const input = document.getElementById(`balance-${userId}`);
-      let amount = parseInt(input.value) || 0;
-      
-      const user = allUsers.find(u => u.id === userId);
-      if (!user) return;
-
-      let newBalance = user.balance || 0;
-
-      if (isAdd) {
-        if (amount <= 0) { alert('Введите сумму больше 0'); return; }
-        newBalance += amount;
-      } else {
-        newBalance = 0;
-      }
-
-      const { error } = await supabase.from('profiles').update({ balance: newBalance }).eq('id', userId);
-
-      if (error) {
-        alert('Ошибка: ' + error.message);
-      } else {
-        user.balance = newBalance;
-        renderUsers();
-      }
-    };
-
-    window.logout = async function() {
-      await supabase.auth.signOut();
-      window.location.href = 'login.html';
-    };
-
-    document.addEventListener('DOMContentLoaded', loadUsers);
+    init();
   </script>
 </body>
 </html>
