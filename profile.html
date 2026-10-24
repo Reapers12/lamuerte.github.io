@@ -146,32 +146,64 @@
     let currentUser = null;
     let userData = null;
 
-    // Проверка авторизации
-    async function checkUser() {
-      const { data: { session } } = await supabase.auth.getSession();
+    async function initProfile() {
+      console.log("Начинаем загрузку профиля...");
       
+      // 1. Получаем сессию
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error("Ошибка сессии:", sessionError);
+        alert("Ошибка авторизации: " + sessionError.message);
+        return;
+      }
+
       if (!session) {
+        console.log("Нет сессии, кидаем на вход");
         window.location.href = 'login.html';
         return;
       }
 
       currentUser = session.user;
+      console.log("Пользователь авторизован:", currentUser.id, currentUser.email);
 
-      // Получаем данные из таблицы profiles
+      // 2. Запрашиваем профиль
+      console.log("Запрашиваем данные из таблицы profiles для ID:", currentUser.id);
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', currentUser.id)
-        .single();
+        .maybeSingle(); // maybeSingle не выдает ошибку, если ничего не найдено
 
       if (error) {
-        console.error('Ошибка загрузки профиля:', error);
-        document.getElementById('displayName').textContent = 'Ошибка данных';
+        console.error("Ошибка при чтении из базы:", error);
+        alert("Ошибка базы данных: " + error.message + "\n(Проверь RLS в Supabase)");
+        document.getElementById('displayName').textContent = 'Ошибка БД';
         return;
       }
 
+      if (!data) {
+        console.warn("Запись в базе не найдена! Создаем вручную...");
+        // Если триггер не сработал, создаем запись вручную прямо сейчас
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert([{ id: currentUser.id, nickname: currentUser.email.split('@')[0], role: 'Боец' }]);
+          
+        if (insertError) {
+           console.error("Не удалось создать запись:", insertError);
+           alert("Не удалось создать профиль. Ошибка: " + insertError.message);
+           return;
+        } else {
+           location.reload(); // Перезагружаем, чтобы данные подтянулись
+           return;
+        }
+      }
+
+      console.log("Данные профиля успешно загружены:", data);
       userData = data;
       
+      // 3. Заполняем интерфейс
       document.getElementById('displayName').textContent = userData.nickname;
       document.getElementById('inputName').value = userData.nickname;
       document.getElementById('avatarBox').textContent = userData.nickname.charAt(0).toUpperCase();
@@ -194,15 +226,14 @@
       }
     }
 
-    checkUser();
+    // Запускаем через секунду, чтобы Supabase точно восстановил сессию
+    setTimeout(initProfile, 500);
 
-    // Выход
     window.logout = async function() {
       await supabase.auth.signOut();
       window.location.href = 'login.html';
     };
 
-    // Сохранение
     window.saveProfile = async function() {
       const newAvatar = document.getElementById('inputAvatar').value.trim();
       
