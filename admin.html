@@ -153,8 +153,9 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const WEBHOOK_APPROVED = 'https://discord.com/api/webhooks/1563575363542458510/_bE3Y5t4U0oZ8Z-89ZNxwwUXh6M0o5dG-S-GQI-dEbqvQQXyJQ8UItS7Oty3nf-sDCMR';
-    const WEBHOOK_REJECTED = 'https://discord.com/api/webhooks/1563575494484430848/-Khgl90Sdwvb3LFSZMUssUXmvSrzvJhcrA_Qyl3V5_F8kM1KVZUCx1rr639ZlmwKDLMv';
+    // НОВЫЙ ВЕБХУК
+    const WEBHOOK_APPROVED = 'https://discord.com/api/webhooks/1563663528131428535/bKmM1iMBGXyK-0s-ilngZ7f-ZwDa5j4AhivQS56TlLHLgj3dxJZEZ0wx5YAJMcCbh4Zi';
+    const WEBHOOK_REJECTED = 'https://discord.com/api/webhooks/1563663528131428535/bKmM1iMBGXyK-0s-ilngZ7f-ZwDa5j4AhivQS56TlLHLgj3dxJZEZ0wx5YAJMcCbh4Zi';
 
     const rolePriority = { 'Администратор': 0, 'Глава': 1, 'Заместитель': 2, 'Кровь Семьи': 3, 'Стажер': 4, 'Боец': 5 };
 
@@ -241,7 +242,9 @@
         let displayName = user.nickname;
         if (displayName && displayName.includes('@')) displayName = displayName.split('@')[0];
 
-        const userPayouts = allPayouts.filter(p => p.nickname === user.nickname || p.nickname === displayName);
+        const cleanUserName = displayName.trim().toLowerCase();
+        const userPayouts = allPayouts.filter(p => p.nickname && p.nickname.trim().toLowerCase() === cleanUserName);
+        
         const pendingCount = userPayouts.filter(p => p.status === 'pending').length;
         let badgeHtml = pendingCount > 0 ? `<span class="badge">${pendingCount}</span>` : '';
 
@@ -359,7 +362,8 @@
       document.querySelectorAll('.payouts-block').forEach(el => el.classList.remove('active'));
       block.classList.add('active');
 
-      const userPayouts = allPayouts.filter(p => p.nickname === name || p.nickname === name.split('@')[0]);
+      const cleanName = name.trim().toLowerCase();
+      const userPayouts = allPayouts.filter(p => p.nickname && p.nickname.trim().toLowerCase() === cleanName);
 
       if (userPayouts.length === 0) {
         content.innerHTML = '<p style="color: var(--muted);">Нет заявок.</p>';
@@ -418,65 +422,48 @@
       btn.textContent = '...';
 
       if (newStatus === 'approved') {
-        // 1. Пытаемся скачать игроков вместе с контрактами
-        const { data: users, error: userError } = await supabase.from('profiles').select('id, nickname, balance, contracts');
+        let { data: users, error: userError } = await supabase.from('profiles').select('id, nickname, balance, contracts');
+        
+        let hasContracts = true;
 
-        let userData = null;
-
-        if (userError || !users) {
-          // Если колонки contracts нет, скачиваем без неё
-          console.warn('Ошибка загрузки колонки contracts. Начисляем только баланс.');
+        if (userError) {
+          hasContracts = false;
           const { data: fallbackUsers, error: fallbackError } = await supabase.from('profiles').select('id, nickname, balance');
+          if (fallbackError) { alert('Ошибка базы: ' + fallbackError.message); btn.disabled = false; btn.textContent = '✅'; return; }
+          users = fallbackUsers;
+        }
 
-          if (fallbackError || !fallbackUsers) {
-            alert('Ошибка загрузки базы: ' + fallbackError.message);
-            btn.disabled = false;
-            btn.textContent = '✅';
-            return;
-          }
+        const cleanName = nickname.trim().toLowerCase();
+        const userData = users.find(u => u.nickname && u.nickname.trim().toLowerCase() === cleanName);
 
-          const cleanName = nickname.trim().toLowerCase();
-          userData = fallbackUsers.find(u => u.nickname && u.nickname.trim().toLowerCase() === cleanName);
+        if (!userData) {
+          alert(`Ошибка: Игрок с ником "${nickname}" не найден в профилях.`);
+          btn.disabled = false;
+          btn.textContent = '✅';
+          return;
+        }
 
-          if (!userData) {
-            alert(`Ошибка: Игрок "${nickname}" не найден.`);
-            btn.disabled = false;
-            btn.textContent = '✅';
-            return;
-          }
+        const currentBalance = Number(userData.balance) || 0;
+        const newBalance = currentBalance + amount;
 
-          const newBalance = (Number(userData.balance) || 0) + amount;
-          await supabase.from('profiles').update({ balance: newBalance }).eq('id', userData.id);
+        if (hasContracts) {
+          const currentContracts = Number(userData.contracts) || 0;
+          const newContracts = currentContracts + 1;
           
-        } else {
-          // Если колонка есть, начисляем баланс и контракты
-          const cleanName = nickname.trim().toLowerCase();
-          userData = users.find(u => u.nickname && u.nickname.trim().toLowerCase() === cleanName);
-
-          if (!userData) {
-            alert(`Ошибка: Игрок "${nickname}" не найден.`);
-            btn.disabled = false;
-            btn.textContent = '✅';
-            return;
-          }
-
-          const newBalance = (Number(userData.balance) || 0) + amount;
-          const newContracts = (Number(userData.contracts) || 0) + 1;
-
           await supabase.from('profiles').update({ 
             balance: newBalance, 
             contracts: newContracts 
           }).eq('id', userData.id);
+        } else {
+          await supabase.from('profiles').update({ balance: newBalance }).eq('id', userData.id);
         }
 
-        // Пишем транзакцию и отправляем лог
         await supabase.from('transactions').insert([{ admin_id: currentAdmin.id, user_id: userData.id, amount: amount, type: 'add' }]);
         await sendDiscordLog(WEBHOOK_APPROVED, nickname, amount, '✅ Выплата одобрена', 0x4caf50);
       } else {
         await sendDiscordLog(WEBHOOK_REJECTED, nickname, amount, '❌ Выплата отклонена', 0xe74c3c);
       }
 
-      // Меняем статус заявки
       const { error } = await supabase
         .from('payout_requests')
         .update({ status: newStatus })
