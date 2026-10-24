@@ -7,12 +7,12 @@
   <script>
     if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
-      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32; --blue: #3498db;
+      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
       --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
     html.dark {
@@ -29,22 +29,10 @@
     header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
     header .logo span { color: var(--accent); }
     .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
-    nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem; }
-    nav a { position: relative; color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; padding: 0.35rem 0.75rem; border-radius: 6px; overflow: hidden; white-space: nowrap; transition: 0.2s; }
-    nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35); }
-    nav a.active { color: var(--text); background: rgba(192, 57, 43, 0.14); }
-    .profile-btn { color: var(--gold) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
-    .profile-btn:hover { background: transparent !important; box-shadow: none !important; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
-    nav a .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
-    nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
-    nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
-    nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
-    nav a .spark { position: absolute; top: 50%; left: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
-    nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
-    nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
-    nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
-    nav a:hover .spark.s2 { animation-delay: 0.12s; }
-    nav a:hover .spark.s3 { animation-delay: 0.24s; }
+    nav { display: flex; align-items: center; gap: 0.2rem; flex-wrap: wrap; }
+    nav a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 0.35rem 0.75rem; border-radius: 6px; transition: 0.2s; }
+    nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); }
+    .logout-btn { color: var(--accent) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
     .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
     .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
@@ -52,159 +40,168 @@
     html.dark .theme-btn .icon-sun { display: none; }
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
-    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
-    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
-    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
-    .page-hero { padding: 4rem 2rem 1rem; text-align: center; position: relative; }
-    .page-hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.3), transparent 60%); pointer-events: none; }
-    .page-hero h1 { font-size: clamp(1.75rem, 4.5vw, 2.5rem); font-weight: 800; color: var(--text); margin-bottom: 0.75rem; position: relative; }
-    .page-hero h1 em { color: var(--accent); font-style: normal; }
-    .page-hero p { color: var(--muted); font-size: 0.95rem; max-width: 640px; margin: 0 auto; position: relative; }
-
-    section.block { padding: 0.4rem 2rem; max-width: 960px; margin: 0 auto; }
-    .accordion { max-width: 700px; margin: 0 auto; }
-    .accordion-header { font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.5px; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 1rem; background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; cursor: pointer; user-select: none; position: relative; overflow: hidden; transition: 0.2s; margin-bottom: 0.5rem; }
-    .accordion-header:hover { border-color: var(--accent); transform: translateX(4px); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.4), 0 0 20px rgba(192, 57, 43, 0.35); }
-    .accordion-header .header-left { display: flex; align-items: center; gap: 0.5rem; position: relative; z-index: 2; }
-    .accordion-header .icon { font-size: 1.15rem; line-height: 1; }
-    .accordion-header .arrow { font-size: 0.75rem; line-height: 1; color: var(--accent); transition: transform 0.3s ease; margin-top: -1px; position: relative; z-index: 2; }
-    .accordion-header.active .arrow { transform: rotate(180deg); }
-    .accordion-header .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
-    .accordion-header .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
-    .accordion-header .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
-    .accordion-header .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
-    .accordion-header .spark { position: absolute; top: 50%; left: 0; width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 2px rgba(255, 230, 100, 0.9), 0 0 14px 4px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
-    .accordion-header:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
-    .accordion-header:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
-    .accordion-header:hover .spark { animation: sparkFly 0.9s ease-out; }
-    .accordion-header:hover .spark.s2 { animation-delay: 0.12s; }
-    .accordion-header:hover .spark.s3 { animation-delay: 0.24s; }
-    .accordion-content { overflow: hidden; height: 0; transition: height 0.3s ease, margin-top 0.2s ease; }
-    .accordion-content.open { margin-top: 0.4rem; margin-bottom: 0.5rem; }
+    section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; }
+    .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
+    .profile-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; border-top: 3px solid var(--accent); height: fit-content; transition: 0.4s; }
     
-    .contracts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-    .contracts-list { display: flex; flex-direction: column; gap: 0.5rem; }
-    .contract-item { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 0.5rem 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; transition: 0.2s; }
+    .avatar-wrapper { position: relative; width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: 800; color: var(--accent); border: 3px solid var(--border); box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: 0.2s; }
+    .avatar-wrapper:hover { border-color: var(--accent); transform: scale(1.02); }
+    .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .avatar-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; color: #fff; }
+    .avatar-wrapper:hover .avatar-overlay { opacity: 1; }
     
-    .back-block { text-align: center; padding: 1.5rem 2rem 3rem; }
-    .btn-back { display: inline-block; padding: 0.7rem 1.5rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; transition: 0.2s; }
-    .btn-back:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+    .profile-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; color: var(--text); word-break: break-all; }
+    .profile-status { font-size: 0.85rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
+    .btn-outline { display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%; margin-bottom: 0.5rem; }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-admin { border-color: var(--accent) !important; color: var(--accent) !important; font-weight: 700 !important; }
     
-    footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
-    footer span { color: var(--accent); }
-
-    /* СТИЛИ ДЛЯ ЛИЧНОГО КАБИНЕТА (ИСТОРИЯ) */
-    .profile-card { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; border-left: 4px solid var(--accent); max-width: 700px; margin-left: auto; margin-right: auto; }
-    .avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; flex-shrink: 0; }
-    .profile-info h2 { font-size: 1.5rem; margin-bottom: 0.25rem; }
-    .profile-info p { color: var(--muted); font-size: 0.9rem; }
-
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; max-width: 700px; margin-left: auto; margin-right: auto; }
-    .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 600; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-radius: 6px; }
-    .tab-btn:hover { color: var(--text); background: rgba(192, 57, 43, 0.05); }
-    .tab-btn.active { color: var(--accent); background: rgba(192, 57, 43, 0.1); }
+    .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     
-    .tab-content { display: none; animation: fadeIn 0.3s ease; max-width: 700px; margin: 0 auto; }
+    /* Вкладки внутри карточки */
+    .tabs-header { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 700; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    .history-table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-    .history-table th, .history-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-    .history-table th { background: rgba(0,0,0,0.02); font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
-    html.dark .history-table th { background: rgba(255,255,255,0.02); }
+    .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text); }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .stat-item { background: rgba(128, 128, 128, 0.1); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
+    .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
+    .stat-value.money { color: var(--green); }
+    
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
+    .form-group input { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem; }
+    .form-group input:focus { outline: none; border-color: var(--accent); }
+
+    /* Таблица истории */
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th, .history-table td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .history-table th { font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
     .history-table tr:last-child td { border-bottom: none; }
     
-    .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .status-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
     .status-pending { background: rgba(212, 175, 55, 0.15); color: var(--gold); }
     .status-approved { background: rgba(76, 175, 80, 0.15); color: var(--green); }
     .status-rejected { background: rgba(192, 57, 43, 0.15); color: var(--accent); }
 
-    .empty-state { text-align: center; padding: 3rem; color: var(--muted); background: var(--panel); border-radius: 8px; border: 1px dashed var(--border); }
-
-    @media (max-width: 850px) { header { flex-direction: column; align-items: flex-start; } .header-right { width: 100%; justify-content: space-between; } nav { justify-content: flex-start; } .profile-card { flex-direction: column; text-align: center; } .tabs { flex-wrap: wrap; } }
-    @media (max-width: 600px) { .contracts-grid { grid-template-columns: 1fr; } .history-table th, .history-table td { padding: 0.75rem 0.5rem; font-size: 0.8rem; } }
+    .empty-state { text-align: center; padding: 2rem; color: var(--muted); }
+    
+    @media (max-width: 850px) {
+      .profile-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; }
+      .header-right { width: 100%; justify-content: space-between; }
+      .history-table th, .history-table td { padding: 0.6rem; font-size: 0.8rem; }
+    }
   </style>
 </head>
 <body>
+
   <header>
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
     <div class="header-right">
       <nav>
-        <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="family.html">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
-        <a href="profile.html" class="profile-btn active">👤 Личный кабинет</a>
-        <button class="theme-btn" id="themeToggle" title="Переключить тему">
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </button>
+        <a href="index.html">Главная</a>
+        <a href="family.html">Правила</a>
+        <a href="transport.html">О транспорте</a>
+        <a href="contracts.html">Контракты</a>
+        <a href="tables.html">Таблицы</a>
+        <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
       </nav>
+      <button class="theme-btn" id="themeToggle" title="Переключить тему">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
     </div>
   </header>
 
-  <section class="page-hero">
-    <h1>Личный кабинет <em>La Muerte</em></h1>
-    <p>Управление вашим профилем и история заявок</p>
-  </section>
-
   <section class="block">
-    <!-- Карточка игрока -->
-    <div class="profile-card">
-      <div class="avatar" id="avatarLetter">?</div>
-      <div class="profile-info">
-        <h2 id="profileNickname">Загрузка...</h2>
-        <p id="profileDiscord">Discord ID: Загрузка...</p>
+    <div class="profile-grid">
+      <!-- ЛЕВАЯ КОЛОНКА (Профиль) -->
+      <div class="profile-card">
+        <div class="avatar-wrapper" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Изменить аватар">
+          <span id="avatarLetter">?</span>
+          <img id="avatarImg" src="" alt="Аватар">
+          <div class="avatar-overlay">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          </div>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
+        <div class="profile-name" id="displayName">Загрузка...</div>
+        <div class="profile-status" id="userRoleDisplay">Загрузка...</div>
+        
+        <a href="admin.html" id="adminPanelBtn" class="btn-outline btn-admin" style="display: none;">⚙️ Панель управления</a>
+        <a href="#" class="btn-outline" onclick="resetProfile()" style="border-color: #333;">Сбросить профиль</a>
       </div>
-    </div>
 
-    <!-- Вкладки -->
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab(event, 'tab-history')">История выплат</button>
-      <button class="tab-btn" onclick="switchTab(event, 'tab-settings')">Настройки</button>
-    </div>
+      <!-- ПРАВАЯ КОЛОНКА (Статистика и История) -->
+      <div class="stats-card">
+        
+        <!-- Вкладки -->
+        <div class="tabs-header">
+          <button class="tab-btn active" onclick="switchTab(event, 'tab-stats')">📊 Статистика</button>
+          <button class="tab-btn" onclick="switchTab(event, 'tab-history')">🧾 История выплат</button>
+        </div>
 
-    <!-- Вкладка: История -->
-    <div id="tab-history" class="tab-content active">
-      <div id="historyLoader" style="text-align: center; padding: 2rem; color: var(--muted);">Загрузка истории...</div>
-      
-      <div id="historyContent" style="display: none;">
-        <table class="history-table">
-          <thead>
-            <tr>
-              <th>Дата</th>
-              <th>Ресурс</th>
-              <th>Сумма</th>
-              <th>Статус</th>
-            </tr>
-          </thead>
-          <tbody id="historyTableBody">
-            <!-- Сюда будут вставляться строки -->
-          </tbody>
-        </table>
-      </div>
-      
-      <div id="historyEmpty" class="empty-state" style="display: none;">
-        <p>У вас пока нет поданных заявок на выплату.</p>
-        <a href="contracts.html" style="display: inline-block; margin-top: 1rem; color: var(--accent); text-decoration: none; font-weight: 600;">Перейти к контрактам →</a>
-      </div>
-    </div>
+        <!-- Вкладка: Статистика (ваш старый код) -->
+        <div id="tab-stats" class="tab-content active">
+          <div class="stats-title">📊 Статистика персонажа</div>
+          <div class="stats-grid">
+            <div class="stat-item"><span class="stat-label">Баланс ($)</span><span class="stat-value money" id="statMoney">0</span></div>
+            <div class="stat-item"><span class="stat-label">Контракты</span><span class="stat-value" id="statContracts">0</span></div>
+          </div>
 
-    <!-- Вкладка: Настройки (заглушка) -->
-    <div id="tab-settings" class="tab-content">
-      <div class="empty-state">
-        <p>Раздел находится в разработке.</p>
+          <div class="stats-title">⚙️ Информация</div>
+          <div class="form-group">
+            <label>Ваш Никнейм</label>
+            <input type="text" id="inputName" readonly style="opacity: 0.7;">
+          </div>
+          <div class="form-group">
+            <label>Ссылка на аватар (GIF / URL)</label>
+            <input type="text" id="avatarUrlInput" placeholder="https://example.com/anime.gif" onchange="saveAvatarUrl()">
+          </div>
+        </div>
+
+        <!-- Вкладка: История выплат (новая) -->
+        <div id="tab-history" class="tab-content">
+          <div class="stats-title">🧾 История ваших заявок</div>
+          
+          <div id="historyLoader" style="text-align: center; padding: 1rem; color: var(--muted); display: none;">Загрузка...</div>
+          
+          <div id="historyContent" style="display: none; overflow-x: auto;">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Ресурс</th>
+                  <th>Сумма</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Строки добавляются через JS -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div id="historyEmpty" class="empty-state" style="display: none;">
+            <p>Вы пока не подавали заявок на выплату.</p>
+            <a href="contracts.html" class="btn-outline" style="margin-top: 1rem; display: inline-block; width: auto;">Перейти к контрактам →</a>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
-
-  <div class="back-block">
-    <a href="index.html" class="btn-back">← Вернуться на главную</a>
-  </div>
-
-  <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -213,14 +210,14 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Переключение тем
     const toggleBtn = document.getElementById('themeToggle');
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-      });
-    }
+    toggleBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    let currentUser = null;
+    let currentDiscordId = null;
 
     // Переключение вкладок
     window.switchTab = function(evt, tabId) {
@@ -229,20 +226,54 @@
       
       evt.currentTarget.classList.add('active');
       document.getElementById(tabId).classList.add('active');
+
+      // Если открыли вкладку истории и она еще не загружена - грузим
+      if (tabId === 'tab-history' && currentDiscordId) {
+        loadHistory(currentDiscordId);
+      }
     }
 
-    // Загрузка данных профиля
-    async function loadProfile() {
-      // Берем данные из localStorage (сохраняются при отправке формы в contracts.html)
-      const savedDiscordId = localStorage.getItem('discordId') || '123456789012345678';
-      const savedNickname = localStorage.getItem('nickname') || 'Игрок La Muerte';
+    async function initProfile() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { window.location.href = 'login.html'; return; }
 
-      document.getElementById('profileNickname').textContent = savedNickname;
-      document.getElementById('profileDiscord').textContent = `Discord ID: ${savedDiscordId}`;
-      document.getElementById('avatarLetter').textContent = savedNickname.charAt(0).toUpperCase();
+      currentUser = session.user;
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
 
-      await loadHistory(savedDiscordId);
+      if (error || !data) {
+        document.getElementById('displayName').textContent = 'Ошибка данных';
+        return;
+      }
+
+      document.getElementById('displayName').textContent = data.nickname;
+      document.getElementById('inputName').value = data.nickname;
+      document.getElementById('userRoleDisplay').textContent = data.role;
+      
+      document.getElementById('statMoney').textContent = (data.balance || 0) + ' $';
+      document.getElementById('statContracts').textContent = data.contracts || 0;
+
+      if (data.role === 'Глава' || data.role === 'Администратор' || data.role === 'Заместитель') {
+        document.getElementById('adminPanelBtn').style.display = 'block';
+      }
+
+      const avatarLetter = document.getElementById('avatarLetter');
+      const avatarImg = document.getElementById('avatarImg');
+      const urlInput = document.getElementById('avatarUrlInput');
+
+      if (data.avatar) {
+        avatarImg.src = data.avatar;
+        avatarImg.style.display = 'block';
+        avatarLetter.style.display = 'none';
+        urlInput.value = data.avatar;
+      } else {
+        avatarLetter.textContent = data.nickname.charAt(0).toUpperCase();
+      }
+
+      // Берем Discord ID из профиля или из localStorage (если его нет в базе)
+      currentDiscordId = data.discord_id || localStorage.getItem('discordId');
     }
+
+    setTimeout(initProfile, 500);
 
     async function loadHistory(discordId) {
       const loader = document.getElementById('historyLoader');
@@ -250,8 +281,12 @@
       const empty = document.getElementById('historyEmpty');
       const tbody = document.getElementById('historyTableBody');
 
+      loader.style.display = 'block';
+      content.style.display = 'none';
+      empty.style.display = 'none';
+
       try {
-        // Ищем заявки в Supabase по Discord ID
+        // Ищем заявки по Discord ID
         const { data, error } = await supabase
           .from('payout_requests')
           .select('*')
@@ -274,7 +309,7 @@
           const tr = document.createElement('tr');
           
           const date = new Date(req.created_at).toLocaleDateString('ru-RU', {
-            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            day: '2-digit', month: '2-digit', year: 'numeric'
           });
 
           let statusClass = 'status-pending';
@@ -293,12 +328,59 @@
 
       } catch (err) {
         console.error('Ошибка загрузки истории:', err);
-        loader.textContent = '❌ Ошибка загрузки истории.';
-        loader.style.color = 'var(--accent)';
+        loader.textContent = '❌ Ошибка загрузки.';
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadProfile);
+    window.uploadAvatar = async function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { alert('Файл больше 5 МБ!'); return; }
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
+
+      if (uploadError) { alert('Ошибка загрузки: ' + uploadError.message); return; }
+
+      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      const publicUrl = data.publicUrl;
+
+      const { error: dbError } = await supabase.from('profiles').update({ avatar: publicUrl }).eq('id', currentUser.id);
+
+      if (dbError) { alert('Ошибка базы: ' + dbError.message); } 
+      else {
+        document.getElementById('avatarImg').src = publicUrl;
+        document.getElementById('avatarImg').style.display = 'block';
+        document.getElementById('avatarLetter').style.display = 'none';
+        document.getElementById('avatarUrlInput').value = publicUrl;
+      }
+    };
+
+    window.saveAvatarUrl = async function() {
+      const url = document.getElementById('avatarUrlInput').value.trim();
+      if (!url) return;
+
+      const { error } = await supabase.from('profiles').update({ avatar: url }).eq('id', currentUser.id);
+      
+      if (error) { alert('Ошибка: ' + error.message); } 
+      else {
+        document.getElementById('avatarImg').src = url;
+        document.getElementById('avatarImg').style.display = 'block';
+        document.getElementById('avatarLetter').style.display = 'none';
+      }
+    };
+
+    window.logout = async function() {
+      await supabase.auth.signOut();
+      window.location.href = 'login.html';
+    };
+
+    window.resetProfile = function() {
+      if(confirm('Вы уверены?')) window.logout();
+    };
   </script>
 </body>
 </html>
