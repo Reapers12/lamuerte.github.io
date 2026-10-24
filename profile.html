@@ -7,12 +7,12 @@
   <script>
     if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
-      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
+      --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32; --blue: #3498db;
       --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
     html.dark {
@@ -29,10 +29,12 @@
     header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
     header .logo span { color: var(--accent); }
     .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
-    nav { display: flex; align-items: center; gap: 0.2rem; flex-wrap: wrap; }
-    nav a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 0.35rem 0.75rem; border-radius: 6px; transition: 0.2s; }
-    nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); }
-    .logout-btn { color: var(--accent) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
+    nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem; }
+    nav a { position: relative; color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; padding: 0.35rem 0.75rem; border-radius: 6px; overflow: hidden; white-space: nowrap; transition: 0.2s; }
+    nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.35), 0 0 16px rgba(192, 57, 43, 0.35); }
+    nav a.active { color: var(--text); background: rgba(192, 57, 43, 0.14); }
+    .profile-btn { color: var(--gold) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
+    .profile-btn:hover { background: transparent !important; box-shadow: none !important; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
     .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
     .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
@@ -41,48 +43,52 @@
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
 
-    section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; }
-    .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
-    .profile-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; border-top: 3px solid var(--accent); height: fit-content; transition: 0.4s; }
+    .page-hero { padding: 4rem 2rem 2rem; text-align: center; position: relative; }
+    .page-hero h1 { font-size: clamp(1.75rem, 4.5vw, 2.5rem); font-weight: 800; color: var(--text); margin-bottom: 0.75rem; }
+    .page-hero h1 em { color: var(--accent); font-style: normal; }
+    .page-hero p { color: var(--muted); font-size: 0.95rem; }
+
+    .profile-container { max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
     
-    .avatar-wrapper { position: relative; width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: 800; color: var(--accent); border: 3px solid var(--border); box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: 0.2s; }
-    .avatar-wrapper:hover { border-color: var(--accent); transform: scale(1.02); }
-    .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
-    .avatar-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; color: #fff; }
-    .avatar-wrapper:hover .avatar-overlay { opacity: 1; }
+    /* Карточка профиля */
+    .profile-card { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; border-left: 4px solid var(--accent); }
+    .avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; flex-shrink: 0; }
+    .profile-info h2 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .profile-info p { color: var(--muted); font-size: 0.9rem; }
+
+    /* Вкладки */
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 600; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-radius: 6px; }
+    .tab-btn:hover { color: var(--text); background: rgba(192, 57, 43, 0.05); }
+    .tab-btn.active { color: var(--accent); background: rgba(192, 57, 43, 0.1); }
     
-    .profile-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; color: var(--text); word-break: break-all; }
-    .profile-status { font-size: 0.85rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
-    .btn-outline { display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%; margin-bottom: 0.5rem; }
-    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-admin { border-color: var(--accent) !important; color: var(--accent) !important; font-weight: 700 !important; }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Таблица истории */
+    .history-table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    .history-table th, .history-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .history-table th { background: rgba(0,0,0,0.02); font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+    html.dark .history-table th { background: rgba(255,255,255,0.02); }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover { background: rgba(192, 57, 43, 0.03); }
     
-    .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
-    .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text); }
-    
-    /* Сетка на 2 колонки, так как убрали одну карточку */
-    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
-    
-    .stat-item { background: rgba(128, 128, 128, 0.1); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
-    .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-    .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
-    .stat-value.money { color: var(--green); }
-    
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
-    .form-group input { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem; }
-    .form-group input:focus { outline: none; border-color: var(--accent); }
-    
-    @media (max-width: 850px) {
-      .profile-grid { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: 1fr; }
-      header { flex-direction: column; align-items: flex-start; }
-      .header-right { width: 100%; justify-content: space-between; }
-    }
+    .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .status-pending { background: rgba(212, 175, 55, 0.15); color: var(--gold); }
+    .status-approved { background: rgba(76, 175, 80, 0.15); color: var(--green); }
+    .status-rejected { background: rgba(192, 57, 43, 0.15); color: var(--accent); }
+
+    .empty-state { text-align: center; padding: 3rem; color: var(--muted); background: var(--panel); border-radius: 8px; border: 1px dashed var(--border); }
+
+    footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
+    footer span { color: var(--accent); }
+
+    @media (max-width: 850px) { header { flex-direction: column; align-items: flex-start; } .header-right { width: 100%; justify-content: space-between; } nav { justify-content: flex-start; } .profile-card { flex-direction: column; text-align: center; } .tabs { flex-wrap: wrap; } }
+    @media (max-width: 600px) { .history-table th, .history-table td { padding: 0.75rem 0.5rem; font-size: 0.8rem; } }
   </style>
 </head>
 <body>
-
   <header>
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
     <div class="header-right">
@@ -92,53 +98,71 @@
         <a href="transport.html">О транспорте</a>
         <a href="contracts.html">Контракты</a>
         <a href="tables.html">Таблицы</a>
-        <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
+        <a href="profile.html" class="profile-btn active">👤 Личный кабинет</a>
+        <button class="theme-btn" id="themeToggle" title="Переключить тему">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
       </nav>
-      <button class="theme-btn" id="themeToggle" title="Переключить тему">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
     </div>
   </header>
 
-  <section class="block">
-    <div class="profile-grid">
-      <div class="profile-card">
-        <div class="avatar-wrapper" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Изменить аватар">
-          <span id="avatarLetter">?</span>
-          <img id="avatarImg" src="" alt="Аватар">
-          <div class="avatar-overlay">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-          </div>
-        </div>
-        <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
-        <div class="profile-name" id="displayName">Загрузка...</div>
-        <div class="profile-status" id="userRoleDisplay">Загрузка...</div>
-        
-        <a href="admin.html" id="adminPanelBtn" class="btn-outline btn-admin" style="display: none;">⚙️ Панель управления</a>
-        <a href="#" class="btn-outline" onclick="resetProfile()" style="border-color: #333;">Сбросить профиль</a>
-      </div>
+  <section class="page-hero">
+    <h1>Личный кабинет <em>La Muerte</em></h1>
+    <p>Управление вашим профилем и история заявок</p>
+  </section>
 
-      <div class="stats-card">
-        <div class="stats-title">📊 Статистика персонажа</div>
-        <div class="stats-grid">
-          <!-- Блок "Уровень" удален -->
-          <div class="stat-item"><span class="stat-label">Баланс ($)</span><span class="stat-value money" id="statMoney">0</span></div>
-          <div class="stat-item"><span class="stat-label">Контракты</span><span class="stat-value" id="statContracts">0</span></div>
-        </div>
-
-        <div class="stats-title">⚙️ Информация</div>
-        <div class="form-group">
-          <label>Ваш Никнейм</label>
-          <input type="text" id="inputName" readonly style="opacity: 0.7;">
-        </div>
-        <div class="form-group">
-          <label>Ссылка на аватар (GIF / URL)</label>
-          <input type="text" id="avatarUrlInput" placeholder="https://example.com/anime.gif" onchange="saveAvatarUrl()">
-        </div>
+  <div class="profile-container">
+    <!-- Карточка игрока -->
+    <div class="profile-card">
+      <div class="avatar" id="avatarLetter">?</div>
+      <div class="profile-info">
+        <h2 id="profileNickname">Загрузка...</h2>
+        <p id="profileDiscord">Discord ID: Загрузка...</p>
       </div>
     </div>
-  </section>
+
+    <!-- Вкладки -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'tab-history')">История выплат</button>
+      <button class="tab-btn" onclick="switchTab(event, 'tab-settings')">Настройки</button>
+    </div>
+
+    <!-- Вкладка: История -->
+    <div id="tab-history" class="tab-content active">
+      <div id="historyLoader" style="text-align: center; padding: 2rem; color: var(--muted);">Загрузка истории...</div>
+      
+      <div id="historyContent" style="display: none;">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Ресурс</th>
+              <th>Сумма</th>
+              <th>Статус</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <!-- Сюда будут вставляться строки -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div id="historyEmpty" class="empty-state" style="display: none;">
+        <p>У вас пока нет поданных заявок на выплату.</p>
+        <a href="contracts.html" style="display: inline-block; margin-top: 1rem; color: var(--accent); text-decoration: none; font-weight: 600;">Перейти к контрактам →</a>
+      </div>
+    </div>
+
+    <!-- Вкладка: Настройки (заглушка) -->
+    <div id="tab-settings" class="tab-content">
+      <div class="empty-state">
+        <p>Раздел находится в разработке.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -147,105 +171,102 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // Переключение тем
     const toggleBtn = document.getElementById('themeToggle');
-    toggleBtn.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-    });
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      });
+    }
 
-    let currentUser = null;
-
-    async function initProfile() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { window.location.href = 'login.html'; return; }
-
-      currentUser = session.user;
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
-
-      if (error || !data) {
-        document.getElementById('displayName').textContent = 'Ошибка данных';
-        return;
-      }
-
-      document.getElementById('displayName').textContent = data.nickname;
-      document.getElementById('inputName').value = data.nickname;
-      document.getElementById('userRoleDisplay').textContent = data.role;
+    // Переключение вкладок
+    window.switchTab = function(evt, tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
       
-      // ОТОБРАЖЕНИЕ БАЛАНСА
-      document.getElementById('statMoney').textContent = (data.balance || 0) + ' $';
-      
-      // ОТОБРАЖЕНИЕ КОНТРАКТОВ (если поле есть в базе, иначе 0)
-      document.getElementById('statContracts').textContent = data.contracts || 0;
+      evt.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
 
-      if (data.role === 'Глава' || data.role === 'Администратор' || data.role === 'Заместитель') {
-        document.getElementById('adminPanelBtn').style.display = 'block';
-      }
+    // Загрузка данных профиля (имитация)
+    // В реальном проекте здесь будет проверка авторизации (Discord OAuth)
+    // Пока мы просто берем последний Discord ID, который вводили, из localStorage
+    // или показываем заглушку.
+    
+    async function loadProfile() {
+      // Представим, что мы сохраняем Discord ID при авторизации
+      const savedDiscordId = localStorage.getItem('discordId') || '123456789012345678';
+      const savedNickname = localStorage.getItem('nickname') || 'Игрок La Muerte';
 
-      const avatarLetter = document.getElementById('avatarLetter');
-      const avatarImg = document.getElementById('avatarImg');
-      const urlInput = document.getElementById('avatarUrlInput');
+      document.getElementById('profileNickname').textContent = savedNickname;
+      document.getElementById('profileDiscord').textContent = `Discord ID: ${savedDiscordId}`;
+      document.getElementById('avatarLetter').textContent = savedNickname.charAt(0).toUpperCase();
 
-      if (data.avatar) {
-        avatarImg.src = data.avatar;
-        avatarImg.style.display = 'block';
-        avatarLetter.style.display = 'none';
-        urlInput.value = data.avatar;
-      } else {
-        avatarLetter.textContent = data.nickname.charAt(0).toUpperCase();
+      // Загружаем историю
+      await loadHistory(savedDiscordId);
+    }
+
+    async function loadHistory(discordId) {
+      const loader = document.getElementById('historyLoader');
+      const content = document.getElementById('historyContent');
+      const empty = document.getElementById('historyEmpty');
+      const tbody = document.getElementById('historyTableBody');
+
+      try {
+        // Делаем запрос в Supabase
+        // Ищем заявки по discord ID
+        const { data, error } = await supabase
+          .from('payout_requests')
+          .select('*')
+          .eq('discord', discordId)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        loader.style.display = 'none';
+
+        if (!data || data.length === 0) {
+          empty.style.display = 'block';
+          return;
+        }
+
+        content.style.display = 'block';
+        tbody.innerHTML = '';
+
+        data.forEach(req => {
+          const tr = document.createElement('tr');
+          
+          // Форматируем дату
+          const date = new Date(req.created_at).toLocaleDateString('ru-RU', {
+            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
+
+          // Статус
+          let statusClass = 'status-pending';
+          let statusText = 'В ожидании';
+          if (req.status === 'approved') { statusClass = 'status-approved'; statusText = 'Одобрено'; }
+          if (req.status === 'rejected') { statusClass = 'status-rejected'; statusText = 'Отклонено'; }
+
+          tr.innerHTML = `
+            <td>${date}</td>
+            <td>${req.details || req.category}</td>
+            <td style="color: var(--gold); font-weight: 700;">${req.amount.toLocaleString('ru-RU')} $</td>
+            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error('Ошибка загрузки истории:', err);
+        loader.textContent = '❌ Ошибка загрузки истории.';
+        loader.style.color = 'var(--accent)';
       }
     }
 
-    setTimeout(initProfile, 500);
+    // Запуск
+    document.addEventListener('DOMContentLoaded', loadProfile);
 
-    window.uploadAvatar = async function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      if (file.size > 5 * 1024 * 1024) { alert('Файл больше 5 МБ!'); return; }
-
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
-
-      if (uploadError) { alert('Ошибка загрузки: ' + uploadError.message); return; }
-
-      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
-      const publicUrl = data.publicUrl;
-
-      const { error: dbError } = await supabase.from('profiles').update({ avatar: publicUrl }).eq('id', currentUser.id);
-
-      if (dbError) { alert('Ошибка базы: ' + dbError.message); } 
-      else {
-        document.getElementById('avatarImg').src = publicUrl;
-        document.getElementById('avatarImg').style.display = 'block';
-        document.getElementById('avatarLetter').style.display = 'none';
-        document.getElementById('avatarUrlInput').value = publicUrl;
-      }
-    };
-
-    window.saveAvatarUrl = async function() {
-      const url = document.getElementById('avatarUrlInput').value.trim();
-      if (!url) return;
-
-      const { error } = await supabase.from('profiles').update({ avatar: url }).eq('id', currentUser.id);
-      
-      if (error) { alert('Ошибка: ' + error.message); } 
-      else {
-        document.getElementById('avatarImg').src = url;
-        document.getElementById('avatarImg').style.display = 'block';
-        document.getElementById('avatarLetter').style.display = 'none';
-      }
-    };
-
-    window.logout = async function() {
-      await supabase.auth.signOut();
-      window.location.href = 'login.html';
-    };
-
-    window.resetProfile = function() {
-      if(confirm('Вы уверены?')) window.logout();
-    };
   </script>
 </body>
 </html>
