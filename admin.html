@@ -31,32 +31,32 @@
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let currentUser = null;
-
-    async function checkAdmin() {
-      const { data: { session } } = await supabase.auth.getSession();
+    // Небольшая задержка, чтобы Supabase успел восстановить сессию
+    setTimeout(async () => {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (!session) {
         window.location.href = 'login.html';
         return;
       }
-      
-      currentUser = session.user;
 
-      // Проверяем роль текущего пользователя
+      const currentUser = session.user;
+
+      // Проверяем роль
       const { data, error } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', currentUser.id)
         .single();
 
-      if (error || data.role !== 'Администратор') {
+      // Если роль не Админ — выкидываем
+      if (error || !data || data.role !== 'Администратор') {
         document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh;">Доступ запрещён!</h1><p style="text-align:center;">Вы не Администратор.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
         return;
       }
 
       loadUsers();
-    }
+    }, 500); // Задержка 500мс
 
     async function loadUsers() {
       const list = document.getElementById('usersList');
@@ -71,6 +71,11 @@
         return;
       }
       
+      if (users.length === 0) {
+        list.innerHTML = '<p style="text-align:center;">Пользователей пока нет.</p>';
+        return;
+      }
+
       users.forEach(user => {
         const card = document.createElement('div');
         card.className = 'user-card';
@@ -105,8 +110,6 @@
         location.reload(); 
       }
     };
-
-    checkAdmin();
   </script>
 </body>
 </html>
