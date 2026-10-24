@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Личный кабинет — La Muerte</title>
   
-  <!-- СКРИПТ ПРОТИВ ВСПЫШКИ (должен быть до стилей) -->
   <script>
     if (localStorage.getItem('theme') === 'dark') {
       document.documentElement.classList.add('dark');
@@ -16,14 +15,12 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ===== СВЕТЛАЯ ТЕМА ===== */
     :root {
       --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
       --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
       --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
 
-    /* ===== ТЕМНАЯ ТЕМА ===== */
     html.dark {
       --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
       --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
@@ -39,7 +36,7 @@
     }
     body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
 
-    /* ===== ШАПКА ===== */
+    /* ШАПКА */
     header {
       background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
       padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
@@ -49,7 +46,6 @@
     header .logo span { color: var(--accent); }
     
     .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
-    
     nav { display: flex; align-items: center; gap: 0.2rem; flex-wrap: wrap; }
     nav a { 
       color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem;
@@ -62,7 +58,6 @@
       margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important;
     }
 
-    /* Кнопка темы */
     .theme-btn { 
       background: transparent; border: 1px solid var(--border); border-radius: 50%; 
       width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; 
@@ -75,7 +70,7 @@
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
 
-    /* ===== КОНТЕНТ ===== */
+    /* КОНТЕНТ */
     section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; }
     .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
 
@@ -92,6 +87,8 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: 0.2s;
     }
     .avatar-wrapper:hover { border-color: var(--accent); transform: scale(1.02); }
+    
+    /* Разрешаем GIF картинкам анимироваться */
     .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
     
     .avatar-overlay {
@@ -130,6 +127,7 @@
       width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text);
       border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem;
     }
+    .form-group input:focus { outline: none; border-color: var(--accent); }
 
     @media (max-width: 768px) {
       .profile-grid { grid-template-columns: 1fr; }
@@ -146,7 +144,7 @@
     <div class="header-right">
       <nav>
         <a href="index.html">Главная</a>
-        <a href="family.html">О семье</a>
+        <a href="family.html">Правила</a>
         <a href="transport.html">О транспорте</a>
         <a href="contracts.html">Контракты</a>
         <a href="tables.html">Таблицы</a>
@@ -164,7 +162,7 @@
     <div class="profile-grid">
       
       <div class="profile-card">
-        <div class="avatar-wrapper" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Нажмите, чтобы изменить аватар">
+        <div class="avatar-wrapper" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Нажмите, чтобы загрузить картинку">
           <span id="avatarLetter">?</span>
           <img id="avatarImg" src="" alt="Аватар">
           <div class="avatar-overlay">
@@ -191,9 +189,16 @@
         </div>
 
         <div class="stats-title">⚙️ Информация</div>
+        
         <div class="form-group">
           <label>Ваш Никнейм</label>
           <input type="text" id="inputName" readonly style="opacity: 0.7;">
+        </div>
+
+        <!-- ДОБАВЛЕНО ПОЛЕ ДЛЯ ССЫЛКИ НА ГИФКУ -->
+        <div class="form-group">
+          <label>Или вставьте ссылку на анимированную картинку (GIF)</label>
+          <input type="text" id="avatarUrlInput" placeholder="https://example.com/anime.gif" onchange="saveAvatarUrl()">
         </div>
       </div>
 
@@ -207,7 +212,7 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    /* Тема (вспышка убрана, так как тема применяется в head) */
+    /* Тема */
     const toggleBtn = document.getElementById('themeToggle');
     toggleBtn.addEventListener('click', () => {
       document.documentElement.classList.toggle('dark');
@@ -239,11 +244,13 @@
 
       const avatarLetter = document.getElementById('avatarLetter');
       const avatarImg = document.getElementById('avatarImg');
+      const urlInput = document.getElementById('avatarUrlInput');
 
       if (data.avatar) {
         avatarImg.src = data.avatar;
         avatarImg.style.display = 'block';
         avatarLetter.style.display = 'none';
+        urlInput.value = data.avatar;
       } else {
         avatarLetter.textContent = data.nickname.charAt(0).toUpperCase();
       }
@@ -251,23 +258,50 @@
 
     setTimeout(initProfile, 500);
 
+    /* Загрузка файла (с поддержкой GIF) */
     window.uploadAvatar = async function(event) {
       const file = event.target.files[0];
       if (!file) return;
-      if (file.size > 1024 * 1024) { alert('Файл больше 1 МБ!'); return; }
+      
+      // Увеличил лимит до 2 МБ для гифок
+      if (file.size > 2 * 1024 * 1024) { 
+        alert('Файл больше 2 МБ! Выберите картинку поменьше.'); 
+        return; 
+      }
 
       const reader = new FileReader();
       reader.onload = async function(e) {
         const base64String = e.target.result;
         const { error } = await supabase.from('profiles').update({ avatar: base64String }).eq('id', currentUser.id);
-        if (error) { alert('Ошибка: ' + error.message); } 
-        else {
+        
+        if (error) { 
+          alert('Ошибка: ' + error.message); 
+        } else {
           document.getElementById('avatarImg').src = base64String;
           document.getElementById('avatarImg').style.display = 'block';
           document.getElementById('avatarLetter').style.display = 'none';
+          document.getElementById('avatarUrlInput').value = ''; // Очищаем поле ссылки
         }
       };
       reader.readAsDataURL(file);
+    };
+
+    /* Сохранение по ссылке (для больших гифок) */
+    window.saveAvatarUrl = async function() {
+      const url = document.getElementById('avatarUrlInput').value.trim();
+      
+      if (!url) return;
+
+      const { error } = await supabase.from('profiles').update({ avatar: url }).eq('id', currentUser.id);
+      
+      if (error) { 
+        alert('Ошибка: ' + error.message); 
+      } else {
+        document.getElementById('avatarImg').src = url;
+        document.getElementById('avatarImg').style.display = 'block';
+        document.getElementById('avatarLetter').style.display = 'none';
+        alert('Аватар по ссылке сохранен!');
+      }
     };
 
     window.logout = async function() {
