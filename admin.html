@@ -96,11 +96,9 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ===== ССЫЛКИ НА ВЕБХУКИ DISCORD =====
-    // Вставь сюда ссылку на канал, куда будут падать логи об одобрении
-    const WEBHOOK_APPROVED = 'ССЫЛКА_НА_ВЕБХУК_ОДОБРЕНИЯ'; 
-    // Вставь сюда ссылку на канал, куда будут падать логи об отказе
-    const WEBHOOK_REJECTED = 'ССЫЛКА_НА_ВЕБХУК_ОТКАЗА'; 
+    // ===== ТВОИ ССЫЛКИ НА ВЕБХУКИ DISCORD =====
+    const WEBHOOK_APPROVED = 'https://discord.com/api/webhooks/1563575363542458510/_bE3Y5t4U0oZ8Z-89ZNxwwUXh6M0o5dG-S-GQI-dEbqvQQXyJQ8UItS7Oty3nf-sDCMR';
+    const WEBHOOK_REJECTED = 'https://discord.com/api/webhooks/1563575494484430848/-Khgl90Sdwvb3LFSZMUssUXmvSrzvJhcrA_Qyl3V5_F8kM1KVZUCx1rr639ZlmwKDLMv';
 
     const rolePriority = { 'Администратор': 1, 'Глава': 2, 'Заместитель': 3, 'Кровь Семьи': 4, 'Стажер': 5, 'Боец': 6 };
 
@@ -108,9 +106,9 @@
     let currentRole = '';
     let isSuperAdmin = false;
 
-    // Функция отправки сообщения в Discord
+    // Функция отправки лога в Discord
     async function sendDiscordLog(webhookUrl, nickname, amount, statusText, color) {
-      if (webhookUrl === 'ССЫЛКА_НА_ВЕБХУК_ОДОБРЕНИЯ' || !webhookUrl) return; // Пропускаем, если ссылка не вставлена
+      if (!webhookUrl || webhookUrl.includes('ССЫЛКА')) return;
 
       const payload = {
         username: "La Muerte | Логи",
