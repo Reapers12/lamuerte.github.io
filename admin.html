@@ -418,44 +418,36 @@
       btn.textContent = '...';
 
       if (newStatus === 'approved') {
-        // 1. Ищем игрока по нику (без учета регистра и лишних пробелов)
-        let userData = null;
-        let userError = null;
+        // Ищем игрока без учета регистра (скачиваем всех)
+        const { data: users, error: userError } = await supabase.from('profiles').select('id, nickname, balance, contracts');
 
-        const { data: exactMatch, error: err1 } = await supabase
-          .from('profiles')
-          .select('id, balance, contracts')
-          .eq('nickname', nickname.trim())
-          .maybeSingle();
-
-        if (exactMatch) {
-          userData = exactMatch;
-        } else {
-          const { data: fuzzyMatch, error: err2 } = await supabase
-            .from('profiles')
-            .select('id, balance, contracts')
-            .ilike('nickname', nickname.trim())
-            .maybeSingle();
-
-          if (fuzzyMatch) userData = fuzzyMatch;
-          else userError = err1 || err2;
-        }
-
-        if (userError || !userData) {
-          alert(`Ошибка: Игрок с ником "${nickname}" не найден в профилях. Проверьте, совпадает ли ник в заявке с ником в базе.`);
+        if (userError || !users) {
+          alert('Ошибка загрузки базы: ' + userError.message);
           btn.disabled = false;
           btn.textContent = '✅';
           return;
         }
 
-        // 2. Считаем новые значения
+        // Ищем совпадение без учета регистра и пробелов
+        const cleanName = nickname.trim().toLowerCase();
+        const userData = users.find(u => u.nickname && u.nickname.trim().toLowerCase() === cleanName);
+
+        if (!userData) {
+          console.error('Игрок не найден. Все ники в базе:', users.map(u => u.nickname));
+          alert(`Ошибка: Игрок "${nickname}" не найден. Откройте консоль (F12), чтобы увидеть все ники из базы.`);
+          btn.disabled = false;
+          btn.textContent = '✅';
+          return;
+        }
+
+        // Считаем новые значения
         const currentBalance = Number(userData.balance) || 0;
         const currentContracts = Number(userData.contracts) || 0;
 
         const newBalance = currentBalance + amount;
         const newContracts = currentContracts + 1;
 
-        // 3. Обновляем базу
+        // Обновляем базу
         const { error: updateError } = await supabase
           .from('profiles')
           .update({ 
@@ -471,14 +463,14 @@
           return;
         }
 
-        // 4. Пишем транзакцию и отправляем лог
+        // Пишем транзакцию и отправляем лог
         await supabase.from('transactions').insert([{ admin_id: currentAdmin.id, user_id: userData.id, amount: amount, type: 'add' }]);
         await sendDiscordLog(WEBHOOK_APPROVED, nickname, amount, '✅ Выплата одобрена', 0x4caf50);
       } else {
         await sendDiscordLog(WEBHOOK_REJECTED, nickname, amount, '❌ Выплата отклонена', 0xe74c3c);
       }
 
-      // 5. Меняем статус заявки
+      // Меняем статус заявки
       const { error } = await supabase
         .from('payout_requests')
         .update({ status: newStatus })
