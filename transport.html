@@ -139,7 +139,7 @@
       text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
     }
 
-    /* Молнии */
+    /* Молнии в навигации */
     nav a .lightning {
       position: absolute; top: 0; bottom: 0; width: 2px;
       background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent);
@@ -161,7 +161,7 @@
     nav a:hover .spark.s2 { animation-delay: 0.12s; }
     nav a:hover .spark.s3 { animation-delay: 0.24s; }
 
-    /* Переключатель */
+    /* ===== Переключатель День/Ночь ===== */
     .spark-switch { display: inline-block; font-size: 20px; flex-shrink: 0; margin-left: 0.5rem; }
     .spark-switch input { display: none; }
     .spark-switch .track {
@@ -183,6 +183,7 @@
     .spark-switch input:checked + .track .knob { transform: translateX(2.5em); }
     .spark-switch input:checked + .track::before { opacity: 1; }
     .spark-switch input:checked + .track .knob svg { color: #f5ba1f; transform: scale(1.1); }
+
     .spark-switch .stars { position: absolute; inset: 0; z-index: 1; }
     .spark-switch .star { position: absolute; background: #f7f7f7; border-radius: 50%; transition: width 0.3s, height 0.3s, background 0.3s, border-radius 0.3s; }
     .spark-switch .star:nth-child(1) { top: 0.4em; left: 100%; width: 0.15em; height: 0.15em; animation: drift 3s linear infinite; }
@@ -201,9 +202,9 @@
     @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
     @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
-    /* ===== Контент ===== */
+    /* ===== Твой оригинальный контент ===== */
     .page-hero {
-      padding: 4rem 2rem 1rem;
+      padding: 5rem 2rem 3rem;
       text-align: center;
       position: relative;
     }
@@ -215,57 +216,272 @@
       pointer-events: none;
     }
     .page-hero h1 {
-      font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+      font-family: 'Overpass', sans-serif;
       font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3rem);
+      letter-spacing: 1px;
       color: var(--text);
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       position: relative;
     }
-    .page-hero h1 em { color: var(--accent); font-style: normal; }
-    
+    .page-hero h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+    .page-hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+    }
+
     section.block {
-      padding: 2rem;
+      padding: 3rem 2rem;
       max-width: 960px;
       margin: 0 auto;
     }
+    section.block h2 {
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    section.block p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      text-align: center;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    section.block p em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 700;
+    }
 
-    .content-box {
+    .vehicle-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .vehicle-table thead th {
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: left;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .vehicle-table tbody tr {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      transition: transform 0.2s, box-shadow 0.2s, background 0.4s;
+    }
+
+    .vehicle-table tbody tr:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(192, 57, 43, 0.25);
+    }
+
+    .vehicle-table tbody td {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+
+    .vehicle-table tbody td:first-child {
+      border-left: 3px solid var(--accent);
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+
+    .vehicle-table tbody td:last-child {
+      border-right: 1px solid var(--border);
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    .vehicle-table .img-cell {
+      width: 130px;
+      text-align: center;
+    }
+
+    .vehicle-table .img-cell img {
+      width: 110px;
+      height: 70px;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      display: block;
+      margin: 0 auto;
+      background: #0d0d0d;
+      padding: 4px;
+      cursor: zoom-in;
+    }
+
+    .vehicle-table tbody tr:hover .img-cell img {
+      transform: scale(1.08);
+      border-color: var(--accent);
+    }
+
+    .vehicle-table .img-cell img:hover {
+      box-shadow: 0 0 12px rgba(192, 57, 43, 0.6);
+    }
+
+    .vehicle-table .name-cell {
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      color: var(--text);
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+    }
+
+    .vehicle-table .rank-cell {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+    }
+
+    .vehicle-table .fuel-cell {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .fuel-icon {
+      display: inline-block;
+      margin-right: 0.35rem;
+    }
+
+    /* Модалка */
+    .img-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      animation: fadeIn 0.25s ease;
+    }
+    .img-modal.active { display: flex; }
+
+    .img-modal-content {
+      position: relative;
+      max-width: 900px;
+      width: 100%;
+      animation: zoomIn 0.3s ease;
+    }
+
+    .img-modal-content img {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+      background: #0d0d0d;
+      display: block;
+    }
+
+    .img-modal-close {
+      position: absolute;
+      top: -45px;
+      right: 0;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 2.25rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s, transform 0.2s;
+      padding: 0;
+    }
+    .img-modal-close:hover {
+      color: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    .img-modal-caption {
+      text-align: center;
+      color: #fff;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      margin-top: 1rem;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes zoomIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .rules {
+      list-style: none;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .rules li {
       background: var(--panel);
       backdrop-filter: blur(6px);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
-      border-radius: 10px;
-      padding: 2rem;
-      margin-bottom: 1.5rem;
-      transition: transform 0.2s, border-color 0.2s;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.85rem;
+      color: var(--text);
+      transition: transform 0.2s, border-color 0.2s, background 0.4s;
     }
-    .content-box:hover {
-      transform: translateY(-2px);
+    .rules li:hover {
+      transform: translateX(6px);
       border-color: var(--accent);
     }
-    .content-box h2 {
+    .rules li strong {
       color: var(--text);
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
+      font-family: 'Overpass', sans-serif;
+      font-weight: 700;
+      margin-right: 0.5rem;
     }
-    .content-box p {
-      color: var(--muted);
-      margin-bottom: 1rem;
+
+    .back-block {
+      text-align: center;
+      padding: 2rem 2rem 4rem;
     }
-    .content-box ul {
-      list-style: none;
-      padding-left: 0;
-    }
-    .content-box li {
-      padding: 0.3rem 0;
+    .btn-back {
+      display: inline-block;
+      padding: 0.8rem 1.75rem;
+      background: transparent;
       color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
     }
-    .content-box li::before {
-      content: "▸ ";
+    .btn-back:hover {
+      border-color: var(--accent);
       color: var(--accent);
-      font-weight: bold;
+      transform: translateY(-2px);
     }
 
     footer {
@@ -274,8 +490,8 @@
       border-top: 1px solid var(--border);
       color: var(--muted);
       text-align: center;
-      padding: 1.25rem;
-      font-size: 0.85rem;
+      padding: 1.5rem;
+      font-size: 0.9rem;
       transition: background 0.4s ease, border-color 0.4s ease;
     }
     footer span { color: var(--accent); }
@@ -284,6 +500,41 @@
       header { flex-direction: column; align-items: flex-start; }
       .header-right { width: 100%; justify-content: space-between; flex-wrap: wrap; }
       nav { justify-content: flex-start; }
+    }
+    @media (max-width: 700px) {
+      .vehicle-table thead { display: none; }
+      .vehicle-table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .vehicle-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border: none;
+        border-bottom: 1px solid var(--border);
+        text-align: right;
+      }
+      .vehicle-table tbody td:last-child { border-bottom: none; }
+      .vehicle-table tbody td::before {
+        content: attr(data-label);
+        font-family: 'Overpass', sans-serif;
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-align: left;
+        margin-right: 1rem;
+      }
+      .vehicle-table .img-cell { width: auto; justify-content: center; }
+      .vehicle-table .img-cell img { width: 140px; height: 90px; }
+      .vehicle-table .img-cell::before { display: none; }
+      .img-modal-close { top: -40px; font-size: 2rem; }
     }
   </style>
 </head>
@@ -299,9 +550,7 @@
         <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         
-        <a href="#" onclick="goToProfile(event)" class="profile-btn">
-          👤 Личный кабинет
-        </a>
+        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
       </nav>
 
       <label class="spark-switch" title="Переключить тему">
@@ -322,40 +571,124 @@
   </header>
 
   <section class="page-hero">
-    <h1>Наш <em>Транспорт</em></h1>
+    <h1>Автопарк <em>La Muerte</em></h1>
+    <p>Наш транспорт — это не просто машины. Это мощь, стиль и скорость семьи.</p>
   </section>
 
   <section class="block">
-    
-    <!-- КАРТОЧКА 1 -->
-    <div class="content-box">
-      <h2>Автопарк семьи</h2>
-      <p>Мы обладаем лучшим транспортом на сервере. Это позволяет нам быстро доставлять грузы и уходить от погони.</p>
-    </div>
-
-    <!-- КАРТОЧКА 2 -->
-    <div class="content-box">
-      <h2>Доступный транспорт</h2>
-      <ul>
-        <li><strong>Спорткары:</strong> Для быстрых операций и погонь (доступно с 3 ранга).</li>
-        <li><strong>Внедорожники:</strong> Для перевозки ценных грузов по бездорожью.</li>
-        <li><strong>Вертолёты:</strong> Для воздушной разведки и эвакуации (доступно с 5 ранга).</li>
-        <li><strong>Яхты:</strong> Для элитного отдыха и морских сделок.</li>
-      </ul>
-    </div>
-
-    <!-- КАРТОЧКА 3 -->
-    <div class="content-box">
-      <h2>Правила вождения</h2>
-      <p>Каждый член семьи обязан соблюдать ПДД, чтобы не привлекать внимание полиции. Транспорт семьи всегда должен быть заправлен и в идеальном состоянии.</p>
-    </div>
-
+    <h2>О нашем автопарке</h2>
+    <p>
+      <em>La Muerte</em> передвигается только на достойном транспорте. Мы не гонимся
+      за количеством — важна надёжность, скорость и внешний вид.
+    </p>
+    <p>
+      Каждый автомобиль в семье закреплён за конкретным братом или сестрой.
+      Машина — это продолжение статуса семьи.
+    </p>
   </section>
 
-  <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
+  <section class="block">
+    <h2>Наш транспорт</h2>
+    <table class="vehicle-table">
+      <thead>
+        <tr>
+          <th>Фото</th>
+          <th>Название авто</th>
+          <th>Ранг</th>
+          <th>Тип топлива</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="img-cell" data-label="Фото">
+            <img src="https://files.fletcher-wiki.com/vehicles/bmwg20.png"
+                 alt="BMW 3 G20"
+                 onclick="openImage(this)"
+                 onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/BMW_G20_IMG_2250.jpg/640px-BMW_G20_IMG_2250.jpg';">
+          </td>
+          <td class="name-cell" data-label="Название">BMW 3 G20</td>
+          <td class="rank-cell" data-label="Ранг">2 ранг</td>
+          <td class="fuel-cell" data-label="Топливо">
+            <span class="fuel-icon">⛽</span> Plus
+          </td>
+        </tr>
+
+        <tr>
+          <td class="img-cell" data-label="Фото">
+            <img src="https://files.fletcher-wiki.com/vehicles/gemera.png"
+                 alt="Koenigsegg Gemera"
+                 onclick="openImage(this)"
+                 onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Koenigsegg_Gemera_Genf_2019_1Y7A5575.jpg/640px-Koenigsegg_Gemera_Genf_2019_1Y7A5575.jpg';">
+          </td>
+          <td class="name-cell" data-label="Название">Koenigsegg Gemera</td>
+          <td class="rank-cell" data-label="Ранг">3 ранг</td>
+          <td class="fuel-cell" data-label="Топливо">
+            <span class="fuel-icon">⛽</span> Премиум
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+
+  <section class="block">
+    <h2>Правила транспорта</h2>
+    <ul class="rules">
+      <li><strong>I.</strong> Машина — это лицо семьи. Следи за её состоянием.</li>
+      <li><strong>II.</strong> Не передавай транспорт посторонним без разрешения.</li>
+      <li><strong>III.</strong> Уважай чужой транспорт так же, как свой.</li>
+      <li><strong>IV.</strong> Повреждение транспорта брата — общая проблема семьи.</li>
+      <li><strong>V.</strong> Хочешь новую машину — обсуди с куратором.</li>
+    </ul>
+  </section>
+
+  <div class="back-block">
+    <a href="index.html" class="btn-back">← Вернуться на главную</a>
+  </div>
+
+  <!-- Модалка -->
+  <div class="img-modal" id="imgModal">
+    <div class="img-modal-content">
+      <button class="img-modal-close" onclick="closeImage()">×</button>
+      <img id="imgModalImg" src="" alt="">
+      <p class="img-modal-caption" id="imgModalCaption"></p>
+    </div>
+  </div>
+
+  <footer>
+    © 2024–2026 <span>La Muerte</span> — Все права защищены.
+  </footer>
 
   <script>
-    // Переключатель темы
+    /* ===== Модалка для фото ===== */
+    function openImage(imgElement) {
+      const modal = document.getElementById('imgModal');
+      const modalImg = document.getElementById('imgModalImg');
+      const caption = document.getElementById('imgModalCaption');
+
+      modalImg.src = imgElement.src;
+      modalImg.alt = imgElement.alt;
+      caption.textContent = imgElement.alt;
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeImage() {
+      document.getElementById('imgModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('imgModal').addEventListener('click', function (e) {
+      if (e.target === this) closeImage();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeImage();
+    });
+
+    /* ===== Переключатель темы ===== */
     (function () {
       const switchEl = document.getElementById('themeSwitch');
       if (!switchEl) return;
@@ -375,7 +708,7 @@
       });
     })();
 
-    // Переход в ЛК
+    /* ===== Переход в ЛК ===== */
     function goToProfile(e) {
       if (e) e.preventDefault();
       if (localStorage.getItem('lm_logged') === 'true') {
