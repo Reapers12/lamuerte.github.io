@@ -10,7 +10,6 @@
     body { font-family: 'Overpass', sans-serif; background: var(--bg); color: var(--text); padding: 2rem; }
     h1 { color: var(--accent); text-align: center; margin-bottom: 2rem; }
     
-    /* ===== БЛОК ЗАЯВОК ===== */
     .requests-section { background: rgba(192, 57, 43, 0.1); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; display: none; }
     .requests-section.active { display: block; }
     .requests-title { color: var(--accent); font-size: 1.2rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
@@ -28,7 +27,6 @@
     .btn-reject { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 0.6rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .btn-reject:hover { background: rgba(192, 57, 43, 0.2); }
 
-    /* ===== КАРТОЧКИ ЮЗЕРОВ ===== */
     .user-card { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 1rem; }
     .user-main { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     .user-info { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
@@ -96,41 +94,23 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ===== ТВОИ ССЫЛКИ НА ВЕБХУКИ DISCORD =====
     const WEBHOOK_APPROVED = 'https://discord.com/api/webhooks/1563575363542458510/_bE3Y5t4U0oZ8Z-89ZNxwwUXh6M0o5dG-S-GQI-dEbqvQQXyJQ8UItS7Oty3nf-sDCMR';
     const WEBHOOK_REJECTED = 'https://discord.com/api/webhooks/1563575494484430848/-Khgl90Sdwvb3LFSZMUssUXmvSrzvJhcrA_Qyl3V5_F8kM1KVZUCx1rr639ZlmwKDLMv';
 
-    const rolePriority = { 'Администратор': 1, 'Глава': 2, 'Заместитель': 3, 'Кровь Семьи': 4, 'Стажер': 5, 'Боец': 6 };
+    // ИЗМЕНЕНО: Администратор теперь на первом месте (индекс 0)
+    const rolePriority = { 'Администратор': 0, 'Глава': 1, 'Заместитель': 2, 'Кровь Семьи': 3, 'Стажер': 4, 'Боец': 5 };
 
     let currentAdmin = null;
     let currentRole = '';
     let isSuperAdmin = false;
 
-    // Функция отправки лога в Discord
     async function sendDiscordLog(webhookUrl, nickname, amount, statusText, color) {
       if (!webhookUrl || webhookUrl.includes('ССЫЛКА')) return;
-
       const payload = {
-        username: "La Muerte | Логи",
-        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
-        embeds: [{
-          title: statusText,
-          color: color,
-          description: `**Игрок:** ${nickname}\n**Сумма:** ${amount} $`,
-          footer: { text: `Обработал: ${currentAdmin.email}` },
-          timestamp: new Date().toISOString()
-        }]
+        username: "La Muerte | Логи", avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
+        embeds: [{ title: statusText, color: color, description: `**Игрок:** ${nickname}\n**Сумма:** ${amount} $`, footer: { text: `Обработал: ${currentAdmin.email}` }, timestamp: new Date().toISOString() }]
       };
-
-      try {
-        await fetch(webhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch (e) {
-        console.error('Ошибка отправки в Discord:', e);
-      }
+      try { await fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); } catch (e) {}
     }
 
     async function init() {
@@ -156,7 +136,6 @@
       loadUsers();
     }
 
-    // ===== ЗАГРУЗКА ЗАЯВОК =====
     async function loadRequests() {
       const section = document.getElementById('requestsSection');
       const list = document.getElementById('requestsList');
@@ -178,7 +157,7 @@
           <div class="req-info">
             <strong>${req.nickname}</strong> запрашивает <span class="req-amount">${req.amount} $</span>
             <p>${req.category} | ${req.details}</p>
-            <p><a href="${req.screenshot}" target="_blank">📸 Смотреть скриншот</a> | Discord: ${req.discord}</p>
+            <p><a href="${req.screenshot}" target="_blank">📸 Смотреть скриншот</a> | ID: ${req.discord}</p>
           </div>
           <div class="req-actions">
             <button class="btn-approve" onclick="approveRequest('${req.id}', '${req.nickname}', ${req.amount})">✅ Выплатить</button>
@@ -189,7 +168,6 @@
       });
     }
 
-    // ОДОБРЕНИЕ
     window.approveRequest = async function(reqId, nickname, amount) {
       if (!confirm(`Вы уверены, что хотите выплатить ${amount} $ игроку ${nickname}?`)) return;
 
@@ -215,7 +193,6 @@
 
       await supabase.from('payout_requests').update({ status: 'approved' }).eq('id', reqId);
 
-      // ОТПРАВЛЯЕМ ЛОГ В DISCORD
       await sendDiscordLog(WEBHOOK_APPROVED, nickname, amount, '✅ Выплата одобрена', 0x4caf50);
 
       alert(`Успешно выплачено ${amount} $ для ${nickname}!`);
@@ -223,19 +200,16 @@
       loadUsers();
     };
 
-    // ОТКЛОНЕНИЕ
     window.rejectRequest = async function(reqId, nickname, amount) {
       if (!confirm('Отклонить эту заявку?')) return;
       
       await supabase.from('payout_requests').update({ status: 'rejected' }).eq('id', reqId);
       
-      // ОТПРАВЛЯЕМ ЛОГ В DISCORD
       await sendDiscordLog(WEBHOOK_REJECTED, nickname, amount, '❌ Выплата отклонена', 0xe74c3c);
       
       loadRequests();
     };
 
-    // ===== ЗАГРУЗКА ЮЗЕРОВ =====
     async function loadUsers() {
       const list = document.getElementById('usersList');
       list.innerHTML = '';
@@ -253,17 +227,21 @@
         const card = document.createElement('div');
         card.className = 'user-card';
         
+        // ИЗМЕНЕНО: Администратор теперь идет первым в списке
         let roleHtml = '';
         if (['Глава', 'Администратор'].includes(currentRole)) {
-          let roleOptions = `
+          let roleOptions = '';
+          
+          if (isSuperAdmin) {
+            roleOptions += `<option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>⭐ Администратор</option>`;
+          }
+          
+          roleOptions += `
             <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
             <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
             <option value="Кровь Семьи" ${user.role === 'Кровь Семьи' ? 'selected' : ''}>Кровь Семьи</option>
             <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
           `;
-          if (isSuperAdmin) {
-            roleOptions += `<option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>⭐ Администратор</option>`;
-          }
           roleHtml = `<select onchange="changeRole('${user.id}', this.value)">${roleOptions}</select>`;
         } else {
           roleHtml = `<span style="color: var(--muted); font-size: 0.9rem;">Роль: ${user.role}</span>`;
