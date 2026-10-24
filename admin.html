@@ -174,12 +174,25 @@
       });
     })();
 
-    async function sendDiscordLog(webhookUrl, nickname, amount, statusText, color) {
+    async function sendDiscordLog(webhookUrl, nickname, amount, statusText, color, discordId) {
       if (!webhookUrl || webhookUrl.includes('ССЫЛКА')) return;
+      
+      const pingText = discordId ? `<@${discordId}>` : nickname;
+      
       const payload = {
-        username: "La Muerte | Логи", avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
-        embeds: [{ title: statusText, color: color, description: `**Игрок:** ${nickname}\n**Сумма:** ${amount} $`, footer: { text: `Обработал: ${currentAdmin.email}` }, timestamp: new Date().toISOString() }]
+        username: "La Muerte | Логи", 
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
+        content: `${pingText}, ваша заявка на ${amount} $ была ${statusText === '✅ Выплата одобрена' ? 'одобрена' : 'отклонена'}!`,
+        allowed_mentions: { parse: ["users"] }, // Разрешаем пинговать
+        embeds: [{ 
+          title: statusText, 
+          color: color, 
+          description: `**Игрок:** ${nickname}\n**Сумма:** ${amount} $`, 
+          footer: { text: `Обработал: ${currentAdmin.email}` }, 
+          timestamp: new Date().toISOString() 
+        }]
       };
+      
       try { await fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); } catch (e) {}
     }
 
@@ -421,6 +434,10 @@
       btn.disabled = true;
       btn.textContent = '...';
 
+      // Находим заявку, чтобы взять из неё Discord ID
+      const reqData = allPayouts.find(p => p.id === reqId);
+      const discordId = reqData ? reqData.discord : null;
+
       if (newStatus === 'approved') {
         let { data: users, error: userError } = await supabase.from('profiles').select('id, nickname, balance, contracts');
         
@@ -459,9 +476,12 @@
         }
 
         await supabase.from('transactions').insert([{ admin_id: currentAdmin.id, user_id: userData.id, amount: amount, type: 'add' }]);
-        await sendDiscordLog(WEBHOOK_APPROVED, nickname, amount, '✅ Выплата одобрена', 0x4caf50);
+        
+        // Передаем discordId в лог
+        await sendDiscordLog(WEBHOOK_APPROVED, nickname, amount, '✅ Выплата одобрена', 0x4caf50, discordId);
       } else {
-        await sendDiscordLog(WEBHOOK_REJECTED, nickname, amount, '❌ Выплата отклонена', 0xe74c3c);
+        // Передаем discordId в лог
+        await sendDiscordLog(WEBHOOK_REJECTED, nickname, amount, '❌ Выплата отклонена', 0xe74c3c, discordId);
       }
 
       const { error } = await supabase
