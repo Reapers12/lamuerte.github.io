@@ -51,7 +51,6 @@
     .btn-reset { background: var(--accent); color: #fff; }
     .btn-reset:hover { background: #a93226; }
     
-    /* Модалка истории */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 100; justify-content: center; align-items: center; }
     .modal-overlay.active { display: flex; }
     .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
@@ -72,7 +71,6 @@
 <body>
   <h1>Управление участниками</h1>
 
-  <!-- БЛОК ОЖИДАЮЩИХ ЗАЯВОК -->
   <div class="requests-section" id="requestsSection">
     <div class="requests-title">⏳ Ожидают выплаты</div>
     <div id="requestsList"></div>
@@ -98,11 +96,44 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // ===== ССЫЛКИ НА ВЕБХУКИ DISCORD =====
+    // Вставь сюда ссылку на канал, куда будут падать логи об одобрении
+    const WEBHOOK_APPROVED = 'ССЫЛКА_НА_ВЕБХУК_ОДОБРЕНИЯ'; 
+    // Вставь сюда ссылку на канал, куда будут падать логи об отказе
+    const WEBHOOK_REJECTED = 'ССЫЛКА_НА_ВЕБХУК_ОТКАЗА'; 
+
     const rolePriority = { 'Администратор': 1, 'Глава': 2, 'Заместитель': 3, 'Кровь Семьи': 4, 'Стажер': 5, 'Боец': 6 };
 
     let currentAdmin = null;
     let currentRole = '';
     let isSuperAdmin = false;
+
+    // Функция отправки сообщения в Discord
+    async function sendDiscordLog(webhookUrl, nickname, amount, statusText, color) {
+      if (webhookUrl === 'ССЫЛКА_НА_ВЕБХУК_ОДОБРЕНИЯ' || !webhookUrl) return; // Пропускаем, если ссылка не вставлена
+
+      const payload = {
+        username: "La Muerte | Логи",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
+        embeds: [{
+          title: statusText,
+          color: color,
+          description: `**Игрок:** ${nickname}\n**Сумма:** ${amount} $`,
+          footer: { text: `Обработал: ${currentAdmin.email}` },
+          timestamp: new Date().toISOString()
+        }]
+      };
+
+      try {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {
+        console.error('Ошибка отправки в Discord:', e);
+      }
+    }
 
     async function init() {
       await new Promise(r => setTimeout(r, 500));
@@ -118,14 +149,13 @@
         if (currentRole === 'Администратор') isSuperAdmin = true;
       }
 
-      // Пускаем Главу, Админа и Заместителя
       if (!profile || !['Глава', 'Администратор', 'Заместитель'].includes(currentRole)) {
         document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh; color:#c0392b;">Доступ запрещён!</h1><p style="text-align:center;">Вы не имеете прав на это действие.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
         return;
       }
 
-      loadRequests(); // Загружаем заявки
-      loadUsers();    // Загружаем юзеров
+      loadRequests();
+      loadUsers();
     }
 
     // ===== ЗАГРУЗКА ЗАЯВОК =====
@@ -154,28 +184,26 @@
           </div>
           <div class="req-actions">
             <button class="btn-approve" onclick="approveRequest('${req.id}', '${req.nickname}', ${req.amount})">✅ Выплатить</button>
-            <button class="btn-reject" onclick="rejectRequest('${req.id}')">❌ Отклонить</button>
+            <button class="btn-reject" onclick="rejectRequest('${req.id}', '${req.nickname}', ${req.amount})">❌ Отклонить</button>
           </div>
         `;
         list.appendChild(card);
       });
     }
 
-    // ОДОБРЕНИЕ ЗАЯВКИ
+    // ОДОБРЕНИЕ
     window.approveRequest = async function(reqId, nickname, amount) {
       if (!confirm(`Вы уверены, что хотите выплатить ${amount} $ игроку ${nickname}?`)) return;
 
-      // 1. Ищем юзера по нику, чтобы получить его ID
       const { data: userData, error: userError } = await supabase.from('profiles').select('id, balance').eq('nickname', nickname).single();
 
       if (userError || !userData) {
-        alert('Ошибка: Игрок с таким ником не найден в базе! Возможно, он указал ник с ошибкой.');
+        alert('Ошибка: Игрок с таким ником не найден в базе!');
         return;
       }
 
       const newBalance = (userData.balance || 0) + amount;
 
-      // 2. Начисляем деньги
       const { error: updateError } = await supabase.from('profiles').update({ balance: newBalance }).eq('id', userData.id);
       
       if (updateError) {
@@ -183,26 +211,29 @@
         return;
       }
 
-      // 3. Записываем в историю транзакций
       await supabase.from('transactions').insert([{
-        admin_id: currentAdmin.id, 
-        user_id: userData.id, 
-        amount: amount, 
-        type: 'add'
+        admin_id: currentAdmin.id, user_id: userData.id, amount: amount, type: 'add'
       }]);
 
-      // 4. Меняем статус заявки на "одобрено"
       await supabase.from('payout_requests').update({ status: 'approved' }).eq('id', reqId);
 
+      // ОТПРАВЛЯЕМ ЛОГ В DISCORD
+      await sendDiscordLog(WEBHOOK_APPROVED, nickname, amount, '✅ Выплата одобрена', 0x4caf50);
+
       alert(`Успешно выплачено ${amount} $ для ${nickname}!`);
-      loadRequests(); // Обновляем список заявок
-      loadUsers();    // Обновляем баланс в списке
+      loadRequests();
+      loadUsers();
     };
 
-    // ОТКЛОНЕНИЕ ЗАЯВКИ
-    window.rejectRequest = async function(reqId) {
+    // ОТКЛОНЕНИЕ
+    window.rejectRequest = async function(reqId, nickname, amount) {
       if (!confirm('Отклонить эту заявку?')) return;
+      
       await supabase.from('payout_requests').update({ status: 'rejected' }).eq('id', reqId);
+      
+      // ОТПРАВЛЯЕМ ЛОГ В DISCORD
+      await sendDiscordLog(WEBHOOK_REJECTED, nickname, amount, '❌ Выплата отклонена', 0xe74c3c);
+      
       loadRequests();
     };
 
