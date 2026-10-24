@@ -6,82 +6,85 @@
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --bg: #0a0a0a; --panel: #111; --border: #222; --text: #eaeaea; --accent: #c0392b; --gold: #d4af37; --green: #4caf50; }
+    :root { --bg: #0a0a0a; --panel: #111; --border: #222; --text: #eaeaea; --accent: #c0392b; --gold: #d4af37; }
     body { font-family: 'Overpass', sans-serif; background: var(--bg); color: var(--text); padding: 2rem; }
     h1 { color: var(--accent); text-align: center; margin-bottom: 2rem; }
-    .user-card { 
-      background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); 
-      border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; 
-      transition: transform 0.2s, border-color 0.2s;
-    }
-    .user-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .user-card { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     .user-info { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-    .user-name { font-weight: 700; font-size: 1.1rem; color: #fff; }
-    .user-role { color: var(--gold); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-    
-    select { 
-      padding: 0.6rem; background: #050505; border: 1px solid #333; color: #fff; 
-      border-radius: 6px; cursor: pointer; outline: none; font-family: inherit; font-size: 0.95rem;
-      transition: border-color 0.2s;
-    }
-    select:hover { border-color: var(--accent); }
-    
-    .back-link { display: block; text-align: center; margin-top: 2rem; color: #666; text-decoration: none; font-weight: 600; transition: color 0.2s; }
+    .user-name { font-weight: 700; font-size: 1.1rem; }
+    .user-role { color: var(--gold); font-weight: 600; }
+    select { padding: 0.5rem; background: #050505; border: 1px solid #333; color: #fff; border-radius: 4px; cursor: pointer; outline: none; }
+    .back-link { display: block; text-align: center; margin-top: 2rem; color: #666; text-decoration: none; transition: color 0.2s; }
     .back-link:hover { color: var(--accent); }
-    
-    .empty-msg { text-align: center; color: var(--muted); padding: 2rem; }
   </style>
 </head>
 <body>
   <h1>Управление участниками</h1>
-  <div id="usersList"></div>
+  <div id="usersList">Загрузка...</div>
   <a href="profile.html" class="back-link">← Вернуться в личный кабинет</a>
 
-  <script>
-    const currentUser = localStorage.getItem('lm_user');
-    const allUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    // Проверка на Администратора
-    if (!allUsers[currentUser] || allUsers[currentUser].role !== 'Администратор') {
-      document.body.innerHTML = `
-        <h1 style="text-align:center; margin-top:20vh;">Доступ запрещён!</h1>
-        <p style="text-align:center;">Вы не Администратор.</p>
-        <a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>
-      `;
-    } else {
-      renderUsers();
-    }
+    const SUPABASE_URL = 'https://drumwcypxzwmwmtozrhd.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
 
-    function renderUsers() {
-      const list = document.getElementById('usersList');
-      list.innerHTML = '';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      const users = Object.keys(allUsers);
+    let currentUser = null;
 
-      if (users.length === 0) {
-        list.innerHTML = '<p class="empty-msg">Пользователей пока нет.</p>';
+    async function checkAdmin() {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      currentUser = session.user;
+
+      // Проверяем роль текущего пользователя
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', currentUser.id)
+        .single();
+
+      if (error || data.role !== 'Администратор') {
+        document.body.innerHTML = '<h1 style="text-align:center; margin-top:20vh;">Доступ запрещён!</h1><p style="text-align:center;">Вы не Администратор.</p><a href="profile.html" style="display:block; text-align:center; margin-top:1rem; color:#c0392b;">Вернуться</a>';
         return;
       }
 
+      loadUsers();
+    }
+
+    async function loadUsers() {
+      const list = document.getElementById('usersList');
+      list.innerHTML = '';
+      
+      const { data: users, error } = await supabase
+        .from('profiles')
+        .select('*');
+
+      if (error) {
+        list.innerHTML = '<p style="color: red;">Ошибка загрузки: ' + error.message + '</p>';
+        return;
+      }
+      
       users.forEach(user => {
-        const data = allUsers[user];
-        
-        // Создаем карточку
         const card = document.createElement('div');
         card.className = 'user-card';
-        
-        // Формируем селект со ВСЕМИ ролями
         card.innerHTML = `
           <div class="user-info">
-            <span class="user-name">${user}</span>
-            <span class="user-role">Текущая роль: ${data.role}</span>
+            <span class="user-name">${user.nickname}</span>
+            <span class="user-role">(Текущая роль: ${user.role})</span>
           </div>
           <div>
-            <select onchange="changeRole('${user}', this.value)">
-              <option value="Боец" ${data.role === 'Боец' ? 'selected' : ''}>Боец</option>
-              <option value="Заместитель" ${data.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
-              <option value="Начальник" ${data.role === 'Начальник' ? 'selected' : ''}>Начальник</option>
-              <option value="Администратор" ${data.role === 'Администратор' ? 'selected' : ''}>Администратор</option>
+            <select onchange="changeRole('${user.id}', this.value)">
+              <option value="Боец" ${user.role === 'Боец' ? 'selected' : ''}>Боец</option>
+              <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
+              <option value="Начальник" ${user.role === 'Начальник' ? 'selected' : ''}>Начальник</option>
+              <option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>Администратор</option>
             </select>
           </div>
         `;
@@ -89,22 +92,21 @@
       });
     }
 
-    function changeRole(user, newRole) {
-      allUsers[user].role = newRole;
-      localStorage.setItem('lm_users', JSON.stringify(allUsers));
-      
-      // Находим карточку этого пользователя и обновляем текст роли
-      const cards = document.querySelectorAll('.user-card');
-      cards.forEach(card => {
-        const name = card.querySelector('.user-name').textContent;
-        if (name === user) {
-          card.querySelector('.user-role').textContent = `Текущая роль: ${newRole}`;
-        }
-      });
-      
-      // Показываем небольшое уведомление (опционально)
-      // alert(`Роль для ${user} изменена на ${newRole}`);
-    }
+    window.changeRole = async function(userId, newRole) {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ role: newRole })
+        .eq('id', userId);
+
+      if (error) {
+        alert('Ошибка: ' + error.message);
+      } else {
+        alert('Роль обновлена!');
+        location.reload(); 
+      }
+    };
+
+    checkAdmin();
   </script>
 </body>
 </html>
