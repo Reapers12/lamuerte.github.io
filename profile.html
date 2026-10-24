@@ -17,7 +17,6 @@
     }
     body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
 
-    /* Шапка */
     header {
       background: rgba(5,5,5,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
       padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
@@ -27,11 +26,9 @@
     nav a { color: var(--muted); text-decoration: none; margin-left: 1.5rem; font-weight: 500; transition: color 0.2s; }
     nav a:hover { color: #fff; }
 
-    /* Контент */
     section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; }
     .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
 
-    /* Левая панель */
     .profile-card {
       background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
       padding: 2rem; text-align: center; border-top: 3px solid var(--accent); height: fit-content;
@@ -55,7 +52,6 @@
     }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
 
-    /* Правая панель */
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
     .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: #fff; }
     
@@ -68,7 +64,6 @@
     .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
     .stat-value.money { color: var(--green); }
 
-    /* Настройки */
     .form-group { margin-bottom: 1.25rem; }
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
     .form-group input {
@@ -123,8 +118,8 @@
 
         <div class="stats-title">⚙️ Настройки профиля</div>
         <div class="form-group">
-          <label>Ваш Никнейм</label>
-          <input type="text" id="inputName" placeholder="Введите ник">
+          <label>Ваш Логин</label>
+          <input type="text" id="inputName" placeholder="Введите логин" readonly style="opacity: 0.7;">
         </div>
         <div class="form-group">
           <label>Ссылка на аватар (URL)</label>
@@ -161,16 +156,9 @@
     }
 
     function saveProfile() {
-      const newName = document.getElementById('inputName').value.trim();
       const newAvatar = document.getElementById('inputAvatar').value.trim();
-
-      if (!newName) return alert('Никнейм не может быть пустым!');
-
-      localStorage.setItem('lm_user', newName);
       localStorage.setItem('lm_avatar', newAvatar);
 
-      document.getElementById('displayName').textContent = newName;
-      
       const box = document.getElementById('avatarBox');
       box.innerHTML = '';
       if (newAvatar) {
@@ -179,7 +167,7 @@
         img.style.display = 'block';
         box.appendChild(img);
       } else {
-        box.textContent = newName.charAt(0).toUpperCase();
+        box.textContent = user.charAt(0).toUpperCase();
       }
       box.style.borderColor = '#4caf50';
       setTimeout(() => box.style.borderColor = 'var(--border)', 500);
