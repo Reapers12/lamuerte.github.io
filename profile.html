@@ -35,6 +35,16 @@
     nav a.active { color: var(--text); background: rgba(192, 57, 43, 0.14); }
     .profile-btn { color: var(--gold) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
     .profile-btn:hover { background: transparent !important; box-shadow: none !important; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+    nav a .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
+    nav a .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
+    nav a .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
+    nav a .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
+    nav a .spark { position: absolute; top: 50%; left: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(255, 230, 100, 0.9), 0 0 10px 3px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
+    nav a:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
+    nav a:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
+    nav a:hover .spark { animation: sparkFly 0.9s ease-out; }
+    nav a:hover .spark.s2 { animation-delay: 0.12s; }
+    nav a:hover .spark.s3 { animation-delay: 0.24s; }
     .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
     .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
@@ -42,37 +52,68 @@
     html.dark .theme-btn .icon-sun { display: none; }
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
+    @keyframes lightningSlideDown { 0% { opacity: 0; transform: translateY(-100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(100%) scaleY(1); } }
+    @keyframes lightningSlideUp { 0% { opacity: 0; transform: translateY(100%) scaleY(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100%) scaleY(1); } }
+    @keyframes sparkFly { 0% { opacity: 0; left: 10%; transform: translateY(-50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; left: 90%; transform: translateY(-50%) scale(1.2); } }
 
-    .page-hero { padding: 4rem 2rem 2rem; text-align: center; position: relative; }
-    .page-hero h1 { font-size: clamp(1.75rem, 4.5vw, 2.5rem); font-weight: 800; color: var(--text); margin-bottom: 0.75rem; }
+    .page-hero { padding: 4rem 2rem 1rem; text-align: center; position: relative; }
+    .page-hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(192, 57, 43, 0.3), transparent 60%); pointer-events: none; }
+    .page-hero h1 { font-size: clamp(1.75rem, 4.5vw, 2.5rem); font-weight: 800; color: var(--text); margin-bottom: 0.75rem; position: relative; }
     .page-hero h1 em { color: var(--accent); font-style: normal; }
-    .page-hero p { color: var(--muted); font-size: 0.95rem; }
+    .page-hero p { color: var(--muted); font-size: 0.95rem; max-width: 640px; margin: 0 auto; position: relative; }
 
-    .profile-container { max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+    section.block { padding: 0.4rem 2rem; max-width: 960px; margin: 0 auto; }
+    .accordion { max-width: 700px; margin: 0 auto; }
+    .accordion-header { font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.5px; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 1rem; background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; cursor: pointer; user-select: none; position: relative; overflow: hidden; transition: 0.2s; margin-bottom: 0.5rem; }
+    .accordion-header:hover { border-color: var(--accent); transform: translateX(4px); box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.4), 0 0 20px rgba(192, 57, 43, 0.35); }
+    .accordion-header .header-left { display: flex; align-items: center; gap: 0.5rem; position: relative; z-index: 2; }
+    .accordion-header .icon { font-size: 1.15rem; line-height: 1; }
+    .accordion-header .arrow { font-size: 0.75rem; line-height: 1; color: var(--accent); transition: transform 0.3s ease; margin-top: -1px; position: relative; z-index: 2; }
+    .accordion-header.active .arrow { transform: rotate(180deg); }
+    .accordion-header .lightning { position: absolute; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--accent), #fff, var(--accent), transparent); filter: blur(0.4px) drop-shadow(0 0 6px rgba(192, 57, 43, 0.9)); opacity: 0; pointer-events: none; z-index: 1; }
+    .accordion-header .lightning::before { content: ""; position: absolute; inset: 0; background: inherit; transform: skewX(-15deg); }
+    .accordion-header .lightning.left { left: 0; transform: translateY(-100%) scaleY(0.6); }
+    .accordion-header .lightning.right { right: 0; transform: translateY(100%) scaleY(0.6); }
+    .accordion-header .spark { position: absolute; top: 50%; left: 0; width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 2px rgba(255, 230, 100, 0.9), 0 0 14px 4px rgba(192, 57, 43, 0.7); opacity: 0; pointer-events: none; transform: translateY(-50%); z-index: 1; }
+    .accordion-header:hover .lightning.left { animation: lightningSlideDown 0.7s ease-out; }
+    .accordion-header:hover .lightning.right { animation: lightningSlideUp 0.7s ease-out; }
+    .accordion-header:hover .spark { animation: sparkFly 0.9s ease-out; }
+    .accordion-header:hover .spark.s2 { animation-delay: 0.12s; }
+    .accordion-header:hover .spark.s3 { animation-delay: 0.24s; }
+    .accordion-content { overflow: hidden; height: 0; transition: height 0.3s ease, margin-top 0.2s ease; }
+    .accordion-content.open { margin-top: 0.4rem; margin-bottom: 0.5rem; }
     
-    /* Карточка профиля */
-    .profile-card { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; border-left: 4px solid var(--accent); }
+    .contracts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .contracts-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .contract-item { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 0.5rem 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; transition: 0.2s; }
+    
+    .back-block { text-align: center; padding: 1.5rem 2rem 3rem; }
+    .btn-back { display: inline-block; padding: 0.7rem 1.5rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; transition: 0.2s; }
+    .btn-back:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+    
+    footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
+    footer span { color: var(--accent); }
+
+    /* СТИЛИ ДЛЯ ЛИЧНОГО КАБИНЕТА (ИСТОРИЯ) */
+    .profile-card { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; border-left: 4px solid var(--accent); max-width: 700px; margin-left: auto; margin-right: auto; }
     .avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; flex-shrink: 0; }
     .profile-info h2 { font-size: 1.5rem; margin-bottom: 0.25rem; }
     .profile-info p { color: var(--muted); font-size: 0.9rem; }
 
-    /* Вкладки */
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; max-width: 700px; margin-left: auto; margin-right: auto; }
     .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 600; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-radius: 6px; }
     .tab-btn:hover { color: var(--text); background: rgba(192, 57, 43, 0.05); }
     .tab-btn.active { color: var(--accent); background: rgba(192, 57, 43, 0.1); }
     
-    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; max-width: 700px; margin: 0 auto; }
     .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Таблица истории */
     .history-table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
     .history-table th, .history-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
     .history-table th { background: rgba(0,0,0,0.02); font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
     html.dark .history-table th { background: rgba(255,255,255,0.02); }
     .history-table tr:last-child td { border-bottom: none; }
-    .history-table tr:hover { background: rgba(192, 57, 43, 0.03); }
     
     .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
     .status-pending { background: rgba(212, 175, 55, 0.15); color: var(--gold); }
@@ -81,11 +122,8 @@
 
     .empty-state { text-align: center; padding: 3rem; color: var(--muted); background: var(--panel); border-radius: 8px; border: 1px dashed var(--border); }
 
-    footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; }
-    footer span { color: var(--accent); }
-
     @media (max-width: 850px) { header { flex-direction: column; align-items: flex-start; } .header-right { width: 100%; justify-content: space-between; } nav { justify-content: flex-start; } .profile-card { flex-direction: column; text-align: center; } .tabs { flex-wrap: wrap; } }
-    @media (max-width: 600px) { .history-table th, .history-table td { padding: 0.75rem 0.5rem; font-size: 0.8rem; } }
+    @media (max-width: 600px) { .contracts-grid { grid-template-columns: 1fr; } .history-table th, .history-table td { padding: 0.75rem 0.5rem; font-size: 0.8rem; } }
   </style>
 </head>
 <body>
@@ -93,11 +131,11 @@
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
     <div class="header-right">
       <nav>
-        <a href="index.html">Главная</a>
-        <a href="family.html">Правила</a>
-        <a href="transport.html">О транспорте</a>
-        <a href="contracts.html">Контракты</a>
-        <a href="tables.html">Таблицы</a>
+        <a href="index.html">Главная <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="family.html">Правила <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="transport.html">О транспорте <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
+        <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="profile.html" class="profile-btn active">👤 Личный кабинет</a>
         <button class="theme-btn" id="themeToggle" title="Переключить тему">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
@@ -112,7 +150,7 @@
     <p>Управление вашим профилем и история заявок</p>
   </section>
 
-  <div class="profile-container">
+  <section class="block">
     <!-- Карточка игрока -->
     <div class="profile-card">
       <div class="avatar" id="avatarLetter">?</div>
@@ -160,6 +198,10 @@
         <p>Раздел находится в разработке.</p>
       </div>
     </div>
+  </section>
+
+  <div class="back-block">
+    <a href="index.html" class="btn-back">← Вернуться на главную</a>
   </div>
 
   <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
@@ -189,13 +231,9 @@
       document.getElementById(tabId).classList.add('active');
     }
 
-    // Загрузка данных профиля (имитация)
-    // В реальном проекте здесь будет проверка авторизации (Discord OAuth)
-    // Пока мы просто берем последний Discord ID, который вводили, из localStorage
-    // или показываем заглушку.
-    
+    // Загрузка данных профиля
     async function loadProfile() {
-      // Представим, что мы сохраняем Discord ID при авторизации
+      // Берем данные из localStorage (сохраняются при отправке формы в contracts.html)
       const savedDiscordId = localStorage.getItem('discordId') || '123456789012345678';
       const savedNickname = localStorage.getItem('nickname') || 'Игрок La Muerte';
 
@@ -203,7 +241,6 @@
       document.getElementById('profileDiscord').textContent = `Discord ID: ${savedDiscordId}`;
       document.getElementById('avatarLetter').textContent = savedNickname.charAt(0).toUpperCase();
 
-      // Загружаем историю
       await loadHistory(savedDiscordId);
     }
 
@@ -214,8 +251,7 @@
       const tbody = document.getElementById('historyTableBody');
 
       try {
-        // Делаем запрос в Supabase
-        // Ищем заявки по discord ID
+        // Ищем заявки в Supabase по Discord ID
         const { data, error } = await supabase
           .from('payout_requests')
           .select('*')
@@ -237,12 +273,10 @@
         data.forEach(req => {
           const tr = document.createElement('tr');
           
-          // Форматируем дату
           const date = new Date(req.created_at).toLocaleDateString('ru-RU', {
             day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
           });
 
-          // Статус
           let statusClass = 'status-pending';
           let statusText = 'В ожидании';
           if (req.status === 'approved') { statusClass = 'status-approved'; statusText = 'Одобрено'; }
@@ -264,9 +298,7 @@
       }
     }
 
-    // Запуск
     document.addEventListener('DOMContentLoaded', loadProfile);
-
   </script>
 </body>
 </html>
