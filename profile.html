@@ -117,26 +117,7 @@
     .status-rejected { background: rgba(192, 57, 43, 0.15); color: var(--accent); }
 
     .empty-state { text-align: center; padding: 2rem; color: var(--muted); }
-
-    /* Стили для Рулетки */
-    .roulette-container { display: flex; flex-direction: column; align-items: center; gap: 2rem; padding: 1rem 0; }
     
-    .wheel-wrapper { position: relative; width: 250px; height: 250px; border-radius: 50%; border: 6px solid var(--gold); box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; transition: transform 4s cubic-bezier(0.17, 0.67, 0.1, 1); transform: rotate(0deg); }
-    
-    .wheel { width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(#c0392b 0deg 45deg, #2e7d32 45deg 90deg, #3498db 90deg 135deg, #8e44ad 135deg 180deg, #d35400 180deg 225deg, #c0392b 225deg 270deg, #2e7d32 270deg 315deg, #3498db 315deg 360deg); position: relative; overflow: hidden; }
-    .wheel-pointer { position: absolute; top: -15px; z-index: 5; font-size: 2rem; color: var(--gold); text-shadow: 0 2px 5px rgba(0,0,0,0.5); transform: rotate(180deg); }
-    .wheel-center { position: absolute; width: 40px; height: 40px; background: var(--panel); border: 3px solid var(--gold); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1rem; font-weight: 800; color: var(--gold); z-index: 10; cursor: pointer; box-shadow: 0 0 15px rgba(0,0,0,0.5); transition: transform 0.2s; }
-    .wheel-center:hover { transform: scale(1.1); }
-    .wheel-center:active { transform: scale(0.95); }
-    .wheel-center.spinning { pointer-events: none; opacity: 0.7; }
-    
-    .spin-btn { padding: 0.8rem 2rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(192, 57, 43, 0.4); text-transform: uppercase; letter-spacing: 1px; }
-    .spin-btn:hover { transform: translateY(-2px); background: #e74c3c; }
-    .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    
-    .prize-result { font-size: 1.2rem; font-weight: 800; color: var(--gold); text-align: center; min-height: 2rem; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); opacity: 0; transition: opacity 0.5s; }
-    .prize-result.show { opacity: 1; }
-
     footer { background: var(--panel); backdrop-filter: blur(6px); border-top: 1px solid var(--border); color: var(--muted); text-align: center; padding: 1.25rem; font-size: 0.85rem; transition: 0.4s; margin-top: 4rem; }
     footer span { color: var(--accent); }
 
@@ -195,9 +176,8 @@
         <!-- Вкладки -->
         <div class="tabs-header">
           <button class="tab-btn active" onclick="switchTab(event, 'tab-stats')">📊 Статистика</button>
-          <button class="tab-btn" onclick="switchTab(event, 'tab-history')">🧾 История</button>
+          <button class="tab-btn" onclick="switchTab(event, 'tab-history')">🧾 История выплат</button>
           <button class="tab-btn" onclick="switchTab(event, 'tab-settings')">⚙️ Настройки</button>
-          <button class="tab-btn" onclick="switchTab(event, 'tab-roulette')">🎰 Рулетка</button>
         </div>
 
         <!-- Вкладка: Статистика -->
@@ -235,9 +215,7 @@
                   <th>Статус</th>
                 </tr>
               </thead>
-              <tbody id="historyTableBody">
-                <!-- Строки добавляются через JS -->
-              </tbody>
+              <tbody id="historyTableBody"></tbody>
             </table>
           </div>
           
@@ -264,23 +242,6 @@
             <button type="submit" class="btn-save" id="savePassBtn">Обновить пароль</button>
             <p class="status-msg" id="passStatusMsg"></p>
           </form>
-        </div>
-
-        <!-- Вкладка: РУЛЕТКА -->
-        <div id="tab-roulette" class="tab-content">
-          <div class="stats-title">🎰 Колесо Фортуны</div>
-          
-          <div class="roulette-container">
-            <div class="wheel-wrapper" id="wheelWrapper">
-              <div class="wheel-pointer">▼</div>
-              <div class="wheel"></div>
-              <div class="wheel-center" id="spinBtn">GO</div>
-            </div>
-
-            <div class="prize-result" id="prizeResult"></div>
-            
-            <button class="spin-btn" id="spinBtnBottom">Крутить</button>
-          </div>
         </div>
 
       </div>
@@ -471,93 +432,6 @@
       }
     });
 
-    // ==========================================
-    // ЛОГИКА РУЛЕТКИ
-    // ==========================================
-    const PRIZES = [
-      "100.000$", 
-      "200.000$", 
-      "500.000$", 
-      "1.000.000$", 
-      "Ничего :(", 
-      "Редкий транспорт", 
-      "Скидка 50%", 
-      "500 MC"
-    ];
-
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563583284930154668/9_Xj1LDUAup3DgDBky6Xui0gvshHaQQHD9sdHT0Ue0OCOmo1YaATZGCVF09iF-KP31aF';
-
-    let currentRotation = 0;
-    let isSpinning = false;
-
-    const wheelWrapper = document.getElementById('wheelWrapper');
-    const spinBtnTop = document.getElementById('spinBtn');
-    const spinBtnBottom = document.getElementById('spinBtnBottom');
-    const prizeResult = document.getElementById('prizeResult');
-
-    function spinWheel() {
-      if (isSpinning) return;
-      isSpinning = true;
-      
-      spinBtnTop.classList.add('spinning');
-      spinBtnBottom.disabled = true;
-      prizeResult.classList.remove('show');
-      prizeResult.textContent = '';
-
-      const randomIndex = Math.floor(Math.random() * PRIZES.length);
-      const prize = PRIZES[randomIndex];
-
-      const spinAngle = 1440 + (randomIndex * 45) + Math.floor(Math.random() * 30) - 15;
-      currentRotation += spinAngle;
-      
-      wheelWrapper.style.transform = `rotate(${currentRotation}deg)`;
-
-      setTimeout(async () => {
-        isSpinning = false;
-        spinBtnTop.classList.remove('spinning');
-        spinBtnBottom.disabled = false;
-        
-        prizeResult.textContent = `Вы выиграли: ${prize}`;
-        prizeResult.classList.add('show');
-
-        await sendToDiscord(prize);
-
-      }, 4000);
-    }
-
-    async function sendToDiscord(prize) {
-      const nickname = localStorage.getItem('nickname') || "Неизвестный";
-      
-      const payload = {
-        username: "La Muerte | Рулетка",
-        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
-        embeds: [{
-          title: "🎰 Новый выигрыш в рулетке!",
-          color: 0xffd700,
-          fields: [
-            { name: "👤 Никнейм", value: nickname, inline: true },
-            { name: "🎁 Приз", value: prize, inline: true },
-            { name: "⏰ Время", value: new Date().toLocaleString('ru-RU'), inline: false }
-          ],
-          footer: { text: "Проверьте выигрыш и выдайте приз" }
-        }]
-      };
-
-      try {
-        await fetch(DISCORD_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch (err) {
-        console.error('Ошибка отправки в Discord:', err);
-      }
-    }
-
-    spinBtnTop.addEventListener('click', spinWheel);
-    spinBtnBottom.addEventListener('click', spinWheel);
-
-    // Остальные функции профиля
     window.uploadAvatar = async function(event) {
       const file = event.target.files[0];
       if (!file) return;
