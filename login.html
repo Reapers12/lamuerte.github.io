@@ -2,39 +2,47 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вход — La Muerte</title>
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { --accent: #c0392b; --bg: #0a0a0a; --panel: #111; --text: #eaeaea; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --accent: #c0392b; --gold: #d4af37; --bg: #0a0a0a; --panel: #111; --text: #eaeaea; }
+    
     body {
-      font-family: 'Overpass', sans-serif; background: var(--bg); color: var(--text);
-      display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
-      background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover;
+      font-family: 'Overpass', sans-serif; background: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      background-color: #050505; color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
     }
     body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
     
     .login-box {
       background: rgba(17, 17, 17, 0.95); border: 1px solid #222; border-left: 3px solid var(--accent);
       padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px); position: relative; overflow: hidden;
     }
-    .login-box h1 { text-align: center; margin-bottom: 1.5rem; font-size: 1.8rem; letter-spacing: 2px; }
+    
+    .login-box h1 { text-align: center; margin-bottom: 1.5rem; font-size: 1.8rem; letter-spacing: 2px; font-weight: 800; }
     .login-box h1 span { color: var(--accent); }
     
-    .input-group { margin-bottom: 1rem; }
-    .input-group label { display: block; font-size: 0.85rem; color: #999; margin-bottom: 0.4rem; }
+    .input-group { margin-bottom: 1.2rem; }
+    .input-group label { display: block; font-size: 0.85rem; color: #999; margin-bottom: 0.4rem; font-weight: 600; }
     .input-group input {
       width: 100%; padding: 0.8rem; background: #050505; border: 1px solid #333; color: #fff;
-      border-radius: 6px; font-family: inherit; transition: border 0.2s;
+      border-radius: 6px; font-family: inherit; transition: border 0.2s; font-size: 1rem;
     }
     .input-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(192,57,43,0.3); }
     
     .btn {
-      width: 100%; padding: 0.8rem; background: var(--accent); color: #fff; border: none;
-      border-radius: 6px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s;
+      width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none;
+      border-radius: 6px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; font-size: 1rem; letter-spacing: 1px;
     }
     .btn:hover { background: #a93226; transform: translateY(-2px); }
-    .msg { text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #4caf50; display: none; }
+    
+    .msg { text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #4caf50; display: none; font-weight: 600; }
     .msg.error { color: #c0392b; }
+    
+    .back-link { display: block; text-align: center; margin-top: 1.5rem; color: #666; text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    .back-link:hover { color: #fff; }
   </style>
 </head>
 <body>
@@ -51,6 +59,7 @@
     </div>
     <button class="btn" onclick="doLogin()">Войти в семью</button>
     <div class="msg" id="loginMsg"></div>
+    <a href="index.html" class="back-link">← Вернуться на главную</a>
   </div>
 
   <script>
@@ -66,16 +75,17 @@
         return;
       }
 
-      // Сохраняем данные в браузере (имитация регистрации/входа)
+      // Имитация регистрации/входа (сохранение в браузере)
       localStorage.setItem('lm_user', user);
       localStorage.setItem('lm_pass', pass);
       localStorage.setItem('lm_logged', 'true');
       
-      msg.textContent = 'Успешный вход! Перенаправление...';
+      msg.textContent = 'Успешный вход! Загрузка...';
       msg.className = 'msg';
       msg.style.display = 'block';
 
-      setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
+      // Переход в ЛК через 800мс
+      setTimeout(() => { window.location.href = 'profile.html'; }, 800);
     }
   </script>
 </body>
