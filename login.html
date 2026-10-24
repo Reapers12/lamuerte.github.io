@@ -32,8 +32,12 @@
     }
     .tabs button.active { color: #fff; border-bottom-color: var(--accent); }
     
-    .form-group { margin-bottom: 1.2rem; display: none; }
-    .form-group.active { display: block; }
+    /* Обертки для форм (скрываем/показываем) */
+    .auth-view { display: none; }
+    .auth-view.active { display: block; }
+
+    /* Поля ввода */
+    .form-group { margin-bottom: 1.2rem; }
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
     .form-group input {
       width: 100%; padding: 0.8rem; background: #050505; border: 1px solid #333; color: #fff;
@@ -65,7 +69,7 @@
     </div>
 
     <!-- Форма ВХОДА -->
-    <div class="form-group active" id="loginForm">
+    <div class="auth-view active" id="loginForm">
       <div class="form-group">
         <label>Логин</label>
         <input type="text" id="loginUser" placeholder="Ваш логин">
@@ -78,7 +82,7 @@
     </div>
 
     <!-- Форма РЕГИСТРАЦИИ -->
-    <div class="form-group" id="registerForm">
+    <div class="auth-view" id="registerForm">
       <div class="form-group">
         <label>Придумайте Логин</label>
         <input type="text" id="regUser" placeholder="Например: John_Doe">
@@ -99,13 +103,12 @@
   </div>
 
   <script>
-    // Простая функция хэширования (для защиты пароля от прямого прочтения в localStorage)
     function hashPassword(str) {
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
         const char = str.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
-        hash |= 0; // Convert to 32bit integer
+        hash |= 0;
       }
       return hash.toString();
     }
@@ -137,7 +140,6 @@
       document.getElementById('authMsg').style.display = 'none';
     }
 
-    // === РЕГИСТРАЦИЯ ===
     function doRegister() {
       const user = document.getElementById('regUser').value.trim();
       const pass = document.getElementById('regPass').value;
@@ -147,17 +149,12 @@
       if (pass !== passConfirm) return showMsg('Пароли не совпадают!', true);
       if (pass.length < 4) return showMsg('Пароль должен быть от 4 символов!', true);
 
-      // Проверяем, существует ли уже такой пользователь
       const existingUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
-      if (existingUsers[user]) {
-        return showMsg('Этот логин уже занят!', true);
-      }
+      if (existingUsers[user]) return showMsg('Этот логин уже занят!', true);
 
-      // Сохраняем нового пользователя (логин -> хэш пароля)
       existingUsers[user] = hashPassword(pass);
       localStorage.setItem('lm_users', JSON.stringify(existingUsers));
 
-      // Автоматический вход
       localStorage.setItem('lm_logged', 'true');
       localStorage.setItem('lm_user', user);
 
@@ -165,7 +162,6 @@
       setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
     }
 
-    // === ВХОД ===
     function doLogin() {
       const user = document.getElementById('loginUser').value.trim();
       const pass = document.getElementById('loginPass').value;
@@ -174,16 +170,9 @@
 
       const existingUsers = JSON.parse(localStorage.getItem('lm_users') || '{}');
       
-      // Проверка: есть ли такой пользователь и совпадает ли хэш пароля
-      if (!existingUsers[user]) {
-        return showMsg('Пользователь не найден. Зарегистрируйтесь.', true);
-      }
+      if (!existingUsers[user]) return showMsg('Пользователь не найден. Зарегистрируйтесь.', true);
+      if (existingUsers[user] !== hashPassword(pass)) return showMsg('Неверный пароль!', true);
 
-      if (existingUsers[user] !== hashPassword(pass)) {
-        return showMsg('Неверный пароль!', true);
-      }
-
-      // Успешный вход
       localStorage.setItem('lm_logged', 'true');
       localStorage.setItem('lm_user', user);
 
