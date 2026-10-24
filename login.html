@@ -32,18 +32,57 @@
     }
     .tabs button.active { color: #fff; border-bottom-color: var(--accent); }
     
-    /* Обертки для форм (скрываем/показываем) */
+    /* Обертки для форм */
     .auth-view { display: none; }
     .auth-view.active { display: block; }
 
     /* Поля ввода */
     .form-group { margin-bottom: 1.2rem; }
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
-    .form-group input {
+    
+    /* Контейнер для пароля с глазиком */
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-wrapper input {
+      width: 100%; padding: 0.8rem; padding-right: 2.8rem; /* Отступ справа для иконки */
+      background: #050505; border: 1px solid #333; color: #fff;
+      border-radius: 6px; font-family: inherit; transition: border 0.2s; font-size: 1rem;
+    }
+
+    .form-group input:not(.password-wrapper input) {
       width: 100%; padding: 0.8rem; background: #050505; border: 1px solid #333; color: #fff;
       border-radius: 6px; font-family: inherit; transition: border 0.2s; font-size: 1rem;
     }
-    .form-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(192,57,43,0.3); }
+
+    .form-group input:focus {
+      outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(192,57,43,0.3); 
+    }
+
+    /* Кнопка-глазик */
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+    .toggle-password:hover {
+      color: var(--text);
+    }
+    .toggle-password svg {
+      width: 20px;
+      height: 20px;
+    }
     
     .btn {
       width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none;
@@ -76,7 +115,16 @@
       </div>
       <div class="form-group">
         <label>Пароль</label>
-        <input type="password" id="loginPass" placeholder="••••••••">
+        <div class="password-wrapper">
+          <input type="password" id="loginPass" placeholder="••••••••">
+          <button type="button" class="toggle-password" onclick="togglePass('loginPass', this)">
+            <!-- Иконка глаза (закрыт) -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
       </div>
       <button class="btn" onclick="doLogin()">Войти</button>
     </div>
@@ -89,11 +137,27 @@
       </div>
       <div class="form-group">
         <label>Придумайте Пароль</label>
-        <input type="password" id="regPass" placeholder="••••••••">
+        <div class="password-wrapper">
+          <input type="password" id="regPass" placeholder="••••••••">
+          <button type="button" class="toggle-password" onclick="togglePass('regPass', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="form-group">
         <label>Повторите Пароль</label>
-        <input type="password" id="regPassConfirm" placeholder="••••••••">
+        <div class="password-wrapper">
+          <input type="password" id="regPassConfirm" placeholder="••••••••">
+          <button type="button" class="toggle-password" onclick="togglePass('regPassConfirm', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
       </div>
       <button class="btn" onclick="doRegister()">Зарегистрироваться</button>
     </div>
@@ -103,6 +167,28 @@
   </div>
 
   <script>
+    // Функция переключения видимости пароля
+    function togglePass(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const svg = btn.querySelector('svg');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        // Меняем иконку на "открытый глаз"
+        svg.innerHTML = `
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        `;
+      } else {
+        input.type = 'password';
+        // Меняем иконку обратно на "закрытый глаз"
+        svg.innerHTML = `
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+        `;
+      }
+    }
+
     function hashPassword(str) {
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
