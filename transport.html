@@ -133,6 +133,7 @@
       padding-left: 1rem !important;
       border-radius: 0 !important;
     }
+    /* Убраны блокировки эффектов, чтобы молнии работали */
     .profile-btn:hover {
       background: transparent !important;
       box-shadow: none !important;
@@ -550,7 +551,8 @@
         <a href="contracts.html">Контракты <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         <a href="tables.html">Таблицы <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
         
-        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет</a>
+        <!-- Добавлены эффекты молний -->
+        <a href="#" onclick="goToProfile(event)" class="profile-btn">👤 Личный кабинет <span class="lightning left"></span><span class="lightning right"></span><span class="spark"></span><span class="spark s2"></span><span class="spark s3"></span></a>
       </nav>
 
       <label class="spark-switch" title="Переключить тему">
