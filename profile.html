@@ -48,9 +48,11 @@
     .btn-outline {
       display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text);
       border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600;
-      transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%;
+      transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%; margin-bottom: 0.5rem;
     }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-admin { border-color: var(--accent) !important; color: var(--accent) !important; font-weight: 700 !important; }
+    .btn-admin:hover { background: rgba(192, 57, 43, 0.1) !important; }
 
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
     .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: #fff; }
@@ -105,10 +107,10 @@
         <div class="profile-name" id="displayName">Загрузка...</div>
         <div class="profile-status" id="userRoleDisplay">Загрузка...</div>
         
-        <!-- Кнопка админа (появится если роль Администратор) -->
-        <a href="admin.html" id="adminPanelBtn" class="btn-outline" style="display: none; margin-top: 0.5rem; border-color: var(--accent); color: var(--accent);">⚙️ Панель управления</a>
+        <!-- Кнопка Админа (скрыта по умолчанию) -->
+        <a href="admin.html" id="adminPanelBtn" class="btn-outline btn-admin" style="display: none;">⚙️ Панель управления</a>
         
-        <a href="#" class="btn-outline" onclick="resetProfile()" style="margin-top: 1rem;">Сбросить профиль</a>
+        <a href="#" class="btn-outline" onclick="resetProfile()" style="border-color: #333;">Сбросить профиль</a>
       </div>
 
       <div class="stats-card">
@@ -148,11 +150,16 @@
     document.getElementById('avatarBox').textContent = user.charAt(0).toUpperCase();
     document.getElementById('inputName').value = user;
     
+    // Проверка роли
     if (userData) {
       document.getElementById('userRoleDisplay').textContent = userData.role;
+      
+      // Если Админ — показываем кнопку
       if (userData.role === 'Администратор') {
         document.getElementById('adminPanelBtn').style.display = 'block';
       }
+    } else {
+      document.getElementById('userRoleDisplay').textContent = 'Ошибка данных';
     }
     
     const savedAvatar = localStorage.getItem('lm_avatar');
