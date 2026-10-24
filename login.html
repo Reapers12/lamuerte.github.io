@@ -65,9 +65,11 @@
       <button onclick="switchTab('register')" id="tabRegister">Регистрация</button>
     </div>
 
+    <!-- ФОРМА ВХОДА -->
     <div class="auth-view active" id="loginForm">
       <div class="form-group">
-        <label>Email</label>
+        <label>Email (почта)</label>
+        <!-- Здесь строго Email -->
         <input type="email" id="loginEmail" placeholder="your@email.com">
       </div>
       <div class="form-group">
@@ -77,13 +79,14 @@
       <button class="btn" onclick="doLogin()">Войти</button>
     </div>
 
+    <!-- ФОРМА РЕГИСТРАЦИИ -->
     <div class="auth-view" id="registerForm">
       <div class="form-group">
-        <label>Ваш Никнейм (Логин)</label>
+        <label>Ваш Никнейм (для игры)</label>
         <input type="text" id="regNickname" placeholder="Например: Kai Muerte">
       </div>
       <div class="form-group">
-        <label>Email</label>
+        <label>Email (почта)</label>
         <input type="email" id="regEmail" placeholder="your@email.com">
       </div>
       <div class="form-group">
@@ -97,13 +100,12 @@
     <a href="index.html" class="back-link">← Вернуться на главную</a>
   </div>
 
-  <!-- Подключение Supabase -->
+  <!-- Скрипт Supabase -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    // ТВОИ ДАННЫЕ ИЗ SUPABASE
     const SUPABASE_URL = 'https://drumwcypxzwmwmtozrhd.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY'; // Если не сработает, замени на anon ключ из Legacy API
+    const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -142,7 +144,7 @@
       if (pass.length < 6) return showMsg('Пароль должен быть от 6 символов!', true);
 
       try {
-        // Создаем пользователя
+        // Создаем пользователя (по Email и паролю)
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: email,
           password: pass,
