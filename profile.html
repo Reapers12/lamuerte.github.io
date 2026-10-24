@@ -4,65 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Личный кабинет — La Muerte</title>
-  
   <script>
-    if (localStorage.getItem('theme') === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
   </script>
-
   <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --bg: #f4f4f7; --panel: rgba(255, 255, 255, 0.92); --border: #e0e0e6;
       --text: #1a1a1a; --muted: #666; --accent: #c0392b; --gold: #b8860b; --green: #2e7d32;
       --bg-image: none; --bg-overlay: rgba(255, 255, 255, 0.9);
     }
-
     html.dark {
       --bg: #0a0a0a; --panel: rgba(17, 17, 17, 0.95); --border: #222;
       --text: #eaeaea; --muted: #999; --gold: #d4af37; --green: #4caf50;
       --bg-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=80');
       --bg-overlay: rgba(0, 0, 0, 0.85);
     }
-
     html, body { transition: background 0.4s ease, color 0.4s ease; }
-
-    body {
-      font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed;
-      background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative;
-    }
+    body { font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed; background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative; }
     body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
 
-    /* ШАПКА */
-    header {
-      background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
-      transition: background 0.4s ease, border-color 0.4s ease;
-    }
+    header { background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10; transition: 0.4s; }
     header .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: 3px; color: var(--text); text-decoration: none; }
     header .logo span { color: var(--accent); }
-    
     .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1; flex-wrap: wrap; }
     nav { display: flex; align-items: center; gap: 0.2rem; flex-wrap: wrap; }
-    nav a { 
-      color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem;
-      padding: 0.35rem 0.75rem; border-radius: 6px; transition: 0.2s; 
-    }
+    nav a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 0.35rem 0.75rem; border-radius: 6px; transition: 0.2s; }
     nav a:hover { color: var(--text); background: rgba(192, 57, 43, 0.08); }
-    
-    .logout-btn {
-      color: var(--accent) !important; font-weight: 700 !important;
-      margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important;
-    }
-
-    .theme-btn { 
-      background: transparent; border: 1px solid var(--border); border-radius: 50%; 
-      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; 
-      cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0;
-    }
+    .logout-btn { color: var(--accent) !important; font-weight: 700 !important; margin-left: 0.5rem; border-left: 1px solid var(--border); padding-left: 1rem !important; border-radius: 0 !important; }
+    .theme-btn { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; margin-left: 0.5rem; flex-shrink: 0; }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
     .theme-btn svg { width: 18px; height: 18px; transition: transform 0.4s ease; }
     .theme-btn .icon-moon { display: none; }
@@ -70,65 +41,30 @@
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
 
-    /* КОНТЕНТ */
     section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; }
     .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
-
-    .profile-card {
-      background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
-      padding: 2rem; text-align: center; border-top: 3px solid var(--accent); height: fit-content;
-      transition: background 0.4s ease;
-    }
-    
-    .avatar-wrapper {
-      position: relative; width: 150px; height: 150px; margin: 0 auto 1.5rem;
-      border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center;
-      font-size: 4rem; font-weight: 800; color: var(--accent); border: 3px solid var(--border);
-      box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: 0.2s;
-    }
+    .profile-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; border-top: 3px solid var(--accent); height: fit-content; transition: 0.4s; }
+    .avatar-wrapper { position: relative; width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: 800; color: var(--accent); border: 3px solid var(--border); box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: 0.2s; }
     .avatar-wrapper:hover { border-color: var(--accent); transform: scale(1.02); }
-    
-    /* Разрешаем GIF картинкам анимироваться */
     .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
-    
-    .avatar-overlay {
-      position: absolute; inset: 0; background: rgba(0,0,0,0.6);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.2s; color: #fff;
-    }
+    .avatar-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; color: #fff; }
     .avatar-wrapper:hover .avatar-overlay { opacity: 1; }
-    
     .profile-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; color: var(--text); word-break: break-all; }
     .profile-status { font-size: 0.85rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
-    
-    .btn-outline {
-      display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text);
-      border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600;
-      transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%; margin-bottom: 0.5rem;
-    }
+    .btn-outline { display: inline-block; padding: 0.6rem 1.2rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; text-decoration: none; font-size: 0.9rem; width: 100%; margin-bottom: 0.5rem; }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
     .btn-admin { border-color: var(--accent) !important; color: var(--accent) !important; font-weight: 700 !important; }
-
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     .stats-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text); }
-    
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
-    .stat-item {
-      background: rgba(128, 128, 128, 0.1); border: 1px solid var(--border); border-radius: 8px; padding: 1rem;
-      display: flex; flex-direction: column; gap: 0.3rem;
-    }
+    .stat-item { background: rgba(128, 128, 128, 0.1); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
     .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
     .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
     .stat-value.money { color: var(--green); }
-
     .form-group { margin-bottom: 1.25rem; }
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
-    .form-group input {
-      width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text);
-      border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem;
-    }
+    .form-group input { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; transition: border 0.2s, background 0.4s; font-size: 0.95rem; }
     .form-group input:focus { outline: none; border-color: var(--accent); }
-
     @media (max-width: 768px) {
       .profile-grid { grid-template-columns: 1fr; }
       header { flex-direction: column; align-items: flex-start; }
@@ -140,7 +76,6 @@
 
   <header>
     <a href="index.html" class="logo">LA <span>MUERTE</span></a>
-    
     <div class="header-right">
       <nav>
         <a href="index.html">Главная</a>
@@ -150,7 +85,6 @@
         <a href="tables.html">Таблицы</a>
         <a href="#" onclick="logout()" class="logout-btn">Выйти</a>
       </nav>
-
       <button class="theme-btn" id="themeToggle" title="Переключить тему">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -160,18 +94,15 @@
 
   <section class="block">
     <div class="profile-grid">
-      
       <div class="profile-card">
-        <div class="avatar-wrapper" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Нажмите, чтобы загрузить картинку">
+        <div class="avatar-wrapper" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Изменить аватар">
           <span id="avatarLetter">?</span>
           <img id="avatarImg" src="" alt="Аватар">
           <div class="avatar-overlay">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
           </div>
         </div>
-        
         <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
-
         <div class="profile-name" id="displayName">Загрузка...</div>
         <div class="profile-status" id="userRoleDisplay">Загрузка...</div>
         
@@ -187,21 +118,16 @@
           <div class="stat-item"><span class="stat-label">Контракты</span><span class="stat-value" id="statContracts">0</span></div>
           <div class="stat-item"><span class="stat-label">Часов в игре</span><span class="stat-value" id="statHours">0</span></div>
         </div>
-
         <div class="stats-title">⚙️ Информация</div>
-        
         <div class="form-group">
           <label>Ваш Никнейм</label>
           <input type="text" id="inputName" readonly style="opacity: 0.7;">
         </div>
-
-        <!-- ДОБАВЛЕНО ПОЛЕ ДЛЯ ССЫЛКИ НА ГИФКУ -->
         <div class="form-group">
-          <label>Или вставьте ссылку на анимированную картинку (GIF)</label>
+          <label>Ссылка на аватар (GIF / URL)</label>
           <input type="text" id="avatarUrlInput" placeholder="https://example.com/anime.gif" onchange="saveAvatarUrl()">
         </div>
       </div>
-
     </div>
   </section>
 
@@ -212,14 +138,12 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    /* Тема */
     const toggleBtn = document.getElementById('themeToggle');
     toggleBtn.addEventListener('click', () => {
       document.documentElement.classList.toggle('dark');
       localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
     });
 
-    /* Профиль */
     let currentUser = null;
 
     async function initProfile() {
@@ -238,7 +162,8 @@
       document.getElementById('inputName').value = data.nickname;
       document.getElementById('userRoleDisplay').textContent = data.role;
 
-      if (data.role === 'Администратор') {
+      // Показываем панель, если роль Глава или Администратор
+      if (data.role === 'Глава' || data.role === 'Администратор') {
         document.getElementById('adminPanelBtn').style.display = 'block';
       }
 
@@ -258,60 +183,28 @@
 
     setTimeout(initProfile, 500);
 
-    /* Загрузка файла (с поддержкой GIF) */
     window.uploadAvatar = async function(event) {
       const file = event.target.files[0];
       if (!file) return;
-      
-      // Увеличил лимит до 2 МБ для гифок
-      if (file.size > 2 * 1024 * 1024) { 
-        alert('Файл больше 2 МБ! Выберите картинку поменьше.'); 
-        return; 
-      }
+      if (file.size > 2 * 1024 * 1024) { alert('Файл больше 2 МБ!'); return; }
 
       const reader = new FileReader();
       reader.onload = async function(e) {
         const base64String = e.target.result;
         const { error } = await supabase.from('profiles').update({ avatar: base64String }).eq('id', currentUser.id);
-        
-        if (error) { 
-          alert('Ошибка: ' + error.message); 
-        } else {
+        if (error) { alert('Ошибка: ' + error.message); } 
+        else {
           document.getElementById('avatarImg').src = base64String;
           document.getElementById('avatarImg').style.display = 'block';
           document.getElementById('avatarLetter').style.display = 'none';
-          document.getElementById('avatarUrlInput').value = ''; // Очищаем поле ссылки
+          document.getElementById('avatarUrlInput').value = '';
         }
       };
       reader.readAsDataURL(file);
     };
 
-    /* Сохранение по ссылке (для больших гифок) */
     window.saveAvatarUrl = async function() {
       const url = document.getElementById('avatarUrlInput').value.trim();
-      
       if (!url) return;
-
       const { error } = await supabase.from('profiles').update({ avatar: url }).eq('id', currentUser.id);
-      
-      if (error) { 
-        alert('Ошибка: ' + error.message); 
-      } else {
-        document.getElementById('avatarImg').src = url;
-        document.getElementById('avatarImg').style.display = 'block';
-        document.getElementById('avatarLetter').style.display = 'none';
-        alert('Аватар по ссылке сохранен!');
-      }
-    };
-
-    window.logout = async function() {
-      await supabase.auth.signOut();
-      window.location.href = 'login.html';
-    };
-
-    window.resetProfile = function() {
-      if(confirm('Вы уверены?')) window.logout();
-    };
-  </script>
-</body>
-</html>
+      if (error) { alert('Ошибка
