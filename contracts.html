@@ -602,6 +602,8 @@
       const payload = {
         username: "La Muerte | Выплаты",
         avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
+        content: `<@${discordId}>, ваша заявка на выплату отправлена на проверку!`, // <--- ПИНГ ПОЛЬЗОВАТЕЛЯ
+        allowed_mentions: { parse: ["users"] }, // <--- РАЗРЕШАЕМ ПИНГ
         embeds: [{
           title: "💰 Новая заявка на выплату",
           color: 0xc0392b,
@@ -621,7 +623,6 @@
       };
 
       try {
-        // БЕЗ mode: 'no-cors'
         const [discordRes, supabaseRes] = await Promise.all([
           fetch(DISCORD_WEBHOOK_URL, {
             method: 'POST',
