@@ -418,49 +418,55 @@
       btn.textContent = '...';
 
       if (newStatus === 'approved') {
-        // Ищем игрока без учета регистра (скачиваем всех)
+        // 1. Пытаемся скачать игроков вместе с контрактами
         const { data: users, error: userError } = await supabase.from('profiles').select('id, nickname, balance, contracts');
 
+        let userData = null;
+
         if (userError || !users) {
-          alert('Ошибка загрузки базы: ' + userError.message);
-          btn.disabled = false;
-          btn.textContent = '✅';
-          return;
-        }
+          // Если колонки contracts нет, скачиваем без неё
+          console.warn('Ошибка загрузки колонки contracts. Начисляем только баланс.');
+          const { data: fallbackUsers, error: fallbackError } = await supabase.from('profiles').select('id, nickname, balance');
 
-        // Ищем совпадение без учета регистра и пробелов
-        const cleanName = nickname.trim().toLowerCase();
-        const userData = users.find(u => u.nickname && u.nickname.trim().toLowerCase() === cleanName);
+          if (fallbackError || !fallbackUsers) {
+            alert('Ошибка загрузки базы: ' + fallbackError.message);
+            btn.disabled = false;
+            btn.textContent = '✅';
+            return;
+          }
 
-        if (!userData) {
-          console.error('Игрок не найден. Все ники в базе:', users.map(u => u.nickname));
-          alert(`Ошибка: Игрок "${nickname}" не найден. Откройте консоль (F12), чтобы увидеть все ники из базы.`);
-          btn.disabled = false;
-          btn.textContent = '✅';
-          return;
-        }
+          const cleanName = nickname.trim().toLowerCase();
+          userData = fallbackUsers.find(u => u.nickname && u.nickname.trim().toLowerCase() === cleanName);
 
-        // Считаем новые значения
-        const currentBalance = Number(userData.balance) || 0;
-        const currentContracts = Number(userData.contracts) || 0;
+          if (!userData) {
+            alert(`Ошибка: Игрок "${nickname}" не найден.`);
+            btn.disabled = false;
+            btn.textContent = '✅';
+            return;
+          }
 
-        const newBalance = currentBalance + amount;
-        const newContracts = currentContracts + 1;
+          const newBalance = (Number(userData.balance) || 0) + amount;
+          await supabase.from('profiles').update({ balance: newBalance }).eq('id', userData.id);
+          
+        } else {
+          // Если колонка есть, начисляем баланс и контракты
+          const cleanName = nickname.trim().toLowerCase();
+          userData = users.find(u => u.nickname && u.nickname.trim().toLowerCase() === cleanName);
 
-        // Обновляем базу
-        const { error: updateError } = await supabase
-          .from('profiles')
-          .update({ 
-            balance: newBalance,
+          if (!userData) {
+            alert(`Ошибка: Игрок "${nickname}" не найден.`);
+            btn.disabled = false;
+            btn.textContent = '✅';
+            return;
+          }
+
+          const newBalance = (Number(userData.balance) || 0) + amount;
+          const newContracts = (Number(userData.contracts) || 0) + 1;
+
+          await supabase.from('profiles').update({ 
+            balance: newBalance, 
             contracts: newContracts 
-          })
-          .eq('id', userData.id);
-
-        if (updateError) {
-          alert('Ошибка обновления профиля: ' + updateError.message);
-          btn.disabled = false;
-          btn.textContent = '✅';
-          return;
+          }).eq('id', userData.id);
         }
 
         // Пишем транзакцию и отправляем лог
