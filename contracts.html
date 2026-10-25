@@ -437,8 +437,8 @@
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ВАШ НОВЫЙ ВЕБХУК
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1563663528131428535/bKmM1iMBGXyK-0s-ilngZ7f-ZwDa5j4AhivQS56TlLHLgj3dxJZEZ0wx5YAJMcCbh4Zi';
+    // УВЕДОМЛЕНИЯ ОТКЛЮЧЕНЫ
+    const DISCORD_WEBHOOK_URL = '';
 
     const toggleBtn = document.getElementById('themeToggle');
     if (toggleBtn) {
@@ -494,8 +494,8 @@
         { name: 'Гипсизигусы', price: 130000 }, { name: 'Подберёзовики', price: 200000 }
       ],
       'Дерево': [
-        { name: 'Сосна', price: 140000 }, { name: 'Берёза', price: 210000 },
-        { name: 'Дуб', price: 173000 }
+        { name: 'Дуб', price: 173000 }, { name: 'Сосна', price: 140000 },
+        { name: 'Берёза', price: 210000 }
       ],
       'Ферма': [
         { name: 'Апельсины', price: 88500 }, { name: 'Пшеница', price: 102000 },
@@ -599,51 +599,22 @@
 
       const displayResource = isQtyVisible ? `${resource} (${qty} шт.)` : resource;
 
-      const payload = {
-        username: "La Muerte | Выплаты",
-        avatar_url: "https://cdn-icons-png.flaticon.com/512/2621/2621040.png",
-        content: `<@${discordId}>, ваша заявка на выплату отправлена на проверку!`, // <--- ПИНГ ПОЛЬЗОВАТЕЛЯ
-        allowed_mentions: { parse: ["users"] }, // <--- РАЗРЕШАЕМ ПИНГ
-        embeds: [{
-          title: "💰 Новая заявка на выплату",
-          color: 0xc0392b,
-          fields: [
-            { name: "👤 Никнейм", value: nickname, inline: true },
-            { name: "🎮 Discord ID", value: discordId, inline: true },
-            { name: "📂 Категория", value: category, inline: true },
-            { name: "📦 Ресурс", value: displayResource, inline: true },
-            { name: "💵 Сумма", value: reward + " $", inline: true },
-            { name: "📸 Скриншот", value: `[Клик для просмотра](${screenshot})`, inline: false },
-            { name: "💬 Комментарий", value: comment, inline: false }
-          ],
-          image: { url: screenshot },
-          footer: { text: "Заявка ожидает подтверждения в админке" },
-          timestamp: new Date().toISOString()
-        }]
-      };
-
       try {
-        const [discordRes, supabaseRes] = await Promise.all([
-          fetch(DISCORD_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          }),
-          supabase
-            .from('payout_requests')
-            .insert([{
-              nickname: nickname,
-              category: category, 
-              details: displayResource,  
-              amount: reward,
-              screenshot: screenshot,
-              discord: discordId,
-              comment: comment,
-              status: 'pending'
-            }])
-        ]);
+        // Сохраняем заявку только в Supabase (без Discord)
+        const { error } = await supabase
+          .from('payout_requests')
+          .insert([{
+            nickname: nickname,
+            category: category, 
+            details: displayResource,  
+            amount: reward,
+            screenshot: screenshot,
+            discord: discordId,
+            comment: comment,
+            status: 'pending'
+          }]);
 
-        if (supabaseRes.error) throw supabaseRes.error;
+        if (error) throw error;
 
         closeForm();
         
