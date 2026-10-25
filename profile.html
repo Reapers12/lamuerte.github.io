@@ -22,7 +22,7 @@
       --bg-overlay: rgba(0, 0, 0, 0.85);
     }
     html, body { transition: background 0.4s ease, color 0.4s ease; }
-    body { font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed; background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative; }
+    body { font-family: 'Overpass', sans-serif; background: var(--bg-image) center/cover no-repeat fixed; background-color: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; position: relative; display: flex; flex-direction: column; }
     body::before { content: ""; position: fixed; inset: 0; background: var(--bg-overlay); z-index: -1; pointer-events: none; transition: background 0.4s ease; }
 
     header { background: var(--panel); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 10; transition: 0.4s; }
@@ -58,7 +58,7 @@
     html.dark .theme-btn .icon-moon { display: block; }
     html.dark .theme-btn { color: var(--gold); border-color: var(--gold); }
 
-    section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; }
+    section.block { padding: 3rem 2rem; max-width: 1000px; margin: 0 auto; flex: 1; width: 100%; }
     .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
     .profile-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; border-top: 3px solid var(--accent); height: fit-content; transition: 0.4s; }
     
@@ -140,6 +140,21 @@
     }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
+    /* ФУТЕР (ЦЕНТРИРОВАННЫЙ) */
+    footer {
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      transition: 0.4s;
+      margin-top: auto; /* Прижимает к низу */
+      width: 100%;
+    }
+    footer span { color: var(--accent); }
+
     @media (max-width: 850px) {
       .profile-grid { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr; }
@@ -196,7 +211,6 @@
         <div class="tabs-header">
           <button class="tab-btn active" onclick="switchTab(event, 'tab-stats')">📊 Статистика</button>
           <button class="tab-btn" onclick="switchTab(event, 'tab-history')">🧾 История выплат</button>
-          <!-- Скрытая вкладка Участники (появится, если роль Админ) -->
           <button class="tab-btn" id="tabMembersBtn" onclick="switchTab(event, 'tab-members')" style="display: none;">👥 Участники</button>
           <button class="tab-btn" onclick="switchTab(event, 'tab-settings')">⚙️ Настройки</button>
         </div>
@@ -282,6 +296,7 @@
     </div>
   </section>
 
+  <!-- Футер вынесен из контейнера section, чтобы был на всю ширину -->
   <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script type="module">
@@ -304,7 +319,7 @@
     let currentUser = null;
     let currentNickname = null;
     let currentDiscordId = null;
-    let currentUserRole = ''; // Сохраняем роль для проверки
+    let currentUserRole = ''; 
 
     const rolePriority = { 'Администратор': 0, 'Глава': 1, 'Заместитель': 2, 'Кровь Семьи': 3, 'Стажер': 4, 'Боец': 5 };
 
@@ -318,7 +333,6 @@
       if (tabId === 'tab-history') {
         loadHistory();
       } else if (tabId === 'tab-members') {
-        // Загружаем участников только если роль позволяет
         if (['Глава', 'Администратор', 'Заместитель'].includes(currentUserRole)) {
           loadMembers();
         }
@@ -384,7 +398,7 @@
       // ПОКАЗЫВАЕМ ВКЛАДКУ УЧАСТНИКИ И КНОПКУ АДМИНКИ
       if (['Глава', 'Администратор', 'Заместитель'].includes(data.role)) {
         document.getElementById('adminPanelBtn').style.display = 'block';
-        document.getElementById('tabMembersBtn').style.display = 'block'; // Показываем вкладку "Участники"
+        document.getElementById('tabMembersBtn').style.display = 'block';
       }
 
       const avatarLetter = document.getElementById('avatarLetter');
@@ -470,7 +484,7 @@
       }
     }
 
-    // === НОВАЯ ФУНКЦИЯ: Загрузка участников ===
+    // === ФУНКЦИЯ: Загрузка участников ===
     async function loadMembers() {
       const loader = document.getElementById('membersLoader');
       const list = document.getElementById('membersList');
@@ -500,7 +514,6 @@
         let displayName = user.nickname;
         if (displayName && displayName.includes('@')) displayName = displayName.split('@')[0];
 
-        // Аватар
         let avatarHtml = '';
         if (user.avatar) {
           avatarHtml = `<img src="${user.avatar}" class="member-avatar" alt="${displayName}">`;
