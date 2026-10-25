@@ -76,9 +76,30 @@
     
     .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: 0.4s; }
     
-    /* Вкладки */
-    .tabs-header { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .tab-btn { background: transparent; border: none; color: var(--muted); font-family: inherit; font-size: 1rem; font-weight: 700; padding: 0.5rem 1rem; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    /* Вкладки (в одну линию) */
+    .tabs-header { 
+      display: flex; 
+      gap: 0.25rem; 
+      border-bottom: 1px solid var(--border); 
+      margin-bottom: 1.5rem; 
+      flex-wrap: nowrap; /* Запрещаем перенос */
+      overflow-x: auto; /* Если не влезет на телефоне, будет скролл */
+      padding-bottom: 0.5rem;
+    }
+    .tab-btn { 
+      background: transparent; 
+      border: none; 
+      color: var(--muted); 
+      font-family: inherit; 
+      font-size: 0.95rem; 
+      font-weight: 700; 
+      padding: 0.5rem 0.6rem; 
+      cursor: pointer; 
+      transition: 0.2s; 
+      border-bottom: 2px solid transparent; 
+      margin-bottom: -1px; 
+      white-space: nowrap; 
+    }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
     
@@ -150,7 +171,7 @@
       padding: 1.25rem;
       font-size: 0.85rem;
       transition: 0.4s;
-      margin-top: auto; /* Прижимает к низу */
+      margin-top: auto;
       width: 100%;
     }
     footer span { color: var(--accent); }
@@ -296,7 +317,6 @@
     </div>
   </section>
 
-  <!-- Футер вынесен из контейнера section, чтобы был на всю ширину -->
   <footer>© 2024–2026 <span>La Muerte</span> — Все права защищены.</footer>
 
   <script type="module">
