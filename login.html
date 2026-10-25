@@ -36,11 +36,22 @@
 
     .form-group { margin-bottom: 1.2rem; }
     .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
+    
+    .password-wrapper { position: relative; display: flex; align-items: center; }
     .form-group input {
-      width: 100%; padding: 0.8rem; background: #050505; border: 1px solid #333; color: #fff;
+      width: 100%; padding: 0.8rem; padding-right: 2.5rem;
+      background: #050505; border: 1px solid #333; color: #fff;
       border-radius: 6px; font-family: inherit; transition: border 0.2s; font-size: 1rem;
     }
     .form-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(192,57,43,0.3); }
+
+    .toggle-password {
+      position: absolute; right: 0.8rem; background: transparent; border: none;
+      color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s; z-index: 2;
+    }
+    .toggle-password:hover { color: var(--text); }
+    .toggle-password svg { width: 18px; height: 18px; }
 
     .btn {
       width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none;
@@ -48,6 +59,21 @@
     }
     .btn:hover { background: #a93226; transform: translateY(-2px); }
     
+    /* Стили для кнопки Discord */
+    .btn-discord {
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      width: 100%; padding: 0.9rem; background: #5865F2; color: #fff; border: none;
+      border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem;
+      margin-top: 1rem; text-decoration: none;
+    }
+    .btn-discord:hover { background: #4752C4; transform: translateY(-2px); }
+    .btn-discord svg { width: 22px; height: 22px; fill: currentColor; }
+    
+    .divider { display: flex; align-items: center; text-align: center; margin: 1.5rem 0; color: var(--muted); font-size: 0.85rem; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+    .divider:not(:empty)::before { margin-right: .5em; }
+    .divider:not(:empty)::after { margin-left: .5em; }
+
     .msg { text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--green); display: none; font-weight: 600; }
     .msg.error { color: var(--accent); }
     
@@ -65,6 +91,7 @@
       <button onclick="switchTab('register')" id="tabRegister">Регистрация</button>
     </div>
 
+    <!-- Вход по Email -->
     <div class="auth-view active" id="loginForm">
       <div class="form-group">
         <label>Email (почта)</label>
@@ -72,11 +99,26 @@
       </div>
       <div class="form-group">
         <label>Пароль</label>
-        <input type="password" id="loginPass" placeholder="••••••••">
+        <div class="password-wrapper">
+          <input type="password" id="loginPass" placeholder="••••••••">
+          <button type="button" class="toggle-password" onclick="togglePassword('loginPass')" title="Показать пароль">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
       </div>
       <button class="btn" onclick="doLogin()">Войти</button>
+      
+      <div class="divider">или</div>
+      <button class="btn-discord" onclick="signInWithDiscord()">
+        <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+        Войти через Discord
+      </button>
     </div>
 
+    <!-- Регистрация по Email -->
     <div class="auth-view" id="registerForm">
       <div class="form-group">
         <label>Ваш Никнейм (для игры)</label>
@@ -88,9 +130,23 @@
       </div>
       <div class="form-group">
         <label>Пароль (мин. 6 символов)</label>
-        <input type="password" id="regPass" placeholder="••••••••">
+        <div class="password-wrapper">
+          <input type="password" id="regPass" placeholder="••••••••">
+          <button type="button" class="toggle-password" onclick="togglePassword('regPass')" title="Показать пароль">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
       </div>
       <button class="btn" onclick="doRegister()">Зарегистрироваться</button>
+
+      <div class="divider">или</div>
+      <button class="btn-discord" onclick="signInWithDiscord()">
+        <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+        Зарегистрироваться через Discord
+      </button>
     </div>
 
     <div class="msg" id="authMsg"></div>
@@ -103,6 +159,15 @@
     const SUPABASE_URL = 'https://drumwcypxzwmwmtozrhd.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_LUAvDl9YpoCe6ordyuPttQ_tVLal6QY';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    window.togglePassword = function(inputId) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+      } else {
+        input.type = 'password';
+      }
+    };
 
     function switchTab(tab) {
       document.getElementById('tabLogin').classList.remove('active');
@@ -129,6 +194,41 @@
 
     function hideMsg() { document.getElementById('authMsg').style.display = 'none'; }
 
+    // === ВХОД ЧЕРЕЗ DISCORD ===
+    window.signInWithDiscord = async function() {
+      try {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'discord',
+          options: {
+            redirectTo: window.location.origin + '/profile.html' // Куда вернуть после входа
+          }
+        });
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
+        showMsg('Ошибка входа через Discord: ' + error.message, true);
+      }
+    };
+
+    // === ВХОД ПО EMAIL ===
+    window.doLogin = async function() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPass').value;
+
+      if (!email || !pass) return showMsg('Заполните все поля!', true);
+
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+        if (error) throw error;
+        showMsg('Успешный вход! Переход...');
+        setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
+      } catch (error) {
+        console.error(error);
+        showMsg('Неверный email или пароль!', true);
+      }
+    };
+
+    // === РЕГИСТРАЦИЯ ПО EMAIL ===
     window.doRegister = async function() {
       const nickname = document.getElementById('regNickname').value.trim();
       const email = document.getElementById('regEmail').value.trim();
@@ -144,7 +244,6 @@
         });
         if (authError) throw authError;
 
-        // ИСПОЛЬЗУЕМ UPSERT ВМЕСТО INSERT, ЧТОБЫ ИЗБЕЖАТЬ ОШИБКИ DUPLICATE KEY
         const { error: dbError } = await supabase
           .from('profiles')
           .upsert({ 
@@ -161,23 +260,6 @@
       } catch (error) {
         console.error(error);
         showMsg('Ошибка: ' + error.message, true);
-      }
-    };
-
-    window.doLogin = async function() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPass').value;
-
-      if (!email || !pass) return showMsg('Заполните все поля!', true);
-
-      try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
-        if (error) throw error;
-        showMsg('Успешный вход! Переход...');
-        setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
-      } catch (error) {
-        console.error(error);
-        showMsg('Неверный email или пароль!', true);
       }
     };
 
