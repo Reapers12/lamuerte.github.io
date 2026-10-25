@@ -305,12 +305,12 @@
           if (isSuperAdmin) {
             roleOptions += `<option value="Администратор" ${user.role === 'Администратор' ? 'selected' : ''}>⭐ Администратор</option>`;
           }
+          // УДАЛЕН "БОЕЦ"
           roleOptions += `
             <option value="Глава" ${user.role === 'Глава' ? 'selected' : ''}>Глава</option>
             <option value="Заместитель" ${user.role === 'Заместитель' ? 'selected' : ''}>Заместитель</option>
             <option value="Кровь Семьи" ${user.role === 'Кровь Семьи' ? 'selected' : ''}>Кровь Семьи</option>
             <option value="Стажер" ${user.role === 'Стажер' ? 'selected' : ''}>Стажер</option>
-            <option value="Боец" ${user.role === 'Боец' ? 'selected' : ''}>Боец</option>
           `;
           roleHtml = `<select onchange="changeRole('${user.id}', this.value)">${roleOptions}</select>`;
         } else {
