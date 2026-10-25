@@ -105,7 +105,25 @@
     .back-link { display: block; text-align: center; margin-top: 2rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
     .back-link:hover { color: var(--accent); }
 
-    .theme-btn { position: fixed; bottom: 2rem; right: 2rem; background: var(--panel); border: 1px solid var(--border); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); transition: 0.3s; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    /* ИЗМЕНЕНО: Кнопка темы теперь в правом верхнем углу */
+    .theme-btn { 
+      position: fixed; 
+      top: 1.5rem; 
+      right: 1.5rem; 
+      background: var(--panel); 
+      border: 1px solid var(--border); 
+      border-radius: 50%; 
+      width: 42px; 
+      height: 42px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      color: var(--muted); 
+      transition: 0.3s; 
+      z-index: 50; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+    }
     .theme-btn:hover { color: var(--gold); border-color: var(--gold); transform: rotate(15deg) scale(1.05); }
     .theme-btn svg { width: 20px; height: 20px; transition: transform 0.4s ease; }
     .theme-btn .icon-moon { display: none; }
@@ -141,6 +159,7 @@
     </div>
   </div>
 
+  <!-- Кнопка переключения темы (в правом верхнем углу) -->
   <button class="theme-btn" id="themeToggle" title="Переключить тему">
     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
     <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -491,19 +510,13 @@
         btn.disabled = false;
         btn.textContent = newStatus === 'approved' ? '✅' : '❌';
       } else {
-        // ВМЕСТО ПОЛНОЙ ПЕРЕЗАГРУЗКИ — ОБНОВЛЯЕМ ТОЛЬКО ТЕКУЩУЮ ТАБЛИЦУ
-        // Находим блок, к которому относится эта кнопка
         const userCard = btn.closest('.user-card');
         const payoutsBlock = userCard.querySelector('.payouts-block');
         const content = payoutsBlock.querySelector('[id^="payouts-content-"]');
         
-        // Получаем имя игрока из заголовка карточки
         const name = userCard.querySelector('.name-input').value.trim().toLowerCase();
-        
-        // Перерисовываем ТОЛЬКО таблицу этого игрока, не трогая остальные
         const userPayouts = allPayouts.filter(p => p.nickname && p.nickname.trim().toLowerCase() === name);
         
-        // Обновляем локальный массив
         const idx = allPayouts.findIndex(p => p.id === reqId);
         if (idx !== -1) allPayouts[idx].status = newStatus;
 
@@ -548,7 +561,6 @@
         html += `</tbody></table>`;
         content.innerHTML = html;
 
-        // Обновляем бейдж непрочитанных (если он есть)
         const pendingCount = userPayouts.filter(p => p.status === 'pending').length;
         const badgeSpan = userCard.querySelector('.btn-payouts .badge');
         
